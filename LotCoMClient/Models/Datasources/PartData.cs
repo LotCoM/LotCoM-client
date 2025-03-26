@@ -7,12 +7,31 @@ public static class PartData {
     /// <summary>
     /// Retrieves the Process Part list for the specified Process.
     /// </summary>
+    /// <param name="ProcessFullName"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static List<Part> GetProcessParts(string ProcessFullName) {
+        // load the Process' data
+        Process Data = ProcessData.GetIndividualProcessData(ProcessFullName);
+        // pull the Part list
+        List<Part> Parts = Data.Parts;
+        // no Part data was read
+        if (Parts.Count < 1) {
+            throw new ArgumentException($"No Part data found for the Process '{ProcessFullName}'.");
+        } 
+        // return the Part list
+        return Parts;
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves the Process Part list for the specified Process.
+    /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve Part Data for.</param>
     /// <returns>A list of Part objects assigned to the Process.</returns>
     /// <exception cref="ArgumentException"></exception>
-    public static async Task<List<Part>> GetProcessParts(string ProcessFullName) {
+    public static async Task<List<Part>> GetProcessPartsAsync(string ProcessFullName) {
         // load the Process' data
-        Process Data = await ProcessData.GetIndividualProcessData(ProcessFullName);
+        Process Data = await ProcessData.GetIndividualProcessDataAsync(ProcessFullName);
         // pull the Part list
         List<Part> Parts = Data.Parts;
         // no Part data was read
@@ -30,7 +49,7 @@ public static class PartData {
     /// <returns>A List of strings.</returns>
     public static async Task<List<string>> GetDisplayableProcessParts(string ProcessFullName) {
         // retrieve the Process' parts
-        List<Part> ProcessParts = await GetProcessParts(ProcessFullName);
+        List<Part> ProcessParts = await GetProcessPartsAsync(ProcessFullName);
         // convert each Part Token into a Displayable string
         List<string> PartStrings = [];
         foreach (Part _part in ProcessParts) {
@@ -48,13 +67,39 @@ public static class PartData {
     /// <returns>A JToken object containing the Part data for PartNumber.</returns>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="FormatException"></exception>
-    public static async Task<Part> GetPartData(string ProcessFullName, string PartNumber) {
+    public static Part GetPartData(string ProcessFullName, string PartNumber) {
+        // retrieve the Process' Part list
+        List<Part> ProcessParts = GetProcessParts(ProcessFullName);
+        // no Part data for this Process
+        if (ProcessParts.Count == 0) {
+            throw new ArgumentException($"No Part data has been assigned to Process '{ProcessFullName}'.");
+        }
+        // attempt to access the specific Part
+        Part? SelectedPart;
+        try {
+            SelectedPart = ProcessParts.Where(x => x.PartNumber.Equals(PartNumber)).First();
+        // Part was not found in the Process' Part list
+        } catch {
+            throw new ArgumentException($"Part '{PartNumber}' not found assigned to Process '{ProcessFullName}'.");
+        }
+        return SelectedPart;
+    }
+
+    /// <summary>
+    /// Asynchronously queries for a Part matching PartNumber in ProcessFullName's Part data.
+    /// </summary>
+    /// <param name="ProcessFullName">The FULL Name ("Code-Title") of the Process to query from.</param>
+    /// <param name="PartNumber">The Part Number to query for within ProcessFullName's data.</param>
+    /// <returns>A JToken object containing the Part data for PartNumber.</returns>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="FormatException"></exception>
+    public static async Task<Part> GetPartDataAsync(string ProcessFullName, string PartNumber) {
         // perform the query on a new CPU thread
         Part PartData = await Task.Run(async () => {
             // retrieve the Process' Part list
-            List<Part> ProcessParts = await GetProcessParts(ProcessFullName);
+            List<Part> ProcessParts = await GetProcessPartsAsync(ProcessFullName);
             // no Part data for this Process
-            if (!ProcessParts.Any()) {
+            if (ProcessParts.Count == 0) {
                 throw new ArgumentException($"No Part data has been assigned to Process '{ProcessFullName}'.");
             }
             // attempt to access the specific Part

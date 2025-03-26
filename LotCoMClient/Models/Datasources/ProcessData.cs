@@ -14,7 +14,7 @@ public static class ProcessData {
     /// <returns>"Originator" || "Pass-through".</returns>
     public static async Task<string> IsOriginator(string ProcessFullName) {
         // load the Process' data
-        Process Data = await ProcessMasterlist.GetIndividualProcess(ProcessFullName);
+        Process Data = await ProcessMasterlist.GetIndividualProcessAsync(ProcessFullName);
         // check whether the process is an originator or not
         return Data.Type;
     }
@@ -24,9 +24,19 @@ public static class ProcessData {
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
     /// <returns>A Process object.</returns>
-    public static async Task<Process> GetIndividualProcessData(string ProcessFullName) {
+    public static Process GetIndividualProcessData(string ProcessFullName) {
         // invoke the Masterlist method to retrieve the Process' data
-        return await ProcessMasterlist.GetIndividualProcess(ProcessFullName);
+        return ProcessMasterlist.GetIndividualProcess(ProcessFullName);
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves ProcessFullName's data utilizing the Process Masterlist data source.
+    /// </summary>
+    /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
+    /// <returns>A Process object.</returns>
+    public static async Task<Process> GetIndividualProcessDataAsync(string ProcessFullName) {
+        // invoke the Masterlist method to retrieve the Process' data
+        return await ProcessMasterlist.GetIndividualProcessAsync(ProcessFullName);
     }
 
     /// <summary>
@@ -215,7 +225,37 @@ public static class ProcessData {
         /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
         /// <returns>A Process object.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static async Task<Process> GetIndividualProcess(string ProcessFullName) {
+        public static Process GetIndividualProcess(string ProcessFullName) {
+            // load the data from the Masterlist
+            JObject FullData = LoadData();
+            // attempt to access the data for the passed Process
+            JToken SelectedData;
+            try {
+                SelectedData = FullData["Processes"]!.Where(x => x["FullName"]!.ToString() == ProcessFullName).First();
+            // no processes matched the name
+            } catch {
+                throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
+            }
+            // resolve the Token to a Process
+            Process ResolvedProcess;
+            try {
+                ResolvedProcess = ResolveProcessFromToken(SelectedData);
+            // the Token could not be resolved to a Process
+            } catch {
+                throw new FormatException($"Could not resolve '{SelectedData}' to a Process object.");
+            }
+            // return the resolved Process object
+            return ResolvedProcess;
+        }
+
+        /// <summary>
+        /// Asynchronously loads and queries the Process Masterlist data for data connected to ProcessFullName. 
+        /// Returns a Process object constructed from the first found match.
+        /// </summary>
+        /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
+        /// <returns>A Process object.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static async Task<Process> GetIndividualProcessAsync(string ProcessFullName) {
             // load the data from the Masterlist
             JObject FullData = await LoadDataAsync();
             // attempt to access the data for the passed Process

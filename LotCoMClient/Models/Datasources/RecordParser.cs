@@ -23,7 +23,7 @@ public static class RecordParser {
         // split the CSV Line by commas
         List<string> SplitLine = CSVLine.Split(",").ToList();
         // confirm that the split list contains 8 universal fields and AT LEAST 1 variable field
-        if (SplitLine.Count < 9) {
+        if (SplitLine.Count < 7) {
             throw new RecordParseException();
         }
         // set the universal properties
@@ -31,8 +31,8 @@ public static class RecordParser {
         string PartNumber = SplitLine[1];
         string PartName = SplitLine[2];
         string Quantity = SplitLine[3];
-        string RecordDate = SplitLine[^4];
-        string RecordTime = SplitLine[^3];
+        string RecordDate = SplitLine[^3].Split("-")[0];
+        string RecordTime = SplitLine[^3].Split("-")[1];
         string RecordShift = SplitLine[^2];
         string OperatorID = SplitLine[^1];
         // get the variable inner fields

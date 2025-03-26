@@ -94,8 +94,8 @@ public class DataTable {
             try {
                 _parsedRecord = ParseRecord(_line);
             // one line could not be parsed; throw an exception
-            } catch {
-                throw new RecordParseException();
+            } catch (Exception _ex) {
+                throw new RecordParseException($"Failed to parse {_line} due to the following exception:\n{_ex}");
             }
             // add the parsed DataRecord object to the Record List
             ParsedRecords.Add(_parsedRecord);
@@ -132,8 +132,8 @@ public class DataTable {
                 try {
                     _parsedRecord = ParseRecord(_line);
                 // one line could not be parsed; throw an exception
-                } catch {
-                    throw new RecordParseException();
+                } catch (RecordParseException _ex) {
+                    throw new RecordParseException($"Failed to parse {_line} due to the following exception:\n{_ex}");
                 }
                 // add the parsed DataRecord object to the Record List
                 Records.Add(_parsedRecord);

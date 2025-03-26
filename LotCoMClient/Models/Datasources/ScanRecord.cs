@@ -34,15 +34,15 @@ public partial class ScanRecord(string Process, string PartNumber, string PartNa
         try {
             BaseRecord = RecordParser.ParseFromCSV(CSVLine);
         // the CSV Line could not be parsed
-        } catch (RecordParseException) {
-            throw new RecordParseException();
+        } catch (RecordParseException _ex) {
+            throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");
         }
         // cast and return the Parsed DataRecord as a ScanRecord
         try {
             return (ScanRecord)BaseRecord;
         // the parsed DataRecord object could not be cast to ScanRecord
-        } catch {
-            throw new RecordParseException();
+        } catch (RecordParseException _ex) {
+            throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");
         }
     }
 }

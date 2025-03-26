@@ -17,6 +17,15 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="OperatorID"></param>
 public partial class PrintRecord(string Process, string PartNumber, string PartName, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(Process, PartNumber, PartName, Quantity, InnerKeys, InnerValues, RecordDate, RecordTime, RecordShift, OperatorID) {
     /// <summary>
+    /// Converts a DataRecord base class type object into a PrintRecord object (explicit cast).
+    /// </summary>
+    /// <param name="BaseRecord"></param>
+    /// <returns></returns>
+    private static PrintRecord ConvertFromBase(DataRecord BaseRecord) {
+        return new PrintRecord(BaseRecord.Process, BaseRecord.PartNumber, BaseRecord.PartName, BaseRecord.Quantity, BaseRecord.InnerKeys, BaseRecord.InnerValues, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
+    }
+    
+    /// <summary>
     /// Attempts to parse a DataRecord object from a CSV Line using the RecordParser. 
     /// Casts that DataRecord to a PrintRecord object.
     /// </summary>
@@ -39,7 +48,7 @@ public partial class PrintRecord(string Process, string PartNumber, string PartN
         }
         // cast and return the Parsed DataRecord as a PrintRecord
         try {
-            return (PrintRecord)BaseRecord;
+            return ConvertFromBase(BaseRecord);
         // the parsed DataRecord object could not be cast to PrintRecord
         } catch (RecordParseException _ex) {
             throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");

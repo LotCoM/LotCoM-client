@@ -17,7 +17,8 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="OperatorID"></param>
 public partial class ScanRecord(string Process, string PartNumber, string PartName, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(Process, PartNumber, PartName, Quantity, InnerKeys, InnerValues, RecordDate, RecordTime, RecordShift, OperatorID) {
     /// <summary>
-    /// Attempts to parse a DataRecord object from a CSV Line. Casts that DataRecord to a ScanRecord object.
+    /// Attempts to parse a DataRecord object from a CSV Line using the RecordParser. 
+    /// Casts that DataRecord to a ScanRecord object.
     /// </summary>
     /// <remarks>
     /// Throws RecordParseException if the line contains too few fields, 
@@ -27,11 +28,11 @@ public partial class ScanRecord(string Process, string PartNumber, string PartNa
     /// <param name="CSVLine"></param>
     /// <returns>A ScanRecord object.</returns>
     /// <exception cref="RecordParseException"></exception>
-    public override ScanRecord ParseFromCSV(string CSVLine) {
+    public static ScanRecord ParseFromCSV(string CSVLine) {
         // attempt to parse a DataRecord object using the base Parser
         DataRecord BaseRecord;
         try {
-            BaseRecord = base.ParseFromCSV(CSVLine);
+            BaseRecord = RecordParser.ParseFromCSV(CSVLine);
         // the CSV Line could not be parsed
         } catch (RecordParseException) {
             throw new RecordParseException();

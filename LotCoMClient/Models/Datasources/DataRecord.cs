@@ -53,7 +53,7 @@ public class DataRecord(string Process, string PartNumber, string PartName, stri
     /// <param name="CSVLine"></param>
     /// <returns>A DataRecord object.</returns>
     /// <exception cref="RecordParseException"></exception>
-    public static DataRecord ParseFromCSV(string CSVLine) {
+    public virtual DataRecord ParseFromCSV(string CSVLine) {
         // split the CSV Line by commas
         List<string> SplitLine = CSVLine.Split(",").ToList();
         // confirm that the split list contains 8 universal fields and AT LEAST 1 variable field

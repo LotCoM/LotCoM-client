@@ -18,6 +18,10 @@ public class DataTable {
     /// Holds the currently-read Data Records in the DataTable.
     /// </summary>
     private List<DataRecord> _records = [];
+    /// <summary>
+    /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.
+    /// </summary>
+    private List<string> _headers = [];
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's _recordType from CSVLine.
@@ -77,6 +81,9 @@ public class DataTable {
         string Text = File.ReadAllText(_path);
         // separate the read text into record lines (split by newline character)
         List<string> RecordLines = Text.Split("\n").ToList();
+        // remove the first entry and save it as the headers property
+        _headers = RecordLines[0].Split(",").ToList();
+        RecordLines.RemoveAt(0);
         // remove any empty lines
         RecordLines = RecordLines.Where(x => !x.Equals("")).ToList();
         // parse each line into a DataRecord
@@ -113,6 +120,9 @@ public class DataTable {
             Split = Split.Where(x => !x.Equals("")).ToList();
             return Split;
         });
+        // remove the first entry and save it as the headers property
+        _headers = RecordLines[0].Split(",").ToList();
+        RecordLines.RemoveAt(0);
         // parse the lines into DataRecords on a new CPU thread
         List<DataRecord> ParsedRecords = await Task.Run(() => {
             List<DataRecord> Records = [];

@@ -37,6 +37,16 @@ public static class RecordParser {
         string OperatorID = SplitLine[^1];
         // get the variable inner fields
         List<string> InnerValues = SplitLine.GetRange(4, SplitLine.Count - 8);
+        // confirm that the Process is a valid process
+        if (!ProcessData.GetProcessNames().Contains(Process)) {
+            throw new RecordParseException($"The Process {Process} is not defined.");
+        }
+        // confirm that the Part Number and Part Name belong to a valid part
+        try {
+            PartData.GetPartData(Process, PartNumber);
+        } catch {
+            throw new RecordParseException($"The Part {PartNumber} {PartName} is not defined for Process {Process}");
+        }
         // attempt to create a DataRecord from the parsed data
         try {
             return new DataRecord(Process, PartNumber, PartName, Quantity, [], InnerValues, RecordDate, RecordTime, RecordShift, OperatorID);

@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     "net9.0-android35.0": {
+      "CommunityToolkit.Mvvm": {
+        "type": "Direct",
+        "requested": "[8.4.0, )",
+        "resolved": "8.4.0",
+        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+      },
       "Microsoft.Extensions.Logging.Debug": {
         "type": "Direct",
         "requested": "[9.0.0, )",
@@ -30,6 +36,12 @@
         "requested": "[9.0.3, )",
         "resolved": "9.0.3",
         "contentHash": "1rqGTfubVg0qj2PsK6esyq3PIxtYJYrN3LsYUV9RrvH3anmt3fT3ozYdAZZH4U8JU/pt5pPIUk8NBSu26wtekA=="
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.3, )",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
       "GoogleGson": {
         "type": "Transitive",
@@ -1133,6 +1145,12 @@
     "net9.0-android35.0/maccatalyst-x64": {},
     "net9.0-android35.0/win10-x64": {},
     "net9.0-ios18.2": {
+      "CommunityToolkit.Mvvm": {
+        "type": "Direct",
+        "requested": "[8.4.0, )",
+        "resolved": "8.4.0",
+        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+      },
       "Microsoft.Extensions.Logging.Debug": {
         "type": "Direct",
         "requested": "[9.0.0, )",
@@ -1161,6 +1179,12 @@
         "requested": "[9.0.3, )",
         "resolved": "9.0.3",
         "contentHash": "1rqGTfubVg0qj2PsK6esyq3PIxtYJYrN3LsYUV9RrvH3anmt3fT3ozYdAZZH4U8JU/pt5pPIUk8NBSu26wtekA=="
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.3, )",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -1293,6 +1317,12 @@
     "net9.0-ios18.2/maccatalyst-x64": {},
     "net9.0-ios18.2/win10-x64": {},
     "net9.0-maccatalyst18.2": {
+      "CommunityToolkit.Mvvm": {
+        "type": "Direct",
+        "requested": "[8.4.0, )",
+        "resolved": "8.4.0",
+        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+      },
       "Microsoft.Extensions.Logging.Debug": {
         "type": "Direct",
         "requested": "[9.0.0, )",
@@ -1321,6 +1351,12 @@
         "requested": "[9.0.3, )",
         "resolved": "9.0.3",
         "contentHash": "1rqGTfubVg0qj2PsK6esyq3PIxtYJYrN3LsYUV9RrvH3anmt3fT3ozYdAZZH4U8JU/pt5pPIUk8NBSu26wtekA=="
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.3, )",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -1453,6 +1489,12 @@
     "net9.0-maccatalyst18.2/maccatalyst-x64": {},
     "net9.0-maccatalyst18.2/win10-x64": {},
     "net9.0-windows10.0.19041": {
+      "CommunityToolkit.Mvvm": {
+        "type": "Direct",
+        "requested": "[8.4.0, )",
+        "resolved": "8.4.0",
+        "contentHash": "tqVU8yc/ADO9oiTRyTnwhFN68hCwvkliMierptWOudIAvWY1mWCh5VFh+guwHJmpMwfg0J0rY+yyd5Oy7ty9Uw=="
+      },
       "Microsoft.Extensions.Logging.Debug": {
         "type": "Direct",
         "requested": "[9.0.0, )",
@@ -1475,6 +1517,12 @@
           "Microsoft.Maui.Controls.Xaml": "9.0.40",
           "Microsoft.Maui.Resizetizer": "9.0.40"
         }
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.3, )",
+        "resolved": "13.0.3",
+        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",

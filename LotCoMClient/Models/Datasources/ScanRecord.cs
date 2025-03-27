@@ -5,24 +5,23 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Extension of the DataRecord class that represents a Label Scan event record.
 /// </summary>
-/// <param name="Process"></param>
-/// <param name="PartNumber"></param>
-/// <param name="PartName"></param>
-/// <param name="Quantity"></param>
-/// <param name="InnerKeys"></param>
-/// <param name="InnerValues"></param>
-/// <param name="RecordDate"></param>
-/// <param name="RecordTime"></param>
-/// <param name="RecordShift"></param>
-/// <param name="OperatorID"></param>
-public partial class ScanRecord(string Process, string PartNumber, string PartName, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(Process, PartNumber, PartName, Quantity, InnerKeys, InnerValues, RecordDate, RecordTime, RecordShift, OperatorID) {
+/// <param name="RecordProcess">The Process this record belongs to.</param>
+/// <param name="RecordPart">The Part assigned to this record.</param>
+/// <param name="Quantity">The Quantity assigned to this record.</param>
+/// <param name="InnerKeys">A List of Keys to apply to the Values in InnerValues.</param>
+/// <param name="InnerValues">A List of Inner Values (variable values from Process to Process) assigned to this record.</param>
+/// <param name="RecordDate">The Date assigned to this record.</param>
+/// <param name="RecordTime">The Time assigned to this record.</param>
+/// <param name="RecordShift">The Shift Number assigned to this record.</param>
+/// <param name="OperatorID">The Operator ID assigned to this record.</param>
+public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, InnerKeys, InnerValues, RecordDate, RecordTime, RecordShift, OperatorID) {
     /// <summary>
     /// Converts a DataRecord base class type object into a ScanRecord object (explicit cast).
     /// </summary>
     /// <param name="BaseRecord"></param>
     /// <returns></returns>
     private static ScanRecord ConvertFromBase(DataRecord BaseRecord) {
-        return new ScanRecord(BaseRecord.Process, BaseRecord.PartNumber, BaseRecord.PartName, BaseRecord.Quantity, BaseRecord.InnerKeys, BaseRecord.InnerValues, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
+        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.InnerKeys, BaseRecord.InnerValues, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
     }
     
     /// <summary>

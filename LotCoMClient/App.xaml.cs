@@ -1,14 +1,13 @@
-﻿namespace LotCoMClient;
+﻿using LotCoMClient.Views;
 
-public partial class App : Application
-{
-	public App()
-	{
+namespace LotCoMClient;
+
+public partial class App : Application {
+	public App() {
 		InitializeComponent();
 	}
 
-	protected override Window CreateWindow(IActivationState? activationState)
-	{
-		return new Window(new AppShell());
+	protected override Window CreateWindow(IActivationState? activationState) {
+		return new Window(new DataTablePage());
 	}
 }

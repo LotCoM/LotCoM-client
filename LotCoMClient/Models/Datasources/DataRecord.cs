@@ -3,9 +3,8 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Base class for all table entry records in LotCoM database tables.
 /// </summary>
-/// <param name="Process">The Process this record belongs to.</param>
-/// <param name="PartNumber">The Part assigned to this record.</param>
-/// <param name="PartName">The Part Name assigned to this record.</param>
+/// <param name="RecordProcess">The Process this record belongs to.</param>
+/// <param name="RecordPart">The Part assigned to this record.</param>
 /// <param name="Quantity">The Quantity assigned to this record.</param>
 /// <param name="InnerKeys">A List of Keys to apply to the Values in InnerValues.</param>
 /// <param name="InnerValues">A List of Inner Values (variable values from Process to Process) assigned to this record.</param>

@@ -8,20 +8,23 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="RecordProcess">The Process this record belongs to.</param>
 /// <param name="RecordPart">The Part assigned to this record.</param>
 /// <param name="Quantity">The Quantity assigned to this record.</param>
-/// <param name="InnerKeys">A List of Keys to apply to the Values in InnerValues.</param>
-/// <param name="InnerValues">A List of Inner Values (variable values from Process to Process) assigned to this record.</param>
+/// <param name="JBKNumber">The JBK Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
 /// <param name="RecordDate">The Date assigned to this record.</param>
 /// <param name="RecordTime">The Time assigned to this record.</param>
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, InnerKeys, InnerValues, RecordDate, RecordTime, RecordShift, OperatorID) {
+public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID) {
     /// <summary>
     /// Converts a DataRecord base class type object into a ScanRecord object (explicit cast).
     /// </summary>
     /// <param name="BaseRecord"></param>
     /// <returns></returns>
     private static ScanRecord ConvertFromBase(DataRecord BaseRecord) {
-        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.InnerKeys, BaseRecord.InnerValues, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
+        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
     }
     
     /// <summary>

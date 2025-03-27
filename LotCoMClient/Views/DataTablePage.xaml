@@ -3,7 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
              xmlns:views="clr-namespace:LotCoMClient.Views"
-             x:Class="LotCoMClient.Views.DataTablePage"
-             Title="Data Table Page">
+             x:Class="LotCoMClient.Views.DataTablePage">
+
+    
+
+    <!-- Use a Grid to control the Frame of the Page -->
+    <Grid>
+        <!-- Page Header Row -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Page Header -->
+        <Border
+            Margin="10"
+            Grid.Row="0"
+            Grid.Column="0"
+            Stroke="Transparent"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+            <Label
+                Text="Data Table"
+                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                FontAttributes="Bold"
+                FontSize="20"/>
+        </Border>
+    </Grid>
 
 </ContentPage>

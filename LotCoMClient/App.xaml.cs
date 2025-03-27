@@ -8,6 +8,15 @@ public partial class App : Application {
 	}
 
 	protected override Window CreateWindow(IActivationState? activationState) {
-		return new Window(new DataTablePage());
+		// create a TitleBar for the Window
+		TitleBar MainWindowTitleBar = new TitleBar {
+			Icon = "lotcom_logo.png",
+			Title = "LotCom Client",
+			Subtitle = "v0.1.0.0-alpha"      
+		};
+		// create the Main Window
+		Window MainWindow = new Window(new DataTablePage());
+		MainWindow.TitleBar = MainWindowTitleBar;
+		return MainWindow;
 	}
 }

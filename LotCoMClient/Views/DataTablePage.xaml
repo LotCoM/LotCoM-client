@@ -3,33 +3,85 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
              xmlns:views="clr-namespace:LotCoMClient.Views"
-             x:Class="LotCoMClient.Views.DataTablePage">
-
-    
+             x:Class="LotCoMClient.Views.DataTablePage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
     <!-- Use a Grid to control the Frame of the Page -->
     <Grid>
-        <!-- Page Header Row -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <!-- Page Title Framing Row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Page Body Row -->
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <!-- Left-Side Framing Column -->
+            <ColumnDefinition Width="150"/>
+            <!-- Page Body Column -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <!-- Page Header -->
+        <!-- Title Framing Border -->
         <Border
-            Margin="10"
+            Margin="0"
             Grid.Row="0"
-            Grid.Column="0"
+            Grid.Column="1"
             Stroke="Transparent"
             StrokeThickness="0"
-            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Title Label -->
             <Label
+                x:Name="PageTitleLabel"
                 Text="Data Table"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                 FontAttributes="Bold"
-                FontSize="20"/>
+                FontSize="20"
+                Margin="20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
         </Border>
-    </Grid>
+        <!-- Left-Side Framing Border -->
+        <Border
+            Margin="0"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Stroke="Transparent"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+        </Border>
+        <!-- Page Body Sub-Grid -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <!-- Table Header Row -->
+                <RowDefinition Height="Auto"/>
+                <!-- Table ScrollView Row -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <!-- Table ScrollView Column -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!-- Table Headers Label -->
+            <Label 
+                x:Name="TableHeadersLabel"
+                Text="Header Row"
+                Grid.Row="0"
+                Grid.Column="0"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                FontAttributes="None"
+                FontSize="12"
+                Margin="20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+            <ScrollView
+                Grid.Row="1"
+                Grid.Column="0">
+                <ListView>
 
+                </ListView>
+            </ScrollView>
+        </Grid>
+    </Grid>
 </ContentPage>

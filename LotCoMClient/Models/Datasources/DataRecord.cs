@@ -3,8 +3,8 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Base class for all table entry records in LotCoM database tables.
 /// </summary>
-/// <param name="Process">The Full Name of the Process this record belongs to.</param>
-/// <param name="PartNumber">The Part Number assigned to this record.</param>
+/// <param name="Process">The Process this record belongs to.</param>
+/// <param name="PartNumber">The Part assigned to this record.</param>
 /// <param name="PartName">The Part Name assigned to this record.</param>
 /// <param name="Quantity">The Quantity assigned to this record.</param>
 /// <param name="InnerKeys">A List of Keys to apply to the Values in InnerValues.</param>
@@ -13,10 +13,9 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="RecordTime">The Time assigned to this record.</param>
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-public class DataRecord(string Process, string PartNumber, string PartName, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID) {
-    public string Process = Process;
-    public string PartNumber = PartNumber;
-    public string PartName = PartName;
+public class DataRecord(Process RecordProcess, Part RecordPart, string Quantity, List<string> InnerKeys, List<string> InnerValues, string RecordDate, string RecordTime, string RecordShift, string OperatorID) {
+    public Process RecordProcess = RecordProcess;
+    public Part RecordPart = RecordPart;
     public string Quantity = Quantity; 
     public List<string> InnerKeys = InnerKeys; 
     public List<string> InnerValues = InnerValues; 
@@ -31,7 +30,7 @@ public class DataRecord(string Process, string PartNumber, string PartName, stri
     /// <returns></returns>
     public string ToCSV() {
         // add the front set of universal data
-        string CSVLine = $",{Process},{PartNumber},{PartName},{Quantity}";
+        string CSVLine = $",{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
         // add the inner (variable) data
         foreach (string _value in InnerValues) {
             CSVLine = $",{_value}";

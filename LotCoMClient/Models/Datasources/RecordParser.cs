@@ -26,17 +26,19 @@ public static class RecordParser {
         if (SplitLine.Count < 7) {
             throw new RecordParseException();
         }
-        // prepare the universal properties
+        // prepare DataRecord properties
         Process RecordProcess;
         Part RecordPart;
-        // TODO: replace these with flexible parsing
         string Quantity = SplitLine[3];
+        string JBKNumber = "";
+        string LotNumber = "";
+        string DeburrJBKNumber = "";
+        string DieNumber = "";
+        string HeatNumber = "";
         string RecordDate = SplitLine[^3].Split("-")[0];
         string RecordTime = SplitLine[^3].Split("-")[1];
         string RecordShift = SplitLine[^2];
         string OperatorID = SplitLine[^1];
-        // get the variable inner fields
-        List<string> InnerValues = SplitLine.GetRange(4, SplitLine.Count - 8);
         // confirm that the Process is a valid process
         try {
             RecordProcess = ProcessData.GetIndividualProcessData(SplitLine[0]);
@@ -49,9 +51,30 @@ public static class RecordParser {
         } catch {
             throw new RecordParseException($"The Part {SplitLine[1]} {SplitLine[2]} is not defined for Process {RecordProcess.FullName}");
         }
+        // parse the required variable data fields
+        List<string> Requirements = RecordProcess.RequiredFields;
+        List<string> InnerFields = [JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber];
+        // use a dual-index loop structure 
+        // parsingIndex: reference next parsable index after the static Quantity, position 4 (index 3)
+            // only increments when a property is found to be required and is assigned a parsable index
+        // propertyIndex: reference next property in InnerFields
+            // always increments
+        int _parsingIndex = 0;
+        int _propertyIndex = 0;
+        foreach (string _field in InnerFields) {
+            // the current required field name is in the Process requirements
+            if (Requirements.Contains(nameof(_field))) {
+                // update the variable field at the current index
+                InnerFields[_propertyIndex] = SplitLine[4 + _parsingIndex];
+                // increment to the next parsable index
+                _parsingIndex += 1;
+            }
+            // increment the property index regardless
+            _propertyIndex += 1;
+        }
         // attempt to create a DataRecord from the parsed data
         try {
-            return new DataRecord(RecordProcess, RecordPart, Quantity, [], InnerValues, RecordDate, RecordTime, RecordShift, OperatorID);
+            return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID);
         // there was a problem constructing a DataRecord from the parsed data
         } catch {
             throw new RecordParseException();

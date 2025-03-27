@@ -1,0 +1,34 @@
+
+# `0.1.0`
+### Datasource Class Implementations
+- **[feature/project](https://github.com/LotCoM/LotCoM-client/pull/1)**
+  - Create and upload .NET MAUI project.
+  - Create Repository and Project documentation.
+  - Rough roadmapping.
+- **[feature/2](https://github.com/LotCoM/LotCoM-client/pull/3)**
+  - Implement `DataTable.cs` class ([#2](https://github.com/LotCoM/LotCoM-client/issues/2))
+  - **New Classes:**
+    - `DataTable.cs`: Provides controlled access and interaction with LotCoM database tables.
+- **[feature/4](https://github.com/LotCoM/LotCoM-client/pull/5)**
+  - Implement Data Record class group ([#4](https://github.com/LotCoM/LotCoM-client/issues/4))
+  - Implement custom `RecordParseException`.
+  - Integrate Data Records with `DataTable`.
+  - **New Classes:**
+    - `DataRecord.cs`: Base class for all database table record types.
+    - `PrintRecord.cs`: Extension of `DataRecord` used to hold a single Label Print event record.
+    - `ScanRecord.cs`: Extension of `DataRecord` used to hold a single Label Scan event record.
+    - `RecordParser.cs`: Static parser used to create `DataRecord` objects from CSV lines.
+    - `RecordParseException.cs`: Custom extension of `Exception` used to throw and trace errors that occur while parsing DataRecords from CSV lines.
+- **[feature/6](https://github.com/LotCoM/LotCoM-client/pull/8)**
+  - Import Process data class group from LotCoM-printer ([#6](https://github.com/LotCoM/LotCoM-client/issues/6)).
+  - Implement synchronous versions of some lightweight Process data methods.
+  - Integrate Process data classes with Data Record classes.
+  - Add new dependencies `CommunityToolkit.MVVM` and `Newtonsoft.Json`.
+  - **New Classes**
+    - `Process.cs`: Represents a single Process in the YNA production flow.
+    - `ProcessData.cs`: Provides access to and methods on the Process datasource.
+    - `Part.cs`: Represents a single Part in the YNA production flow.
+    - `PartData.cs`: Provides access to and methods on the Process datasource.
+    - `Timestamp`: Provides quick and consistent formatting of DateTime objects into timestamps of `mm/dd/yyyy-hh:mm:ss`.
+- **[feature/7](https://github.com/LotCoM/LotCoM-client/pull/9)**
+  - Remove ambiguity in variable data fields of `DataRecord.cs` ([#7](https://github.com/LotCoM/LotCoM-client/issues/7))

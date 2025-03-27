@@ -26,10 +26,10 @@ public static class RecordParser {
         if (SplitLine.Count < 7) {
             throw new RecordParseException();
         }
-        // set the universal properties
-        string Process = SplitLine[0];
-        string PartNumber = SplitLine[1];
-        string PartName = SplitLine[2];
+        // prepare the universal properties
+        Process RecordProcess;
+        Part RecordPart;
+        // TODO: replace these with flexible parsing
         string Quantity = SplitLine[3];
         string RecordDate = SplitLine[^3].Split("-")[0];
         string RecordTime = SplitLine[^3].Split("-")[1];
@@ -38,18 +38,20 @@ public static class RecordParser {
         // get the variable inner fields
         List<string> InnerValues = SplitLine.GetRange(4, SplitLine.Count - 8);
         // confirm that the Process is a valid process
-        if (!ProcessData.GetProcessNames().Contains(Process)) {
-            throw new RecordParseException($"The Process {Process} is not defined.");
+        try {
+            RecordProcess = ProcessData.GetIndividualProcessData(SplitLine[0]);
+        } catch {
+            throw new RecordParseException($"The Process {SplitLine[0]} is not defined.");
         }
         // confirm that the Part Number and Part Name belong to a valid part
         try {
-            PartData.GetPartData(Process, PartNumber);
+            RecordPart = PartData.GetPartData(RecordProcess.FullName, SplitLine[1]);
         } catch {
-            throw new RecordParseException($"The Part {PartNumber} {PartName} is not defined for Process {Process}");
+            throw new RecordParseException($"The Part {SplitLine[1]} {SplitLine[2]} is not defined for Process {RecordProcess.FullName}");
         }
         // attempt to create a DataRecord from the parsed data
         try {
-            return new DataRecord(Process, PartNumber, PartName, Quantity, [], InnerValues, RecordDate, RecordTime, RecordShift, OperatorID);
+            return new DataRecord(RecordProcess, RecordPart, Quantity, [], InnerValues, RecordDate, RecordTime, RecordShift, OperatorID);
         // there was a problem constructing a DataRecord from the parsed data
         } catch {
             throw new RecordParseException();

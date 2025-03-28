@@ -18,22 +18,27 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <!-- Left-Side Framing Column -->
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
             <!-- Page Body Column -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <!-- Title Framing Border -->
-        <Border
-            x:Name="PageTitleFramingBorder"
+
+        <!-- Top-Left Page Corner Frame -->
+        <BoxView
+            x:Name="PageTopLeftCornerFrameFill"
+            IsVisible="{Binding LeftFrameShown}"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+
+        <!-- Title Frame -->
+        <VerticalStackLayout
+            x:Name="PageTitleFrameLayout"
             Margin="0"
             Grid.Row="0"
             Grid.Column="1"
-            Stroke="Transparent"
-            StrokeThickness="0"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
             <!-- Title Label -->
             <Label
-                x:Name="PageTitleLabel"
+                x:Name="PageTitleFrameLabel"
                 Text="Data Table"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                 FontAttributes="None"
@@ -41,35 +46,80 @@
                 Margin="20"
                 HorizontalOptions="Start"
                 VerticalOptions="Center"/>
-        </Border>
-        <!-- Left-Side Framing Border -->
-        <Border
-            x:Name="PageLeftFramingBorder"
+            <!-- Title Frame Bottom Border -->
+            <BoxView
+                x:Name="PageTitleFrameBottomBorder"
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+        </VerticalStackLayout>
+
+        <!-- Left-Side Frame -->
+        <HorizontalStackLayout
+            x:Name="PageLeftFrameLayout"
+            IsVisible="{Binding LeftFrameShown}"
             Margin="0"
-            Grid.Row="0"
-            Grid.RowSpan="2"
+            Grid.Row="1"
+            Grid.RowSpan="1"
             Grid.Column="0"
-            Stroke="Transparent"
-            StrokeThickness="0"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
-        </Border>
+            <!-- Inner Grid to Control Vertical/Horizontal Elements -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Left Frame Header Row -->
+                    <RowDefinition Height="50"/>
+                    <!-- Left Frame Body Row -->
+                    <RowDefinition Height="*"/>
+                    <!-- Left Frame Footer Row -->
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <!-- Left Frame Main Column -->
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <!-- Left Frame Header Label -->
+                <Label 
+                    x:Name="PageLeftFrameHeaderLabel"
+                    Margin="0,20,0,0"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Left Frame"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontSize="16"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+                <!-- Left Frame Right Border -->
+                <BoxView
+                    x:Name="PageLeftFrameRightBorder"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    WidthRequest="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Fill"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+            </Grid>
+        </HorizontalStackLayout>
+
         <!-- Page Body Sub-Grid -->
         <Grid
             Grid.Row="1"
             Grid.Column="1">
             <Grid.RowDefinitions>
-                <!-- Table Header Row -->
+                <!-- Page Body Table Header Row -->
                 <RowDefinition Height="Auto"/>
-                <!-- Table ScrollView Row -->
+                <!-- Page Body Table ScrollView Row -->
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <!-- Table ScrollView Column -->
+                <!-- Page Body Table ScrollView Column -->
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <!-- Table Headers Label -->
+
+            <!-- Page Body Table Header Label -->
             <Label 
-                x:Name="TableHeadersLabel"
+                x:Name="PageBodyTableHeaderLabel"
                 Text="Header Row"
                 Grid.Row="0"
                 Grid.Column="0"
@@ -79,14 +129,15 @@
                 Margin="22,20,20,20"
                 HorizontalOptions="Start"
                 VerticalOptions="Center"/>
-            <!-- Table ScrollView (DataRecord List Display) -->
+                
+            <!-- Page Body Table ScrollView -->
             <ScrollView
-                x:Name="TableScrollView"
+                x:Name="PageBodyTableScrollView"
                 Grid.Row="1"
                 Grid.Column="0">
-                <!-- Data List View -->
+                <!-- Page Data Table List View -->
                 <ListView
-                    x:Name="TableListView"
+                    x:Name="PageDataTableListView"
                     ItemsSource="{Binding Data}"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->

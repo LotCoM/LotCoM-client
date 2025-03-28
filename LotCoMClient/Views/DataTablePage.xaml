@@ -8,33 +8,36 @@
              x:DataType="viewModels:DataTableViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
-    <!-- Use a Grid to control the Frame of the Page -->
+    <!-- Use a Grid to control the Framing of the Page -->
     <Grid>
         <Grid.RowDefinitions>
-            <!-- Page Title Framing Row -->
+            <!-- Page Title Frame Row -->
             <RowDefinition Height="Auto"/>
             <!-- Page Body Row -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <!-- Left-Side Framing Column -->
+            <!-- Left-Side Frame Column -->
             <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
             <!-- Page Body Column -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!-- Title Frame -->
         <!-- Top-Left Page Corner Frame -->
         <BoxView
             x:Name="PageTopLeftCornerFrameFill"
+            Grid.Row="0"
+            Grid.Column="0"
             IsVisible="{Binding LeftFrameShown}"
+            WidthRequest="{Binding LeftFrameWidth}"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
-
         <!-- Title Frame -->
         <VerticalStackLayout
             x:Name="PageTitleFrameLayout"
-            Margin="0"
             Grid.Row="0"
             Grid.Column="1"
+            Margin="0"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
             <!-- Title Label -->
             <Label
@@ -59,12 +62,12 @@
         <HorizontalStackLayout
             x:Name="PageLeftFrameLayout"
             IsVisible="{Binding LeftFrameShown}"
-            Margin="0"
             Grid.Row="1"
-            Grid.RowSpan="1"
             Grid.Column="0"
+            Margin="0"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
-            <!-- Inner Grid to Control Vertical/Horizontal Elements -->
+
+            <!-- Grid to Control Vertical/Horizontal Elements -->
             <Grid>
                 <Grid.RowDefinitions>
                     <!-- Left Frame Header Row -->
@@ -78,17 +81,31 @@
                     <!-- Left Frame Main Column -->
                     <ColumnDefinition Width="150"/>
                 </Grid.ColumnDefinitions>
+
                 <!-- Left Frame Header Label -->
                 <Label 
                     x:Name="PageLeftFrameHeaderLabel"
                     Margin="0,20,0,0"
                     Grid.Row="0"
                     Grid.Column="0"
-                    Text="Left Frame"
+                    Text="{Binding FramePanelHeader}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontSize="16"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"/>
+
+                <!-- Left Frame Footer Label -->
+                <Label 
+                    x:Name="PageLeftFrameFooterLabel"
+                    Margin="0,20,0,0"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="{Binding FramePanelFooter}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontSize="16"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+
                 <!-- Left Frame Right Border -->
                 <BoxView
                     x:Name="PageLeftFrameRightBorder"

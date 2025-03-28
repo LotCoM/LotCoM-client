@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datasources="clr-namespace:LotCoMClient.Models.Datasources"
+             xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
+             xmlns:views="clr-namespace:LotCoMClient.Views"
+             x:Class="LotCoMClient.Views.PageFrame"
+             x:DataType="viewModels:PageFrameViewModel"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
+    <!-- Use a Grid to control the Frame of the Page -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Page Title Framing Row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Page Body Row -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!-- Left-Side Framing Column -->
+            <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+            <!-- Page Body Column -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top-Left Page Corner Frame -->
+        <BoxView
+            x:Name="PageTopLeftCornerFrameFill"
+            IsVisible="{Binding LeftFrameShown}"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+
+        <!-- Title Frame -->
+        <VerticalStackLayout
+            x:Name="PageTitleFrameLayout"
+            Margin="0"
+            Grid.Row="0"
+            Grid.Column="1"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Title Label -->
+            <Label
+                x:Name="PageTitleFrameLabel"
+                Text="{Binding PageTitle}"
+                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                FontAttributes="None"
+                FontSize="20"
+                Margin="20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+            <!-- Title Frame Bottom Border -->
+            <BoxView
+                x:Name="PageTitleFrameBottomBorder"
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+        </VerticalStackLayout>
+
+        <!-- Left-Side Frame -->
+        <HorizontalStackLayout
+            x:Name="PageLeftFrameLayout"
+            IsVisible="{Binding LeftFrameShown}"
+            Margin="0"
+            Grid.Row="1"
+            Grid.RowSpan="1"
+            Grid.Column="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Inner Grid to Control Vertical/Horizontal Elements -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Left Frame Header Row -->
+                    <RowDefinition Height="50"/>
+                    <!-- Left Frame Body Row -->
+                    <RowDefinition Height="*"/>
+                    <!-- Left Frame Footer Row -->
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <!-- Left Frame Main Column -->
+                    <ColumnDefinition Width="150"/>
+                </Grid.ColumnDefinitions>
+                <!-- Left Frame Header Label -->
+                <Label 
+                    x:Name="PageLeftFrameHeaderLabel"
+                    Margin="0,20,0,0"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Left Frame"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontSize="16"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"/>
+                <!-- Left Frame Right Border -->
+                <BoxView
+                    x:Name="PageLeftFrameRightBorder"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    WidthRequest="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Fill"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+            </Grid>
+        </HorizontalStackLayout>
+
+        <!-- Page Body -->
+        <ContentView
+            Grid.Row="1"
+            Grid.Column="1" 
+            ControlTemplate="{Binding PageBody}"/>
+
+    </Grid>
+</ContentPage>

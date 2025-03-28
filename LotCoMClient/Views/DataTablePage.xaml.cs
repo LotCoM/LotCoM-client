@@ -14,7 +14,7 @@ public partial class DataTablePage : ContentPage {
     /// </summary>
     public DataTablePage() {
 		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableViewModel();
+        _viewModel = new ViewModels.DataTableViewModel("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4134-CRV-Pipe-Comp.txt");
         BindingContext = _viewModel;
 
         // create the page from XAML

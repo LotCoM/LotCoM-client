@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
 
 namespace LotCoMClient.Models.Datasources;
@@ -5,7 +6,7 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Provides controlled access and manipulation of database tables in the LotCoM Database.
 /// </summary>
-public class DataTable {
+public partial class DataTable : ObservableObject {
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
     /// </summary>
@@ -22,6 +23,11 @@ public class DataTable {
     /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.
     /// </summary>
     private List<string> _headers = [];
+    [ObservableProperty]
+    /// <summary>
+    /// Observable property exposing the Name of the Process producing the Records in this Table.
+    /// </summary>
+    public partial string TableProcess {get; set;}
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's _recordType from CSVLine.
@@ -60,6 +66,8 @@ public class DataTable {
         }
         // read the database table and populate runtime
         _records = Read();
+        // set the Table's Process from the first Record's RecordProcess property
+        TableProcess = _records[0].RecordProcess.FullName;
     }
 
     /// <summary>

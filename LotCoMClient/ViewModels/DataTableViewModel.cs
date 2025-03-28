@@ -20,6 +20,13 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(Data));
         }
     }
+    private string _pageTitle = "";
+    /// <summary>
+    /// Serves the Page's Title.
+    /// </summary>
+    public string PageTitle {
+        get {return _pageTitle;}
+    }
     
     // UI visual controls
     private bool _leftFrameShown = false;
@@ -49,8 +56,11 @@ public partial class DataTableViewModel : ObservableObject {
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.
     /// </summary>
-    /// <param name="DataTablePath"></param>
-    public DataTableViewModel(string DataTablePath) {
+    /// <param name="DataTablePath">The desired display Database Table's full path.</param>
+    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    public DataTableViewModel(string DataTablePath, string PageTitle) {
+        // assign the Page's Title
+        _pageTitle = PageTitle;
         // create a DataTable from the path passed in DataTablePath
         _table = new DataTable(DataTablePath);
         // read the Table

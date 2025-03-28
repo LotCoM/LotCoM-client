@@ -15,7 +15,7 @@ public partial class App : Application {
 			Subtitle = "v0.1.0.0-alpha"      
 		};
 		// create the Main Window
-		Window MainWindow = new Window(new DataTablePage());
+		Window MainWindow = new Window(new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4134-CRV-Pipe-Comp.txt", "Test Data Page"));
 		MainWindow.TitleBar = MainWindowTitleBar;
 		return MainWindow;
 	}

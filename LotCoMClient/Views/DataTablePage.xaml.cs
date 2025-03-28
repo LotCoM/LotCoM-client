@@ -12,9 +12,10 @@ public partial class DataTablePage : ContentPage {
     /// <summary>
     /// Creates a new DataTablePage.
     /// </summary>
-    public DataTablePage() {
+    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    public DataTablePage(string DataTablePath, string PageTitle) {
 		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableViewModel("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4134-CRV-Pipe-Comp.txt");
+        _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle);
         BindingContext = _viewModel;
 
         // create the page from XAML

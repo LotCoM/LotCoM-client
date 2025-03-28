@@ -39,7 +39,7 @@
             <!-- Title Label -->
             <Label
                 x:Name="PageTitleFrameLabel"
-                Text="Data Table"
+                Text="{Binding PageTitle}"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                 FontAttributes="None"
                 FontSize="20"

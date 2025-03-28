@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datasources="clr-namespace:LotCoMClient.Models.Datasources"
              xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
              xmlns:views="clr-namespace:LotCoMClient.Views"
              x:Class="LotCoMClient.Views.DataTablePage"
@@ -90,63 +91,124 @@
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->
                     <ListView.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate
+                            x:DataType="datasources:DataRecord">
                             <ViewCell>
                                 <!-- Each Entry is a fully-configurable Grid -->
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="30"/>
-                                        <RowDefinition Height="30"/>
+                                        <!-- DataRecord Field Row (Horizontal Stack) -->
+                                        <RowDefinition Height="*"/>
+                                        <!-- DataRecord Timestamp/ID Row -->
+                                        <RowDefinition Height="45"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
+                                        <!-- Left-Side Padding Column -->
                                         <ColumnDefinition Width="25"/>
+                                        <!-- Date Column -->
                                         <ColumnDefinition Width="125"/>
+                                        <!-- Time Column -->
                                         <ColumnDefinition Width="125"/>
+                                        <!-- Shift Column -->
                                         <ColumnDefinition Width="125"/>
-                                        <ColumnDefinition Width="125"/>
+                                        <!-- Operator Column -->
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- DataRecord Data Label -->
-                                    <Label
-                                        Margin="5"
+                                    <!-- Horizontal Stack Layout to Layer DataRecord Fields -->
+                                    <HorizontalStackLayout
+                                        Margin="0,10,0,0"
                                         Grid.Row="0"
                                         Grid.Column="1"
-                                        Grid.ColumnSpan="4"
-                                        Text=""
-                                        FontSize="12"
-                                        TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        Grid.ColumnSpan="4">
+                                        <!-- DataRecord Part Number -->
+                                        <Label
+                                            Text="{Binding RecordPart.PartNumber, StringFormat='Part: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Part Name -->
+                                        <Label
+                                            Margin="10,0,0,0"
+                                            Text="{Binding RecordPart.PartName}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Quantity -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            Text="{Binding Quantity, StringFormat='Quantity: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord JBK Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesJBKNumber}"
+                                            Text="{Binding JBKNumber, StringFormat='JBK #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Lot Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesLotNumber}"
+                                            Text="{Binding LotNumber, StringFormat='Lot #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Deburr JBK Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesDeburrJBKNumber}"
+                                            Text="{Binding DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Die Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesDieNumber}"
+                                            Text="{Binding DieNumber, StringFormat='Die #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Heat Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesHeatNumber}"
+                                            Text="{Binding HeatNumber, StringFormat='Heat #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                    </HorizontalStackLayout>
                                     <!-- DataRecord Date Label -->
                                     <Label
                                         Margin="5"
                                         Grid.Row="1"
                                         Grid.Column="1"
-                                        Text="Date:"
+                                        Text="{Binding RecordDate, StringFormat='Date: {0}'}"
                                         FontSize="12"
-                                        TextColor="{StaticResource Gray500}"/>
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
                                     <!-- DataRecord Time Label -->
                                     <Label
                                         Margin="5"
                                         Grid.Row="1"
                                         Grid.Column="2"
-                                        Text="Time:"
+                                        Text="{Binding RecordTime, StringFormat='Time: {0}'}"
                                         FontSize="12"
-                                        TextColor="{StaticResource Gray500}"/>
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
                                     <!-- DataRecord Shift Label -->
                                     <Label
                                         Margin="5"
                                         Grid.Row="1"
                                         Grid.Column="3"
-                                        Text="Shift:"
+                                        Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
                                         FontSize="12"
-                                        TextColor="{StaticResource Gray500}"/>
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
                                     <!-- DataRecord Operator Label -->
                                     <Label
                                         Margin="5"
                                         Grid.Row="1"
                                         Grid.Column="4"
-                                        Text="Operator:"
+                                        Text="{Binding OperatorID, StringFormat='ID: {0}'}"
                                         FontSize="12"
-                                        TextColor="{StaticResource Gray500}"/>
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

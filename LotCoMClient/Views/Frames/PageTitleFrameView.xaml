@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:LotCoMClient.Views.Frames"
+             x:Name="this"
+             x:Class="LotCoMClient.Views.Frames.PageTitleFrameView"
+             x:DataType="local:PageTitleFrameView"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
+    <HorizontalStackLayout
+        VerticalOptions="Start"
+        HorizontalOptions="Start"
+        Margin="0">
+        <!-- Top-Left Page Corner Frame -->
+        <BoxView
+            x:Name="PageTopLeftCornerFrameFill"
+            IsVisible="{Binding LeftFrameShown}"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+        <!-- Title Frame -->
+        <VerticalStackLayout
+            x:Name="PageTitleFrameLayout"
+            Margin="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Title Label -->
+            <Label
+                x:Name="PageTitleFrameLabel"
+                Text="{Binding PageTitle}"
+                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                FontAttributes="None"
+                FontSize="20"
+                Margin="20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+            <!-- Title Frame Bottom Border -->
+            <BoxView
+                x:Name="PageTitleFrameBottomBorder"
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+        </VerticalStackLayout>
+    </HorizontalStackLayout>
+</ContentView>

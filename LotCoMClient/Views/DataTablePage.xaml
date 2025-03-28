@@ -186,7 +186,9 @@
                                         <!-- DataRecord Field Row (Horizontal Stack) -->
                                         <RowDefinition Height="*"/>
                                         <!-- DataRecord Timestamp/ID Row -->
-                                        <RowDefinition Height="45"/>
+                                        <RowDefinition Height="30"/>
+                                        <!-- Separator Row -->
+                                        <RowDefinition Height="5"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <!-- Left-Side Padding Column -->
@@ -261,7 +263,7 @@
                                     </HorizontalStackLayout>
                                     <!-- DataRecord Date Label -->
                                     <Label
-                                        Margin="5"
+                                        Margin="5,0,0,0"
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Text="{Binding RecordDate, StringFormat='Date: {0}'}"
@@ -270,7 +272,7 @@
                                         VerticalOptions="Start"/>
                                     <!-- DataRecord Time Label -->
                                     <Label
-                                        Margin="5"
+                                        Margin="5,0,0,0"
                                         Grid.Row="1"
                                         Grid.Column="2"
                                         Text="{Binding RecordTime, StringFormat='Time: {0}'}"
@@ -279,7 +281,7 @@
                                         VerticalOptions="Start"/>
                                     <!-- DataRecord Shift Label -->
                                     <Label
-                                        Margin="5"
+                                        Margin="5,0,0,0"
                                         Grid.Row="1"
                                         Grid.Column="3"
                                         Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
@@ -288,13 +290,22 @@
                                         VerticalOptions="Start"/>
                                     <!-- DataRecord Operator Label -->
                                     <Label
-                                        Margin="5"
+                                        Margin="5,0,0,0"
                                         Grid.Row="1"
                                         Grid.Column="4"
                                         Text="{Binding OperatorID, StringFormat='ID: {0}'}"
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
+                                    <!-- Separator Bar -->
+                                    <BoxView
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="5"
+                                        HeightRequest="1"
+                                        HorizontalOptions="Fill"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

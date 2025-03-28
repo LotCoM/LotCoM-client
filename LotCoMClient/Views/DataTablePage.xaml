@@ -80,19 +80,6 @@
                     <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Left Frame Header Label -->
-                <Label 
-                    x:Name="PageLeftFrameHeaderLabel"
-                    IsVisible="{Binding LeftFrameShown}"
-                    Margin="0,15,0,0"
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Text="{Binding LeftFramePanelHeader}"
-                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                    FontSize="12"
-                    VerticalOptions="Center"
-                    HorizontalOptions="Center"/>
-
                 <!-- Left Frame Footer Label -->
                 <Label 
                     x:Name="PageLeftFrameFooterLabel"
@@ -135,6 +122,20 @@
                     BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
             </Grid>
         </HorizontalStackLayout>
+
+        <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
+        <Label 
+            x:Name="PageLeftFrameHeaderLabel"
+            IsVisible="{Binding LeftFrameShown}"
+            Margin="0"
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="{Binding LeftFramePanelHeader}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+            FontSize="12"
+            FontAttributes="Bold"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"/>
 
         <!-- Page Body Sub-Grid -->
         <Grid

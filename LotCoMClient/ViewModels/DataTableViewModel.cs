@@ -34,7 +34,7 @@ public partial class DataTableViewModel : ObservableObject {
     public string PageTitle {
         get {return _pageTitle;}
     }
-    private string _leftFramePanelHeader = "Panel Header";
+    private string _leftFramePanelHeader;
     /// <summary>
     /// Serves the Page's Left Frame Panel Header.
     /// </summary>
@@ -88,6 +88,8 @@ public partial class DataTableViewModel : ObservableObject {
         _pageTitle = PageTitle;
         // create a DataTable from the path passed in DataTablePath
         _table = new DataTable(DataTablePath);
+        // set the left frame panel's header
+        _leftFramePanelHeader = Table.TableProcess;
         // read the Table
         _data = _table.GetRecords();
     }

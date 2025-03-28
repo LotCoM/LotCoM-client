@@ -29,7 +29,6 @@
             x:Name="PageTopLeftCornerFrameFill"
             Grid.Row="0"
             Grid.Column="0"
-            IsVisible="{Binding LeftFrameShown}"
             WidthRequest="{Binding LeftFrameWidth}"
             BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
         <!-- Title Frame -->
@@ -61,7 +60,6 @@
         <!-- Left-Side Frame -->
         <HorizontalStackLayout
             x:Name="PageLeftFrameLayout"
-            IsVisible="{Binding LeftFrameShown}"
             Grid.Row="1"
             Grid.Column="0"
             Margin="0"
@@ -75,40 +73,59 @@
                     <!-- Left Frame Body Row -->
                     <RowDefinition Height="*"/>
                     <!-- Left Frame Footer Row -->
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="75"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <!-- Left Frame Main Column -->
-                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Left Frame Header Label -->
                 <Label 
                     x:Name="PageLeftFrameHeaderLabel"
-                    Margin="0,20,0,0"
+                    IsVisible="{Binding LeftFrameShown}"
+                    Margin="0,15,0,0"
                     Grid.Row="0"
                     Grid.Column="0"
                     Text="{Binding LeftFramePanelHeader}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                    FontSize="16"
+                    FontSize="12"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"/>
 
                 <!-- Left Frame Footer Label -->
                 <Label 
                     x:Name="PageLeftFrameFooterLabel"
-                    Margin="0,20,0,0"
-                    Grid.Row="0"
+                    IsVisible="{Binding LeftFrameShown}"
+                    Margin="0,0,0,15"
+                    Grid.Row="2"
                     Grid.Column="0"
                     Text="{Binding LeftFramePanelFooter}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                    FontSize="16"
-                    VerticalOptions="Center"
+                    FontSize="10"
+                    VerticalOptions="End"
                     HorizontalOptions="Center"/>
+                
+                <!-- Panel Collapse Button -->
+                <Button
+                    x:Name="PageLeftFrameCollapseButton"
+                    Clicked="OnPageLeftFrameCollapseButtonClicked"
+                    Margin="-10,0,0,0"
+                    Padding="10"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    HeightRequest="25"
+                    WidthRequest="25"
+                    IsVisible="true"
+                    ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                    Background="Transparent"/>
 
                 <!-- Left Frame Right Border -->
                 <BoxView
                     x:Name="PageLeftFrameRightBorder"
+                    IsVisible="true"
                     Grid.Row="0"
                     Grid.RowSpan="3"
                     Grid.Column="0"

@@ -27,6 +27,20 @@ public partial class DataTableViewModel : ObservableObject {
     public string PageTitle {
         get {return _pageTitle;}
     }
+    private string _leftFramePanelHeader = "Panel Header";
+    /// <summary>
+    /// Serves the Page's Left Frame Panel Header.
+    /// </summary>
+    public string LeftFramePanelHeader {
+        get {return _leftFramePanelHeader;}
+    }
+    private string _leftFramePanelFooter = "Panel Footer";
+    /// <summary>
+    /// Serves the Page's Left Frame Panel Footer.
+    /// </summary>
+    public string LeftFramePanelFooter {
+        get {return _leftFramePanelFooter;}
+    }
     
     // UI visual controls
     private bool _leftFrameShown = false;

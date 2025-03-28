@@ -54,24 +54,45 @@ public static class RecordParser {
         // parse the required variable data fields
         List<string> Requirements = RecordProcess.RequiredFields;
         List<string> InnerFields = [JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber];
-        // use a dual-index loop structure 
-        // parsingIndex: reference next parsable index after the static Quantity, position 4 (index 3)
-            // only increments when a property is found to be required and is assigned a parsable index
-        // propertyIndex: reference next property in InnerFields
-            // always increments
+        // references next parsable index after the static Quantity, position 4 (index 3); 
+        // increments when a property is found to be required and is assigned a parsable index
         int _parsingIndex = 0;
-        int _propertyIndex = 0;
-        foreach (string _field in InnerFields) {
-            // the current required field name is in the Process requirements
-            if (Requirements.Contains(nameof(_field))) {
-                // update the variable field at the current index
-                InnerFields[_propertyIndex] = SplitLine[4 + _parsingIndex];
-                // increment to the next parsable index
-                _parsingIndex += 1;
-            }
-            // increment the property index regardless
-            _propertyIndex += 1;
+        // attempt to parse a JBK number
+        if (Requirements.Contains("JBKNumber")) {
+            // assign the value of the current parsing index to the JBK Number property
+            JBKNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
         }
+        // attempt to parse a Lot number
+        if (Requirements.Contains("LotNumber")) {
+            // assign the value of the current parsing index to the Lot Number property
+            LotNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
+        }
+        // attempt to parse a Deburr JBK number
+        if (Requirements.Contains("DeburrJBKNumber")) {
+            // assign the value of the current parsing index to the Deburr JBK Number property
+            DeburrJBKNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
+        }
+        // attempt to parse a Die number
+        if (Requirements.Contains("DieNumber")) {
+            // assign the value of the current parsing index to the Die Number property
+            DieNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
+        }
+        // attempt to parse a Heat number
+        if (Requirements.Contains("HeatNumber")) {
+            // assign the value of the current parsing index to the Heat Number property
+            HeatNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
+        }
+
         // attempt to create a DataRecord from the parsed data
         try {
             return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID);

@@ -43,7 +43,7 @@ public partial class DataTableViewModel : ObservableObject {
     }
     
     // UI visual controls
-    private bool _leftFrameShown = false;
+    private bool _leftFrameShown = true;
     public bool LeftFrameShown {
         get {return _leftFrameShown;} 
         set {
@@ -52,7 +52,16 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameShown));
         }
     }
-    private int _leftFrameWidth = 0;
+    private bool _leftFrameHidden = false;
+    public bool LeftFrameHidden {
+        get {return _leftFrameHidden;} 
+        set {
+            _leftFrameHidden = value;
+            OnPropertyChanged(nameof(_leftFrameHidden));
+            OnPropertyChanged(nameof(LeftFrameHidden));
+        }
+    }
+    private int _leftFrameWidth = 150;
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 
         set {

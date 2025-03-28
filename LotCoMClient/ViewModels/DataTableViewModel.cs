@@ -8,6 +8,13 @@ namespace LotCoMClient.ViewModels;
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
 public partial class DataTableViewModel : ObservableObject {
+    private DataTable _table;
+    /// <summary>
+    /// Serves the DataTable object for this Page's Database Table. 
+    /// </summary>
+    public DataTable Table {
+        get {return _table;}
+    }
     private List<DataRecord> _data = [];
     /// <summary>
     /// Serves the Data in the Page's assigned Database Table.
@@ -70,11 +77,6 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameWidth));
         }
     }
-
-    /// <summary>
-    /// Private property that holds the DataTable object for this Page's Database Table. 
-    /// </summary>
-    private DataTable _table;
 
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.

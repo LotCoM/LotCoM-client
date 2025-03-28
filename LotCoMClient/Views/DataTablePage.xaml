@@ -4,6 +4,7 @@
              xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
              xmlns:views="clr-namespace:LotCoMClient.Views"
              x:Class="LotCoMClient.Views.DataTablePage"
+             x:DataType="viewModels:DataTableViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
     <!-- Use a Grid to control the Frame of the Page -->
@@ -22,6 +23,7 @@
         </Grid.ColumnDefinitions>
         <!-- Title Framing Border -->
         <Border
+            x:Name="PageTitleFramingBorder"
             Margin="0"
             Grid.Row="0"
             Grid.Column="1"
@@ -33,7 +35,7 @@
                 x:Name="PageTitleLabel"
                 Text="Data Table"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
-                FontAttributes="Bold"
+                FontAttributes="None"
                 FontSize="20"
                 Margin="20"
                 HorizontalOptions="Start"
@@ -41,6 +43,7 @@
         </Border>
         <!-- Left-Side Framing Border -->
         <Border
+            x:Name="PageLeftFramingBorder"
             Margin="0"
             Grid.Row="0"
             Grid.RowSpan="2"
@@ -71,15 +74,83 @@
                 Grid.Column="0"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                 FontAttributes="None"
-                FontSize="12"
-                Margin="20"
+                FontSize="16"
+                Margin="22,20,20,20"
                 HorizontalOptions="Start"
                 VerticalOptions="Center"/>
+            <!-- Table ScrollView (DataRecord List Display) -->
             <ScrollView
+                x:Name="TableScrollView"
                 Grid.Row="1"
                 Grid.Column="0">
-                <ListView>
-
+                <!-- Data List View -->
+                <ListView
+                    x:Name="TableListView"
+                    ItemsSource="{Binding Data}"
+                    Margin="20">
+                    <!-- Configure DataRecord ItemTemplate -->
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <!-- Each Entry is a fully-configurable Grid -->
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="25"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- DataRecord Data Label -->
+                                    <Label
+                                        Margin="5"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="4"
+                                        Text=""
+                                        FontSize="12"
+                                        TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                    <!-- DataRecord Date Label -->
+                                    <Label
+                                        Margin="5"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Text="Date:"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"/>
+                                    <!-- DataRecord Time Label -->
+                                    <Label
+                                        Margin="5"
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        Text="Time:"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"/>
+                                    <!-- DataRecord Shift Label -->
+                                    <Label
+                                        Margin="5"
+                                        Grid.Row="1"
+                                        Grid.Column="3"
+                                        Text="Shift:"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"/>
+                                    <!-- DataRecord Operator Label -->
+                                    <Label
+                                        Margin="5"
+                                        Grid.Row="1"
+                                        Grid.Column="4"
+                                        Text="Operator:"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
                 </ListView>
             </ScrollView>
         </Grid>

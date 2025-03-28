@@ -20,6 +20,26 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(Data));
         }
     }
+    
+    // UI visual controls
+    private bool _leftFrameShown = false;
+    public bool LeftFrameShown {
+        get {return _leftFrameShown;} 
+        set {
+            _leftFrameShown = value;
+            OnPropertyChanged(nameof(_leftFrameShown));
+            OnPropertyChanged(nameof(LeftFrameShown));
+        }
+    }
+    private int _leftFrameWidth = 0;
+    public int LeftFrameWidth {
+        get {return _leftFrameWidth;} 
+        set {
+            _leftFrameWidth = value;
+            OnPropertyChanged(nameof(_leftFrameWidth));
+            OnPropertyChanged(nameof(LeftFrameWidth));
+        }
+    }
 
     /// <summary>
     /// Private property that holds the DataTable object for this Page's Database Table. 

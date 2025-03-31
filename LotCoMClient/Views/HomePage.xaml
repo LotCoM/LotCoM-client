@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
+             xmlns:views="clr-namespace:LotCoMClient.Views"
+             x:Class="LotCoMClient.Views.HomePage"
+             x:DataType="viewModels:HomePageViewModel"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
+    <!-- Customize NavigationPage Bar and Properties -->
+    <NavigationPage.HasBackButton>
+        <x:Boolean>False</x:Boolean>
+    </NavigationPage.HasBackButton>
+    <NavigationPage.HasNavigationBar>
+        <x:Boolean>False</x:Boolean>
+    </NavigationPage.HasNavigationBar>
+    <NavigationPage.TitleView>
+        <Border 
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+    </NavigationPage.TitleView>
+
+    <!-- Use a Grid to control the Framing of the Page -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Page Title Frame Row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Page Body Row -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!-- Left-Side Frame Column -->
+            <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+            <!-- Page Body Column -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Title Frame -->
+        <!-- Top-Left Page Corner Frame -->
+        <BoxView
+            x:Name="PageTopLeftCornerFrameFill"
+            Grid.Row="0"
+            Grid.Column="0"
+            WidthRequest="{Binding LeftFrameWidth}"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+        <!-- Title Frame -->
+        <VerticalStackLayout
+            x:Name="PageTitleFrameLayout"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Title Label -->
+            <Label
+                x:Name="PageTitleFrameLabel"
+                Text="{Binding PageTitle}"
+                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                FontAttributes="None"
+                FontSize="20"
+                Margin="20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+            <!-- Title Frame Bottom Border -->
+            <BoxView
+                x:Name="PageTitleFrameBottomBorder"
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+        </VerticalStackLayout>
+
+        <!-- Left-Side Frame -->
+        <HorizontalStackLayout
+            x:Name="PageLeftFrameLayout"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+
+            <!-- Grid to Control Vertical/Horizontal Elements -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Left Frame Header Row -->
+                    <RowDefinition Height="50"/>
+                    <!-- Left Frame Body Row -->
+                    <RowDefinition Height="*"/>
+                    <!-- Left Frame Footer Row -->
+                    <RowDefinition Height="75"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <!-- Left Frame Main Column -->
+                    <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Frame Footer Label -->
+                <Label 
+                    x:Name="PageLeftFrameFooterLabel"
+                    IsVisible="{Binding LeftFrameShown}"
+                    Margin="0,0,0,15"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="{Binding LeftFramePanelFooter}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontSize="10"
+                    VerticalOptions="End"
+                    HorizontalOptions="Center"/>
+                
+                <!-- Panel Collapse Button -->
+                <Button
+                    x:Name="PageLeftFrameCollapseButton"
+                    Clicked="OnPageLeftFrameCollapseButtonClicked"
+                    Margin="-10,0,0,0"
+                    Padding="10"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    HeightRequest="25"
+                    WidthRequest="25"
+                    IsVisible="true"
+                    ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                    Background="Transparent"/>
+
+                <!-- Left Frame Right Border -->
+                <BoxView
+                    x:Name="PageLeftFrameRightBorder"
+                    IsVisible="true"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    WidthRequest="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Fill"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+            </Grid>
+        </HorizontalStackLayout>
+
+        <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
+        <Label 
+            x:Name="PageLeftFrameHeaderLabel"
+            IsVisible="{Binding LeftFrameShown}"
+            Margin="0"
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="{Binding LeftFramePanelHeader}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+            FontSize="12"
+            FontAttributes="Bold"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"/>
+
+        <!-- Page Body Sub-Grid -->
+        <Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

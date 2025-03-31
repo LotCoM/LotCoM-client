@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datasources="clr-namespace:LotCoMClient.Models.Datasources"
+             xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
+             xmlns:views="clr-namespace:LotCoMClient.Views"
+             x:Class="LotCoMClient.Views.DataTableSelectorPage"
+             x:DataType="viewModels:DataTableSelectorViewModel"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+
+    <!-- Customize NavigationPage Bar and Properties -->
+    <NavigationPage.HasBackButton>
+        <x:Boolean>True</x:Boolean>
+    </NavigationPage.HasBackButton>
+    <NavigationPage.HasNavigationBar>
+        <x:Boolean>False</x:Boolean>
+    </NavigationPage.HasNavigationBar>
+
+    <!-- Use a Grid to control the Framing of the Page -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Page Title Frame Row -->
+            <RowDefinition Height="Auto"/>
+            <!-- Page Body Row -->
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <!-- Left-Side Frame Column -->
+            <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+            <!-- Page Body Column -->
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Title Frame -->
+        <!-- Top-Left Page Corner Frame -->
+        <BoxView
+            x:Name="PageTopLeftCornerFrameFill"
+            Grid.Row="0"
+            Grid.Column="0"
+            WidthRequest="{Binding LeftFrameWidth}"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+        <!-- Title Frame -->
+        <VerticalStackLayout
+            x:Name="PageTitleFrameLayout"
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            <!-- Title and Process Selector Layout -->
+            <HorizontalStackLayout>
+                <!-- Title Label -->
+                <Label
+                    x:Name="PageTitleFrameLabel"
+                    Text="{Binding PageTitle}"
+                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                    FontAttributes="None"
+                    FontSize="20"
+                    Margin="20"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/>
+                <!-- Process Selector Title -->
+                <Label 
+                    Text="Process:"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontAttributes="None"
+                    FontSize="14"
+                    Margin="20,0,0,0"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center"/>
+                <!-- Process Selector -->
+                <Picker
+                    x:Name="PageProcessPicker"
+                    ItemsSource="{Binding Processes}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontAttributes="None"
+                    FontSize="14"
+                    Margin="10,0,0,0"
+                    HeightRequest="25"
+                    WidthRequest="250"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center">
+                    <!-- <Picker.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label 
+                                    Text="{Binding FullName}"/>
+                            </ViewCell>
+                        </DataTemplate>
+                    </Picker.ItemTemplate> -->
+                </Picker>
+            </HorizontalStackLayout>
+            <!-- Title Frame Bottom Border -->
+            <BoxView
+                x:Name="PageTitleFrameBottomBorder"
+                HeightRequest="1"
+                HorizontalOptions="Fill"
+                VerticalOptions="End"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+        </VerticalStackLayout>
+
+        <!-- Left-Side Frame -->
+        <HorizontalStackLayout
+            x:Name="PageLeftFrameLayout"
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="0"
+            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+
+            <!-- Grid to Control Vertical/Horizontal Elements -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Left Frame Header Row -->
+                    <RowDefinition Height="50"/>
+                    <!-- Left Frame Body Row -->
+                    <RowDefinition Height="*"/>
+                    <!-- Left Frame Footer Row -->
+                    <RowDefinition Height="75"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <!-- Left Frame Main Column -->
+                    <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Frame Body Sub-Grid -->
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    IsVisible="{Binding LeftFrameShown}">
+                    <Grid.RowDefinitions>
+                        <!-- Main ScrollView Row -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <!-- Main ScrollView Column -->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Left Frame ScrollView (allows indefinite Panel Body expansion) -->
+                    <ScrollView
+                        Grid.Row="0"
+                        Grid.Column="0">
+                        <!-- ScrollView Sub-Grid (allows layout customization) -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <!-- Expand Rows to Add Frame Entries -->
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <!-- Frame Entry Icon Column -->
+                                <ColumnDefinition Width="50"/>
+                                <!-- Frame Entry Title Column -->
+                                <ColumnDefinition Width="*"/>
+                                <!-- Expand Columns to Add More Entry Formatting -->
+                            </Grid.ColumnDefinitions>
+                            <!-- Add ScrollView Entries Here -->
+                        </Grid>
+                    </ScrollView>
+                </Grid>
+
+                <!-- Left Frame Footer Label -->
+                <Label 
+                    x:Name="PageLeftFrameFooterLabel"
+                    IsVisible="{Binding LeftFrameShown}"
+                    Margin="0,0,0,15"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="{Binding LeftFramePanelFooter}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontSize="10"
+                    VerticalOptions="End"
+                    HorizontalOptions="Center"/>
+                
+                <!-- Panel Collapse Button -->
+                <Button
+                    x:Name="PageLeftFrameCollapseButton"
+                    Clicked="OnPageLeftFrameCollapseButtonClicked"
+                    Margin="-10,0,0,0"
+                    Padding="10"
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    VerticalOptions="End"
+                    HorizontalOptions="End"
+                    HeightRequest="25"
+                    WidthRequest="25"
+                    IsVisible="true"
+                    ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                    Background="Transparent"/>
+
+                <!-- Left Frame Right Border -->
+                <BoxView
+                    x:Name="PageLeftFrameRightBorder"
+                    IsVisible="true"
+                    Grid.Row="0"
+                    Grid.RowSpan="3"
+                    Grid.Column="0"
+                    WidthRequest="1"
+                    HorizontalOptions="End"
+                    VerticalOptions="Fill"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+            </Grid>
+        </HorizontalStackLayout>
+
+        <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
+        <Label 
+            x:Name="PageLeftFrameHeaderLabel"
+            IsVisible="{Binding LeftFrameShown}"
+            Margin="0"
+            Grid.Row="0"
+            Grid.Column="0"
+            Text="{Binding LeftFramePanelHeader}"
+            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+            FontSize="12"
+            FontAttributes="Bold"
+            VerticalOptions="Center"
+            HorizontalOptions="Center"/>
+
+        <!-- Page Body Sub-Grid -->
+        <Grid
+            Grid.Row="1"
+            Grid.Column="1">
+            <Grid.RowDefinitions>
+                <!-- Page Body Table Header Row -->
+                <RowDefinition Height="Auto"/>
+                <!-- Page Body Table ScrollView Row -->
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <!-- Page Body Table ScrollView Column -->
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Page Body Table Header Label -->
+            <Label 
+                x:Name="PageBodyTableHeaderLabel"
+                Text="Header Row"
+                Grid.Row="0"
+                Grid.Column="0"
+                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                FontAttributes="None"
+                FontSize="16"
+                Margin="22,20,20,20"
+                HorizontalOptions="Start"
+                VerticalOptions="Center"/>
+                
+            <!-- Page Body Table ScrollView -->
+            <ScrollView
+                x:Name="PageBodyTableScrollView"
+                Grid.Row="1"
+                Grid.Column="0">
+                <!-- Page Data Table List View -->
+                <ListView
+                    x:Name="PageDataTableListView"
+                    ItemsSource="{Binding Data}"
+                    Margin="20">
+                    <!-- Configure DataRecord ItemTemplate -->
+                    <ListView.ItemTemplate>
+                        <DataTemplate
+                            x:DataType="datasources:DataRecord">
+                            <ViewCell>
+                                <!-- Each Entry is a fully-configurable Grid -->
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <!-- DataRecord Field Row (Horizontal Stack) -->
+                                        <RowDefinition Height="*"/>
+                                        <!-- DataRecord Timestamp/ID Row -->
+                                        <RowDefinition Height="30"/>
+                                        <!-- Separator Row -->
+                                        <RowDefinition Height="5"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <!-- Left-Side Padding Column -->
+                                        <ColumnDefinition Width="25"/>
+                                        <!-- Date Column -->
+                                        <ColumnDefinition Width="125"/>
+                                        <!-- Time Column -->
+                                        <ColumnDefinition Width="125"/>
+                                        <!-- Shift Column -->
+                                        <ColumnDefinition Width="125"/>
+                                        <!-- Operator Column -->
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Horizontal Stack Layout to Layer DataRecord Fields -->
+                                    <HorizontalStackLayout
+                                        Margin="0,10,0,0"
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Grid.ColumnSpan="4">
+                                        <!-- DataRecord Part Number -->
+                                        <Label
+                                            Text="{Binding RecordPart.PartNumber, StringFormat='Part: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Part Name -->
+                                        <Label
+                                            Margin="10,0,0,0"
+                                            Text="{Binding RecordPart.PartName}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Quantity -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            Text="{Binding Quantity, StringFormat='Quantity: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord JBK Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesJBKNumber}"
+                                            Text="{Binding JBKNumber, StringFormat='JBK #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Lot Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesLotNumber}"
+                                            Text="{Binding LotNumber, StringFormat='Lot #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Deburr JBK Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesDeburrJBKNumber}"
+                                            Text="{Binding DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Die Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesDieNumber}"
+                                            Text="{Binding DieNumber, StringFormat='Die #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Heat Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesHeatNumber}"
+                                            Text="{Binding HeatNumber, StringFormat='Heat #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                    </HorizontalStackLayout>
+                                    <!-- DataRecord Date Label -->
+                                    <Label
+                                        Margin="5,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Text="{Binding RecordDate, StringFormat='Date: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- DataRecord Time Label -->
+                                    <Label
+                                        Margin="5,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        Text="{Binding RecordTime, StringFormat='Time: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- DataRecord Shift Label -->
+                                    <Label
+                                        Margin="5,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="3"
+                                        Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- DataRecord Operator Label -->
+                                    <Label
+                                        Margin="5,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="4"
+                                        Text="{Binding OperatorID, StringFormat='ID: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- Separator Bar -->
+                                    <BoxView
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="5"
+                                        HeightRequest="1"
+                                        HorizontalOptions="Fill"
+                                        VerticalOptions="Center"
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

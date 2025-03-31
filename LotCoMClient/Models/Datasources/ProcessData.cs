@@ -213,7 +213,7 @@ public static class ProcessData {
             // create a List of all Process Names
             List<string> Processes = [];
             foreach(JToken _process in FullData["Processes"]!) {
-                Processes.Add(_process["FullName"]!.ToString());
+                Processes.Add($"{_process["LineCode"]}-{_process["Line"]}-{_process["Title"]}"!.ToString());
             }
             return Processes;
         }
@@ -231,7 +231,7 @@ public static class ProcessData {
             // attempt to access the data for the passed Process
             JToken SelectedData;
             try {
-                SelectedData = FullData["Processes"]!.Where(x => x["FullName"]!.ToString() == ProcessFullName).First();
+                SelectedData = FullData["Processes"]!.Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}".ToString() == ProcessFullName).First();
             // no processes matched the name
             } catch {
                 throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
@@ -261,7 +261,7 @@ public static class ProcessData {
             // attempt to access the data for the passed Process
             JToken SelectedData;
             try {
-                SelectedData = FullData["Processes"]!.Where(x => x["FullName"]!.ToString() == ProcessFullName).First();
+                SelectedData = FullData["Processes"]!.Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}".ToString() == ProcessFullName).First();
             // no processes matched the name
             } catch {
                 throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");

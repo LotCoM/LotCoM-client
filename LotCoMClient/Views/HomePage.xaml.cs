@@ -59,4 +59,19 @@ public partial class HomePage : ContentPage {
             _viewModel.LeftFrameHidden = false;
         }
     }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_PrintingMenuButton control. 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_PrintingMenuButtonClicked(object sender, EventArgs e) {
+        // invert the Printing Menu Shown property
+        if (_viewModel.LeftFramePanelBody_PrintingMenuExpanded) {
+            _viewModel.LeftFramePanelBody_PrintingMenuExpanded = false;
+        } else {
+            _viewModel.LeftFramePanelBody_PrintingMenuExpanded = true;
+        }
+        await Task.Delay(0);
+    }
 }

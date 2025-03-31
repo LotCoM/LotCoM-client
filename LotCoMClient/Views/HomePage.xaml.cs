@@ -106,7 +106,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_SteelPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Steel Database Table
-        DataTablePage SteelPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4134-CRV-Pipe-Comp.txt", "Steel Printing Data");
+        DataTableSelectorPage SteelPage = new DataTableSelectorPage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4134-CRV-Pipe-Comp.txt", "Steel Printing Data");
         // push the new Steel Data Page to the Navigation Stack
         await Navigation.PushAsync(SteelPage);
     }
@@ -118,7 +118,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_AluminumPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Aluminum Database Table
-        DataTablePage AluminumPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4320-NP2-OP-Cover-MC.txt", "Aluminum Printing Data");
+        DataTableSelectorPage AluminumPage = new DataTableSelectorPage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4320-NP2-OP-Cover-MC.txt", "Aluminum Printing Data");
         // push the new Aluminum Data Page to the Navigation Stack
         await Navigation.PushAsync(AluminumPage);
     }

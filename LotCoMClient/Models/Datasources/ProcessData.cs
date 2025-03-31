@@ -178,6 +178,46 @@ public static class ProcessData {
         }
 
         /// <summary>
+        /// Attempts to resolve a Department object from the data in Token.
+        /// </summary>
+        /// <param name="Token">A JToken object containing Department data.</param>
+        /// <returns>A Department object with data resolved from the JToken.</returns>
+        /// <exception cref="FormatException"></exception>
+        private static Department ResolveDepartmentFromToken(JToken Token) {
+            // hold variables for each Department object property
+            string Title;
+            string Code;
+            List<string> Lines = [];
+            // attempt to access each field of Data from the Department Token
+            try {
+                Title = Token["Title"]!.ToString();
+                Code = Token["Code"]!.ToString();
+            // one of the needed fields was not accessible
+            } catch {
+                throw new FormatException($"Could not resolve '{Token}' to a Department object.");
+            }
+            // add each Line to the Lines list individually
+            try {
+                // resolve a Line from each Token
+                foreach (JToken _line in Token["Lines"]!) {
+                    Lines.Add(_line.ToString());
+                }
+            // one of the Tokens could not be resolved to a Line
+            } catch (Exception _ex) {
+                throw new FormatException($"Could not resolve '{Token}' to a Department object, due to the following Line resolution failure: {_ex.Message}");
+            }
+            // attempt to construct the Department object from the resolved data
+            Department ResolvedDepartment;
+            try {
+                ResolvedDepartment = new Department(Title, Code, Lines);
+            } catch {
+                throw new FormatException($"Could not resolve '{Token}' to a Department object.");
+            }
+            // return the resolved Process object
+            return ResolvedDepartment;
+        }
+
+        /// <summary>
         /// Retrieves the list of Processes, as Process objects, from the Process Masterlist.
         /// </summary>
         /// <returns>A list of Process objects.</returns>
@@ -276,6 +316,40 @@ public static class ProcessData {
             }
             // return the resolved Process object
             return ResolvedProcess;
-        } 
+        }
+
+        /// <summary>
+        /// Retrieves a List of all Departments from the Process Masterlist.
+        /// </summary>
+        /// <returns></returns>
+        private static List<Department> GetDepartments() {
+            // load the data from the Masterlist
+            JObject FullData = LoadData();
+            // create a List of all Departments
+            List<Department> Departments = [];
+            foreach(JToken _department in FullData["Departments"]!) {
+                Departments.Add(ResolveDepartmentFromToken(_department));
+            }
+            return Departments;
+        }
+
+        /// <summary>
+        /// Searches for a Department that has a Title the matches DepartmentTitle.
+        /// </summary>
+        /// <param name="DepartmentTitle"></param>
+        /// <returns>A Department object.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        private static Department GetIndividualDepartment(string DepartmentTitle) {
+            // retrieve all of the Departments
+            List<Department> Departments = GetDepartments();
+            // try to find a match for the passed Title
+            List<Department> Matches = Departments.Where(x => x.Title.Equals(DepartmentTitle)).ToList();
+            if (Matches.Count <= 0) {
+                // there was no match, throw an exception
+                throw new ArgumentException($"Could not match '{DepartmentTitle}' to a defined Department.");
+            }
+            // return the first of the Matches
+            return Matches[0];
+        }
     }
 }

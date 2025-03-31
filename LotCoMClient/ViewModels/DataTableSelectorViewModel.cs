@@ -6,7 +6,7 @@ namespace LotCoMClient.ViewModels;
 /// ViewModel (ViewModel Layer) controlling the logic of the DataTableSelectorPage View class.
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
-public partial class DataTableSelectorViewModel(string DataTablePath, string PageTitle) : DataTableViewModel(DataTablePath, PageTitle) {
+public partial class DataTableSelectorViewModel : DataTableViewModel {
     // add a Processes property
     private List<Process> _processes = ProcessData.GetProcesses();
     /// <summary>
@@ -27,5 +27,25 @@ public partial class DataTableSelectorViewModel(string DataTablePath, string Pag
             OnPropertyChanged(nameof(_selectedProcessIndex));
             OnPropertyChanged(nameof(SelectedProcessIndex));
         }
+    }
+
+    /// <summary>
+    /// Creates a ViewModel for the DataTableSelectorPage.
+    /// </summary>
+    /// <param name="DataTablePath"></param>
+    /// <param name="PageTitle"></param>
+    /// <param name="Department"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public DataTableSelectorViewModel(string DataTablePath, string PageTitle, string Department) : base(DataTablePath, PageTitle) {
+        // try to match the Department passed with a defined Department Title
+        Department Dept;
+        try {
+            Dept = ProcessData.GetIndividualDepartment(Department);
+        // there was no match found for the passed Department Title
+        } catch (Exception _ex) {
+            throw new ArgumentException(_ex.Message);
+        }
+        // configure Processes list to only contain the necessary Lines
+        _processes = _processes.Where(x => Dept.Lines.Contains(x.Line)).ToList();
     }
 }

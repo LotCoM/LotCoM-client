@@ -58,6 +58,16 @@ public static class ProcessData {
     }
 
     /// <summary>
+    /// Retrieve a single Department utilizing the Process Masterlist data source.
+    /// </summary>
+    /// <param name="DepartmentTitle">The Department Title to use to find matching Departments.</param>
+    /// <returns></returns>
+    public static Department GetIndividualDepartment(string DepartmentTitle) {
+        // invoke the Masterlist method to retrieve a matching Department
+        return ProcessMasterlist.GetIndividualDepartment(DepartmentTitle);
+    }
+
+    /// <summary>
     /// Provides ProcessData controlled access to the Process Masterlist data source.
     /// </summary>
     private static class ProcessMasterlist {
@@ -322,7 +332,7 @@ public static class ProcessData {
         /// Retrieves a List of all Departments from the Process Masterlist.
         /// </summary>
         /// <returns></returns>
-        private static List<Department> GetDepartments() {
+        public static List<Department> GetDepartments() {
             // load the data from the Masterlist
             JObject FullData = LoadData();
             // create a List of all Departments
@@ -339,7 +349,7 @@ public static class ProcessData {
         /// <param name="DepartmentTitle"></param>
         /// <returns>A Department object.</returns>
         /// <exception cref="ArgumentException"></exception>
-        private static Department GetIndividualDepartment(string DepartmentTitle) {
+        public static Department GetIndividualDepartment(string DepartmentTitle) {
             // retrieve all of the Departments
             List<Department> Departments = GetDepartments();
             // try to find a match for the passed Title

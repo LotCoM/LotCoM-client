@@ -7,7 +7,7 @@ namespace LotCoMClient.ViewModels;
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
 public partial class HomePageViewModel : ObservableObject {
-    private string _pageTitle = "";
+    private string _pageTitle;
     /// <summary>
     /// Serves the Page's Title.
     /// </summary>
@@ -21,7 +21,7 @@ public partial class HomePageViewModel : ObservableObject {
     public string LeftFramePanelHeader {
         get {return _leftFramePanelHeader;}
     }
-    private string _leftFramePanelFooter = "Panel Footer";
+    private string _leftFramePanelFooter;
     /// <summary>
     /// Serves the Page's Left Frame Panel Footer.
     /// </summary>
@@ -70,7 +70,7 @@ public partial class HomePageViewModel : ObservableObject {
         _leftFrameShown = false;
         _leftFrameWidth = 30;
         // set the left frame panel's header
-        _leftFramePanelHeader = "Navigate";
+        _leftFramePanelHeader = "Menu";
         // set the left frame panel's body content
         // set the left frame panel's footer content
         _leftFramePanelFooter = "";

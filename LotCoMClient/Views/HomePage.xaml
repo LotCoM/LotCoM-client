@@ -148,7 +148,8 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}">
-                                <!-- Printing Data Subgroup Button -->
+                                <!-- Printing Data Page Navigation Buttons -->
+                                <!-- Diecast -->
                                 <Button
                                     x:Name="LeftFramePanelBody_DiecastPrintingDataButton"
                                     Clicked="OnLeftFramePanelBody_DiecastPrintingDataButtonClicked"
@@ -160,8 +161,10 @@
                                     FontAttributes="None"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
+                                <!-- Deburr -->
                                 <Button
                                     x:Name="LeftFramePanelBody_DeburrPrintingDataButton"
+                                    Clicked="OnLeftFramePanelBody_DeburrPrintingDataButtonClicked"
                                     Background="Transparent"
                                     BackgroundColor="Transparent"
                                     Text="Deburr"
@@ -170,8 +173,10 @@
                                     FontAttributes="None"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
+                                <!-- Steel -->
                                 <Button
                                     x:Name="LeftFramePanelBody_SteelPrintingDataButton"
+                                    Clicked="OnLeftFramePanelBody_SteelPrintingDataButtonClicked"
                                     Background="Transparent"
                                     BackgroundColor="Transparent"
                                     Text="Steel"
@@ -180,8 +185,10 @@
                                     FontAttributes="None"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
+                                <!-- Aluminum -->
                                 <Button
                                     x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
+                                    Clicked="OnLeftFramePanelBody_AluminumPrintingDataButtonClicked"
                                     Background="Transparent"
                                     BackgroundColor="Transparent"
                                     Text="Aluminum"

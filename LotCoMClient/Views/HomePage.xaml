@@ -155,6 +155,7 @@
                                 <!-- Printing Data Subgroup Button -->
                                 <Button
                                     x:Name="LeftFramePanelBody_DiecastPrintingDataButton"
+                                    Clicked="OnLeftFramePanelBody_DiecastPrintingDataButtonClicked"
                                     Background="Transparent"
                                     BackgroundColor="Transparent"
                                     Text="Diecast"

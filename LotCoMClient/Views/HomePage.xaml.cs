@@ -74,4 +74,16 @@ public partial class HomePage : ContentPage {
         }
         await Task.Delay(0);
     }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_DiecastPrintingDataButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_DiecastPrintingDataButtonClicked(object sender, EventArgs e) {
+        // create a new DataTablePage instance for the Diecast Database Table
+        DataTablePage DiecastPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4420-DC-Diecast.txt", "Diecast Printing Data");
+        // push the new Diecast Data Page to the Navigation Stack
+        await Navigation.PushAsync(DiecastPage);
+    }
 }

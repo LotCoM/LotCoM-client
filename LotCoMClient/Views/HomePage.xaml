@@ -122,6 +122,25 @@
                                 <!-- Expand Columns to Add More Entry Formatting -->
                             </Grid.ColumnDefinitions>
                             <!-- Add ScrollView Entries Here -->
+                            <!-- Printing Data Menu Section -->
+                            <Image
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Source="{AppThemeBinding Light=printerblack.png, Dark=printerwhite.png}"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Margin="20,0,0,5"/>
+                            <Button 
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Background="Transparent"
+                                BackgroundColor="Transparent"
+                                Text="Printing"
+                                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                FontSize="12"
+                                FontAttributes="None"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"/>
                         </Grid>
                     </ScrollView>
                 </Grid>

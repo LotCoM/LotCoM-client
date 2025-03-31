@@ -57,7 +57,16 @@ public partial class HomePageViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameWidth));
         }
     }
-
+    private bool _leftFramePanelBody_PrintingMenuExpanded = false;
+    public bool LeftFramePanelBody_PrintingMenuExpanded {
+        get {return _leftFramePanelBody_PrintingMenuExpanded;} 
+        set {
+            _leftFramePanelBody_PrintingMenuExpanded = value;
+            OnPropertyChanged(nameof(_leftFramePanelBody_PrintingMenuExpanded));
+            OnPropertyChanged(nameof(LeftFramePanelBody_PrintingMenuExpanded));
+        }
+    }
+    
     /// <summary>
     /// Creates a ViewModel for the HomePage.
     /// </summary>

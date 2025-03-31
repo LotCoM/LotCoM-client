@@ -91,6 +91,41 @@
                     <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
                 </Grid.ColumnDefinitions>
 
+                <!-- Left Frame Body Sub-Grid -->
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    IsVisible="{Binding LeftFrameShown}">
+                    <Grid.RowDefinitions>
+                        <!-- Main ScrollView Row -->
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <!-- Main ScrollView Column -->
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- Left Frame ScrollView (allows indefinite Panel Body expansion) -->
+                    <ScrollView
+                        Grid.Row="0"
+                        Grid.Column="0">
+                        <!-- ScrollView Sub-Grid (allows layout customization) -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <!-- Expand Rows to Add Frame Entries -->
+                                <RowDefinition Height="50"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <!-- Frame Entry Icon Column -->
+                                <ColumnDefinition Width="50"/>
+                                <!-- Frame Entry Title Column -->
+                                <ColumnDefinition Width="*"/>
+                                <!-- Expand Columns to Add More Entry Formatting -->
+                            </Grid.ColumnDefinitions>
+                            <!-- Add ScrollView Entries Here -->
+                        </Grid>
+                    </ScrollView>
+                </Grid>
+
                 <!-- Left Frame Footer Label -->
                 <Label 
                     x:Name="PageLeftFrameFooterLabel"

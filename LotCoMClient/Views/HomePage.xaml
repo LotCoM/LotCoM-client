@@ -14,10 +14,6 @@
     <NavigationPage.HasNavigationBar>
         <x:Boolean>False</x:Boolean>
     </NavigationPage.HasNavigationBar>
-    <NavigationPage.TitleView>
-        <Border 
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
-    </NavigationPage.TitleView>
 
     <!-- Use a Grid to control the Framing of the Page -->
     <Grid>

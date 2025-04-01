@@ -15,6 +15,9 @@ public partial class DataTable : ObservableObject {
     /// The type of Data Record the table file contains (Prints || Scans).
     /// </summary>
     private readonly Type _recordType;
+    public Type RecordType {
+        get {return _recordType;}
+    }
     /// <summary>
     /// Holds the currently-read Data Records in the DataTable.
     /// </summary>

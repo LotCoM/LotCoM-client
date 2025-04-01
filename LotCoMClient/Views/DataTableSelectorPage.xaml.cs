@@ -27,7 +27,7 @@ public partial class DataTableSelectorPage : ContentPage {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) {
+    private async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) {
         // the Panel needs to collapse
         if (_viewModel.LeftFrameShown) {
             // set the Left Panel properties in the ViewModel
@@ -55,5 +55,15 @@ public partial class DataTableSelectorPage : ContentPage {
             _viewModel.LeftFrameShown = true;
             _viewModel.LeftFrameHidden = false;
         }
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the PageProcessPicker control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnPageProcessSelectionChanged(object sender, EventArgs e) {
+        // invoke the ViewModel method to update the UI
+        await _viewModel.UpdatePageProcess(PageProcessPicker);
     }
 }

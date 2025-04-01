@@ -45,6 +45,11 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     public string LeftFramePanelHeader {
         get {return _leftFramePanelHeader;}
+        set {
+            _leftFramePanelHeader = value;
+            OnPropertyChanged(nameof(_leftFramePanelHeader));
+            OnPropertyChanged(nameof(LeftFramePanelHeader));
+        }
     }
     private string _leftFramePanelFooter = "Panel Footer";
     /// <summary>
@@ -52,6 +57,11 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     public string LeftFramePanelFooter {
         get {return _leftFramePanelFooter;}
+        set {
+            _leftFramePanelFooter = value;
+            OnPropertyChanged(nameof(_leftFramePanelFooter));
+            OnPropertyChanged(nameof(LeftFramePanelFooter));
+        }
     }
     
     // UI visual controls

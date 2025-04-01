@@ -7,15 +7,13 @@ namespace LotCoMClient.ViewModels;
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
 public partial class DataTableSelectorViewModel : DataTableViewModel {
-    // add a Processes property
-    private List<Process> _processes = ProcessData.GetProcesses();
+    private readonly List<Process> _processes = ProcessData.GetProcesses();
     /// <summary>
     /// Serves the selectable Processes for this Page.
     /// </summary>
     public List<Process> Processes {
         get {return _processes;}
     }
-    // add a SelectedProcessIndex (for the ProcessPicker) property
     private int _selectedProcessIndex = -1;
     /// <summary>
     /// Serves the currently selected index of the ProcessPicker Control.
@@ -34,20 +32,20 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// </summary>
     /// <param name="DataTablePath"></param>
     /// <param name="PageTitle"></param>
-    /// <param name="Department"></param>
+    /// <param name="Department">A Department Title to assign as the Department of this Page.</param>
+    /// <param name="RecordType">The subclass of DataRecord this Page is meant to display (PrintRecord || ScanRecord).</param>
     /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
     /// <exception cref="ArgumentException"></exception>
-    public DataTableSelectorViewModel(string DataTablePath, string PageTitle, string Department, bool IsProcessAssigned = true) : base(DataTablePath, PageTitle, IsProcessAssigned) {
+    public DataTableSelectorViewModel(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) : base(DataTablePath, PageTitle, RecordType, IsProcessAssigned) {
         // try to match the Department passed with a defined Department Title
-        Department Dept;
         try {
-            Dept = ProcessData.GetIndividualDepartment(Department);
+            PageDepartment = ProcessData.GetIndividualDepartment(Department);
         // there was no match found for the passed Department Title
         } catch (Exception _ex) {
             throw new ArgumentException(_ex.Message);
         }
         // configure Processes list to only contain the necessary Lines
-        _processes = _processes.Where(x => Dept.Lines.Contains(x.Line)).ToList();
+        _processes = _processes.Where(x => PageDepartment.Lines.Contains(x.Line)).ToList();
     }
 
     /// <summary>

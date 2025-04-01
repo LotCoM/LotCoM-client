@@ -8,30 +8,6 @@ namespace LotCoMClient.ViewModels;
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
 public partial class DataTableViewModel : ObservableObject {
-    private DataTable? _table;
-    /// <summary>
-    /// Serves the DataTable object for this Page's Database Table. 
-    /// </summary>
-    public DataTable? Table {
-        get {return _table;}
-        set {
-            _table = value;
-            OnPropertyChanged(nameof(_table));
-            OnPropertyChanged(nameof(Table));
-        }
-    }
-    private List<DataRecord> _data = [];
-    /// <summary>
-    /// Serves the Data in the Page's assigned Database Table.
-    /// </summary>
-    public List<DataRecord> Data {
-        get {return _data;}
-        set {
-            _data = value;
-            OnPropertyChanged(nameof(_data));
-            OnPropertyChanged(nameof(Data));
-        }
-    }
     private string _pageTitle = "";
     /// <summary>
     /// Serves the Page's Title.
@@ -39,6 +15,31 @@ public partial class DataTableViewModel : ObservableObject {
     public string PageTitle {
         get {return _pageTitle;}
     }
+    private Department? _pageDepartment = null;
+    /// <summary>
+    /// Serves the Department assigned to this Page.
+    /// </summary>
+    public Department? PageDepartment {
+        get {return _pageDepartment;}
+        set {
+            _pageDepartment = value;
+            OnPropertyChanged(nameof(_pageDepartment));
+            OnPropertyChanged(nameof(PageDepartment));
+        }
+    }
+    private Type _recordType;
+    /// <summary>
+    /// Serves the DataRecord subclass this Page is meant to Display.
+    /// </summary>
+    public Type RecordType {
+        get {return _recordType;}
+        set {
+            _recordType = value;
+            OnPropertyChanged(nameof(_recordType));
+            OnPropertyChanged(nameof(RecordType));
+        }
+    }
+
     private string _leftFramePanelHeader;
     /// <summary>
     /// Serves the Page's Left Frame Panel Header.
@@ -63,9 +64,10 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFramePanelFooter));
         }
     }
-    
-    // UI visual controls
     private bool _leftFrameShown = true;
+    /// <summary>
+    /// Serves the Left Frame Panel's Shown state (boolean).
+    /// </summary>
     public bool LeftFrameShown {
         get {return _leftFrameShown;} 
         set {
@@ -75,6 +77,9 @@ public partial class DataTableViewModel : ObservableObject {
         }
     }
     private bool _leftFrameHidden = false;
+    /// <summary>
+    /// Serves the inverse of the Left Frame Panel's Shown state (boolean).
+    /// </summary>
     public bool LeftFrameHidden {
         get {return _leftFrameHidden;} 
         set {
@@ -83,6 +88,9 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameHidden));
         }
     }
+    /// <summary>
+    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 150 when raised).
+    /// </summary>
     private int _leftFrameWidth = 150;
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 
@@ -92,23 +100,49 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameWidth));
         }
     }
+    private DataTable? _table;
+    /// <summary>
+    /// Serves the DataTable object for this Page's Database Table. 
+    /// </summary>
+    public DataTable? Table {
+        get {return _table;}
+        set {
+            _table = value;
+            OnPropertyChanged(nameof(_table));
+            OnPropertyChanged(nameof(Table));
+        }
+    }
+    private List<DataRecord> _data = [];
+    /// <summary>
+    /// Serves the Data in the Page's assigned Database Table.
+    /// </summary>
+    public List<DataRecord> Data {
+        get {return _data;}
+        set {
+            _data = value;
+            OnPropertyChanged(nameof(_data));
+            OnPropertyChanged(nameof(Data));
+        }
+    }
 
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.
     /// </summary>
     /// <param name="DataTablePath">The desired display Database Table's full path.</param>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    /// <param name="RecordType">The subclass of DataRecord this Page is meant to display (PrintRecord || ScanRecord).</param>
     /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
-    public DataTableViewModel(string DataTablePath, string PageTitle, bool IsProcessAssigned = true) {
-        // assign the Page's Title
+    public DataTableViewModel(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) {
+        // assign properties
         _pageTitle = PageTitle;
+        _recordType = RecordType;
+        // configure the Page based on whether an initial Process is assigned
         if (IsProcessAssigned) {
             // create a DataTable from the path passed in DataTablePath
             _table = new DataTable(DataTablePath);
+            _data = _table.GetRecords();
             // set the left frame panel's header
             _leftFramePanelHeader = Table!.TableProcess;
-            // read the Table
-            _data = _table.GetRecords();
         // no Process is assigned at instantiation
         } else {
             // set the table to null

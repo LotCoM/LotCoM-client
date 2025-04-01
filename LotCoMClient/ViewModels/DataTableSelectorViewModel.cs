@@ -54,8 +54,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// <param name="PageProcessPicker">The Process Picker control.</param>
     /// <returns></returns>
     public async Task UpdatePageProcess(Picker PageProcessPicker) {
-        // elicit the record type of this page using the current DataTable and set the path accordingly
-        Type RecordType = Table!.RecordType;
+        // use the record type of this page to set the path accordingly
         string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables";
         if (RecordType.Equals(typeof(PrintRecord))) {
             // page is displaying printing data

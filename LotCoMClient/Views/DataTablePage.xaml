@@ -209,6 +209,18 @@
                 VerticalOptions="Center"/>
                 
             <!-- Page Body Table ScrollView -->
+            <!-- Activity Indicator (Shows While Loading Data) -->
+            <ActivityIndicator 
+                x:Name="PageDataLoadingActivityIndicator"
+                IsEnabled="{Binding Data.IsNotCompleted}"
+                IsVisible="{Binding Data.IsNotCompleted}"
+                IsRunning="{Binding Data.IsNotCompleted}"
+                Grid.Row="1"
+                Grid.Column="0"
+                Color="{StaticResource Secondary}"
+                WidthRequest="200"
+                HeightRequest="200"/>
+            <!-- Actual View -->
             <ScrollView
                 x:Name="PageBodyTableScrollView"
                 IsVisible="{Binding Data.IsCompleted}"

@@ -1,3 +1,5 @@
+using LotCoMClient.Models.Datasources;
+
 namespace LotCoMClient.Views;
 
 /// <summary>
@@ -65,5 +67,10 @@ public partial class DataTableSelectorPage : ContentPage {
     private async void OnPageProcessSelectionChanged(object sender, EventArgs e) {
         // invoke the ViewModel method to update the UI
         await _viewModel.UpdatePageProcess(PageProcessPicker);
+        // update and collapse the Page's Left Frame Panel
+        _viewModel.LeftFramePanelHeader = ((Process)PageProcessPicker.ItemsSource[_viewModel.SelectedProcessIndex]!).FullName;
+        if (_viewModel.LeftFrameShown) {
+            OnPageLeftFrameCollapseButtonClicked(PageLeftFrameCollapseButton, new EventArgs());
+        }
     }
 }

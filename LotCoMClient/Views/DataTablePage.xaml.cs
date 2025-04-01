@@ -12,10 +12,13 @@ public partial class DataTablePage : ContentPage {
     /// <summary>
     /// Creates a new DataTablePage.
     /// </summary>
+    /// <param name="DataTablePath"></param>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTablePage(string DataTablePath, string PageTitle) {
+    /// <param name="RecordType">The subclass of DataRecord this Page is meant to display (PrintRecord || ScanRecord).</param>
+    /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
+    public DataTablePage(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) {
 		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle);
+        _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle, RecordType, IsProcessAssigned);
         BindingContext = _viewModel;
 
         // create the page from XAML

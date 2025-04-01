@@ -64,9 +64,9 @@ public partial class DataTableSelectorPage : ContentPage {
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnPageProcessSelectionChanged(object sender, EventArgs e) {
+    private void OnPageProcessSelectionChanged(object sender, EventArgs e) {
         // invoke the ViewModel method to update the UI
-        await _viewModel.UpdatePageProcess(PageProcessPicker);
+        _viewModel.UpdatePageProcess(PageProcessPicker);
         // update and collapse the Page's Left Frame Panel
         _viewModel.LeftFramePanelHeader = ((Process)PageProcessPicker.ItemsSource[_viewModel.SelectedProcessIndex]!).FullName;
         if (_viewModel.LeftFrameShown) {

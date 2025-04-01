@@ -1,4 +1,5 @@
 using LotCoMClient.Models.Datasources;
+using LotCoMClient.Models.Services;
 
 namespace LotCoMClient.ViewModels;
 
@@ -53,7 +54,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// </summary>
     /// <param name="PageProcessPicker">The Process Picker control.</param>
     /// <returns></returns>
-    public async Task UpdatePageProcess(Picker PageProcessPicker) {
+    public void UpdatePageProcess(Picker PageProcessPicker) {
         // use the record type of this page to set the path accordingly
         string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables";
         if (RecordType.Equals(typeof(PrintRecord))) {
@@ -70,6 +71,6 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
         Path = $"{Path}\\{SelectedProcess.FullName}.txt";
         Table = new DataTable(Path);
         // update the Page's Data
-        Data = await Table.GetRecordsAsync();
+        Data = new NotifyTaskCompletion<List<DataRecord>>(Table.GetRecordsAsync());
     }
 }

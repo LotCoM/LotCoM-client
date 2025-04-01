@@ -65,9 +65,10 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
             RecordType = "scans";
         }
         // get the Process currently selected in the ProcessPicker control
+        SelectedProcessIndex = PageProcessPicker.SelectedIndex;
         Process SelectedProcess = (Process)PageProcessPicker.ItemsSource[SelectedProcessIndex]!;
         // update the Page's DataTable to consume data from the newly selected Process Database Table
-        string Path = $"\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\{RecordType}\\{SelectedProcess.FullName}";
+        string Path = $"\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\{RecordType}\\{SelectedProcess.FullName}.txt";
         Table = new DataTable(Path);
         // update the Page's Data
         Data = await Table.GetRecordsAsync();

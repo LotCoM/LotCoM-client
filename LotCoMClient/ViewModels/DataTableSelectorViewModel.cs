@@ -35,8 +35,9 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// <param name="DataTablePath"></param>
     /// <param name="PageTitle"></param>
     /// <param name="Department"></param>
+    /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
     /// <exception cref="ArgumentException"></exception>
-    public DataTableSelectorViewModel(string DataTablePath, string PageTitle, string Department) : base(DataTablePath, PageTitle) {
+    public DataTableSelectorViewModel(string DataTablePath, string PageTitle, string Department, bool IsProcessAssigned = true) : base(DataTablePath, PageTitle, IsProcessAssigned) {
         // try to match the Department passed with a defined Department Title
         Department Dept;
         try {
@@ -56,7 +57,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// <returns></returns>
     public async Task UpdatePageProcess(Picker PageProcessPicker) {
         // elicit the record type of this page using the current DataTable and set the path accordingly
-        Type RecordType = Table.RecordType;
+        Type RecordType = Table!.RecordType;
         string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables";
         if (RecordType.Equals(typeof(PrintRecord))) {
             // page is displaying printing data

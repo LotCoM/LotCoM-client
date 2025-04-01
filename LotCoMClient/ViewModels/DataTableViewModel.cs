@@ -8,11 +8,11 @@ namespace LotCoMClient.ViewModels;
 /// Interacts with the Model Layer to invoke business logic and retrieve data.
 /// </summary>
 public partial class DataTableViewModel : ObservableObject {
-    private DataTable _table;
+    private DataTable? _table;
     /// <summary>
     /// Serves the DataTable object for this Page's Database Table. 
     /// </summary>
-    public DataTable Table {
+    public DataTable? Table {
         get {return _table;}
         set {
             _table = value;
@@ -98,14 +98,24 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     /// <param name="DataTablePath">The desired display Database Table's full path.</param>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTableViewModel(string DataTablePath, string PageTitle) {
+    /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
+    public DataTableViewModel(string DataTablePath, string PageTitle, bool IsProcessAssigned = true) {
         // assign the Page's Title
         _pageTitle = PageTitle;
-        // create a DataTable from the path passed in DataTablePath
-        _table = new DataTable(DataTablePath);
-        // set the left frame panel's header
-        _leftFramePanelHeader = Table.TableProcess;
-        // read the Table
-        _data = _table.GetRecords();
+        if (IsProcessAssigned) {
+            // create a DataTable from the path passed in DataTablePath
+            _table = new DataTable(DataTablePath);
+            // set the left frame panel's header
+            _leftFramePanelHeader = Table!.TableProcess;
+            // read the Table
+            _data = _table.GetRecords();
+        // no Process is assigned at instantiation
+        } else {
+            // set the table to null
+            _table = null;
+            _data = [];
+            // set the left frame panel's header to a default no process string
+            _leftFramePanelHeader = "Select Process...";
+        }
     }
 }

@@ -15,9 +15,9 @@ public partial class DataTableSelectorPage : ContentPage {
     /// Creates a new DataTableSelectorPage.
     /// </summary>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department) {
+    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, bool IsProcessAssigned = true) {
 		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department);
+        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, IsProcessAssigned);
         BindingContext = _viewModel;
 
         // create the page from XAML

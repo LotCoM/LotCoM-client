@@ -30,26 +30,6 @@ public partial class DataTable : ObservableObject {
     public partial string TableProcess {get; set;}
 
     /// <summary>
-    /// Parses a DataRecord of the DataTable's _recordType from CSVLine.
-    /// </summary>
-    /// <param name="CSVLine"></param>
-    /// <exception cref="RecordParseException"></exception>
-    /// <returns>A DataRecord object.</returns>
-    private DataRecord ParseRecord(string CSVLine) {
-        // attempt to parse the proper type of DataRecord from the CSV Line
-        DataRecord ParsedRecord;
-        // parse a PrintRecord
-        if (_recordType.Equals(typeof(PrintRecord))) {
-            ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
-        // parse a ScanRecord
-        } else {
-            ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
-        }
-        // return the parsed DataRecord
-        return ParsedRecord;
-    }
-
-    /// <summary>
     /// Constructs a new DataTable that provides controlled access and manipulation of data in the Database Table located at DataTablePath.
     /// </summary>
     /// <param name="DataTablePath">A full file path to a Database Table file in the LotCoM database.</param>
@@ -67,7 +47,32 @@ public partial class DataTable : ObservableObject {
         // read the database table and populate runtime
         _records = Read();
         // set the Table's Process from the first Record's RecordProcess property
-        TableProcess = _records[0].RecordProcess.FullName;
+        try {
+            TableProcess = _records[0].RecordProcess.FullName;
+        // the file was empty, must use path to elicit name (more expensive)
+        } catch {
+            TableProcess = _path.Split("\\")[^1].Replace(".txt", "");
+        }
+    }
+
+    /// <summary>
+    /// Parses a DataRecord of the DataTable's _recordType from CSVLine.
+    /// </summary>
+    /// <param name="CSVLine"></param>
+    /// <exception cref="RecordParseException"></exception>
+    /// <returns>A DataRecord object.</returns>
+    private DataRecord ParseRecord(string CSVLine) {
+        // attempt to parse the proper type of DataRecord from the CSV Line
+        DataRecord ParsedRecord;
+        // parse a PrintRecord
+        if (_recordType.Equals(typeof(PrintRecord))) {
+            ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
+        // parse a ScanRecord
+        } else {
+            ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
+        }
+        // return the parsed DataRecord
+        return ParsedRecord;
     }
 
     /// <summary>

@@ -211,12 +211,13 @@
             <!-- Page Body Table ScrollView -->
             <ScrollView
                 x:Name="PageBodyTableScrollView"
+                IsVisible="{Binding Data.IsCompleted}"
                 Grid.Row="1"
                 Grid.Column="0">
                 <!-- Page Data Table List View -->
                 <ListView
                     x:Name="PageDataTableListView"
-                    ItemsSource="{Binding Data}"
+                    ItemsSource="{Binding Data.Result}"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->
                     <ListView.ItemTemplate>

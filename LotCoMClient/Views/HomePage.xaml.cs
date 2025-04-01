@@ -1,3 +1,5 @@
+using LotCoMClient.Models.Datasources;
+
 namespace LotCoMClient.Views;
 
 /// <summary>
@@ -82,7 +84,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_DiecastPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Diecast Database Table
-        DataTablePage DiecastPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4420-DC-Diecast.txt", "Diecast Printing Data");
+        DataTablePage DiecastPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4420-DC-Diecast.txt", "Diecast Printing Data", typeof(PrintRecord));
         // push the new Diecast Data Page to the Navigation Stack
         await Navigation.PushAsync(DiecastPage);
     }
@@ -94,7 +96,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_DeburrPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Deburr Database Table
-        DataTablePage DeburrPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4470-DC-Deburr.txt", "Deburr Printing Data");
+        DataTablePage DeburrPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\prints\\4470-DC-Deburr.txt", "Deburr Printing Data", typeof(PrintRecord));
         // push the new Deburr Data Page to the Navigation Stack
         await Navigation.PushAsync(DeburrPage);
     }
@@ -106,7 +108,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_SteelPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Steel Database Table
-        DataTableSelectorPage SteelPage = new DataTableSelectorPage("", "Steel Printing Data", "Steel", false);
+        DataTableSelectorPage SteelPage = new DataTableSelectorPage("", "Steel Printing Data", "Steel", typeof(PrintRecord), false);
         // push the new Steel Data Page to the Navigation Stack
         await Navigation.PushAsync(SteelPage);
     }
@@ -118,7 +120,7 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_AluminumPrintingDataButtonClicked(object sender, EventArgs e) {
         // create a new DataTablePage instance for the Aluminum Database Table
-        DataTableSelectorPage AluminumPage = new DataTableSelectorPage("", "Aluminum Printing Data", "Aluminum", false);
+        DataTableSelectorPage AluminumPage = new DataTableSelectorPage("", "Aluminum Printing Data", "Aluminum", typeof(PrintRecord), false);
         // push the new Aluminum Data Page to the Navigation Stack
         await Navigation.PushAsync(AluminumPage);
     }

@@ -71,6 +71,7 @@
                 <Picker
                     x:Name="PageProcessPicker"
                     ItemsSource="{Binding Processes}"
+                    ItemDisplayBinding="{Binding FullName}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontAttributes="None"
                     FontSize="14"
@@ -79,14 +80,6 @@
                     WidthRequest="250"
                     HorizontalOptions="Start"
                     VerticalOptions="Center">
-                    <!-- <Picker.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Label 
-                                    Text="{Binding FullName}"/>
-                            </ViewCell>
-                        </DataTemplate>
-                    </Picker.ItemTemplate> -->
                 </Picker>
             </HorizontalStackLayout>
             <!-- Title Frame Bottom Border -->

@@ -48,4 +48,20 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
         // configure Processes list to only contain the necessary Lines
         _processes = _processes.Where(x => Dept.Lines.Contains(x.Line)).ToList();
     }
+
+    /// <summary>
+    /// Updates the Table and Data properties to consume data from a newly-selected Process Database Table.
+    /// </summary>
+    /// <param name="PageProcessPicker">The Process Picker control.</param>
+    /// <param name="RecordType">The type of record stored in the desired Database file ("prints" || "scans").</param>
+    /// <returns></returns>
+    public async Task UpdatePageProcess(Picker PageProcessPicker, string RecordType) {
+        // get the Process currently selected in the ProcessPicker control
+        Process SelectedProcess = (Process)PageProcessPicker.ItemsSource[SelectedProcessIndex]!;
+        // update the Page's DataTable to consume data from the newly selected Process Database Table
+        string Path = $"\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\{RecordType.ToLower()}\\{SelectedProcess.FullName}";
+        Table = new DataTable(Path);
+        // update the Page's Data
+        Data = await Table.GetRecordsAsync();
+    }
 }

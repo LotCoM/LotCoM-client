@@ -52,7 +52,7 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFramePanelHeader));
         }
     }
-    private string _leftFramePanelFooter = "Panel Footer";
+    private string _leftFramePanelFooter = "Click to Collapse";
     /// <summary>
     /// Serves the Page's Left Frame Panel Footer.
     /// </summary>

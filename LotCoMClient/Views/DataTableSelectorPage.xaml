@@ -203,7 +203,7 @@
             Text="{Binding LeftFramePanelHeader}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
             FontSize="12"
-            FontAttributes="Bold"
+            FontAttributes="None"
             VerticalOptions="Center"
             HorizontalOptions="Center"/>
 

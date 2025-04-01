@@ -82,6 +82,6 @@ public partial class HomePageViewModel : ObservableObject {
         _leftFramePanelHeader = "Menu";
         // set the left frame panel's body content
         // set the left frame panel's footer content
-        _leftFramePanelFooter = "";
+        _leftFramePanelFooter = "Click to Collapse";
     }
 }

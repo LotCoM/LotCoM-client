@@ -140,14 +140,16 @@
                                 Text="Printing"
                                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                                 FontSize="12"
-                                FontAttributes="Bold"
+                                FontAttributes="None"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                             <!-- Vertical Stack Layout Creates Expanding/Collapsing Printing Menu Section -->
                             <VerticalStackLayout
                                 Grid.Row="1"
-                                Grid.Column="1"
-                                IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}">
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}">
                                 <!-- Printing Data Page Navigation Buttons -->
                                 <!-- Diecast -->
                                 <Button
@@ -255,7 +257,7 @@
             Text="{Binding LeftFramePanelHeader}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
             FontSize="12"
-            FontAttributes="Bold"
+            FontAttributes="None"
             VerticalOptions="Center"
             HorizontalOptions="Center"/>
 

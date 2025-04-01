@@ -72,6 +72,7 @@
                     x:Name="PageProcessPicker"
                     ItemsSource="{Binding Processes}"
                     ItemDisplayBinding="{Binding FullName}"
+                    SelectedIndexChanged="OnPageProcessSelectionChanged"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontAttributes="None"
                     FontSize="14"

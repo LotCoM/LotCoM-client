@@ -15,6 +15,9 @@ public partial class DataTable : ObservableObject {
     /// The type of Data Record the table file contains (Prints || Scans).
     /// </summary>
     private readonly Type _recordType;
+    public Type RecordType {
+        get {return _recordType;}
+    }
     /// <summary>
     /// Holds the currently-read Data Records in the DataTable.
     /// </summary>
@@ -45,7 +48,11 @@ public partial class DataTable : ObservableObject {
             throw new ArgumentException($"Could not create a DataTable object from the file at {_path}.");
         }
         // read the database table and populate runtime
-        _records = Read();
+        try {
+            _records = Read();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
         // set the Table's Process from the first Record's RecordProcess property
         try {
             TableProcess = _records[0].RecordProcess.FullName;
@@ -91,7 +98,12 @@ public partial class DataTable : ObservableObject {
     /// <returns>A List of DataRecords.</returns>
     private List<DataRecord> Read() {
         // read the Database Table at the _path property
-        string Text = File.ReadAllText(_path);
+        string Text;
+        try {
+            Text = File.ReadAllText(_path);
+        } catch (Exception _ex) {
+            throw new FileNotFoundException($"Failed to read the Database file: '{_path}' due to the following exception:\n{_ex.Message}.");
+        }
         // separate the read text into record lines (split by newline character)
         List<string> RecordLines = Text.Split("\n").ToList();
         // remove the first entry and save it as the headers property
@@ -211,7 +223,11 @@ public partial class DataTable : ObservableObject {
     /// <returns>A List of DataRecords.</returns>
     public List<DataRecord> GetRecords() {
         // update the DataRecords in runtime
-        _records = Read();
+        try {
+            _records = Read();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
         // return the DataRecords stored in runtime
         return _records;
     }
@@ -223,7 +239,11 @@ public partial class DataTable : ObservableObject {
     /// <returns>A List of DataRecords.</returns>
     public async Task<List<DataRecord>> GetRecordsAsync() {
         // update the DataRecords in runtime
-        _records = await ReadAsync();
+        try {
+            _records = await ReadAsync();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
         // return the DataRecords stored in runtime
         return _records;
     }
@@ -245,7 +265,11 @@ public partial class DataTable : ObservableObject {
         // update the _records property
         _records = Records;
         // save the DataTable
-        Save();
+        try {
+            Save();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
+        }
         // update the _records property to the post-save entries list
         _records = GetRecords();
     }
@@ -260,7 +284,11 @@ public partial class DataTable : ObservableObject {
         // update the _records property
         _records = Records;
         // save the DataTable asynchronously
-        await SaveAsync();
+        try {
+            await SaveAsync();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
+        }
         // update the _records property to the post-save DataRecords list asynchronously
         _records = await GetRecordsAsync();
     }

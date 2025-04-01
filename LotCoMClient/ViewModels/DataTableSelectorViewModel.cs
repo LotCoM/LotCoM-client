@@ -53,13 +53,21 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
     /// Updates the Table and Data properties to consume data from a newly-selected Process Database Table.
     /// </summary>
     /// <param name="PageProcessPicker">The Process Picker control.</param>
-    /// <param name="RecordType">The type of record stored in the desired Database file ("prints" || "scans").</param>
     /// <returns></returns>
-    public async Task UpdatePageProcess(Picker PageProcessPicker, string RecordType) {
+    public async Task UpdatePageProcess(Picker PageProcessPicker) {
+        // elicit the record type of this page using the current records in Data
+        string RecordType;
+        if (Data[0].GetType().Equals(typeof(PrintRecord))) {
+            // page is displaying printing data
+            RecordType = "prints";
+        } else {
+            // page is displaying scanning data
+            RecordType = "scans";
+        }
         // get the Process currently selected in the ProcessPicker control
         Process SelectedProcess = (Process)PageProcessPicker.ItemsSource[SelectedProcessIndex]!;
         // update the Page's DataTable to consume data from the newly selected Process Database Table
-        string Path = $"\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\{RecordType.ToLower()}\\{SelectedProcess.FullName}";
+        string Path = $"\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\{RecordType}\\{SelectedProcess.FullName}";
         Table = new DataTable(Path);
         // update the Page's Data
         Data = await Table.GetRecordsAsync();

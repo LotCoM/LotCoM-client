@@ -14,6 +14,11 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     public DataTable Table {
         get {return _table;}
+        set {
+            _table = value;
+            OnPropertyChanged(nameof(_table));
+            OnPropertyChanged(nameof(Table));
+        }
     }
     private List<DataRecord> _data = [];
     /// <summary>

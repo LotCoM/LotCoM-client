@@ -5,7 +5,7 @@ namespace LotCoMClient.Views;
 /// <summary>
 /// Code-behind (View Layer) for the DataTableSelectorPage View.
 /// </summary>
-public partial class DataTableSelectorPage : ContentPage {
+public partial class DataTableSelectorPage : DataTablePage {
     /// <summary>
     /// ViewModel object controlling the logic of this Page.
     /// </summary>
@@ -15,48 +15,13 @@ public partial class DataTableSelectorPage : ContentPage {
     /// Creates a new DataTableSelectorPage.
     /// </summary>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, bool IsProcessAssigned = true) {
+    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) : base(DataTablePath, PageTitle, RecordType, IsProcessAssigned) {
 		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, IsProcessAssigned);
+        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
         BindingContext = _viewModel;
 
         // create the page from XAML
 		InitializeComponent();
-    }
-
-    /// <summary>
-    /// Handler for the Clicked event from the PageLeftFrameCollapseButton control.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) {
-        // the Panel needs to collapse
-        if (_viewModel.LeftFrameShown) {
-            // set the Left Panel properties in the ViewModel
-            _viewModel.LeftFrameShown = false;
-            _viewModel.LeftFrameHidden = true;
-            // 12 frame animation (150 -> 30 by increments of 10)
-            while (_viewModel.LeftFrameWidth > 30) {
-                // animate the panel shrinking
-                _viewModel.LeftFrameWidth -= 10;
-                // animate the collapse button rotating
-                PageLeftFrameCollapseButton.Rotation += 15;
-                await Task.Delay(1);
-            }
-        // the Panel needs to raise
-        } else {
-            // 12 frame animation (30 -> 150 by increments of 10)
-            while (_viewModel.LeftFrameWidth < 150) {
-                // animate the panel raising
-                _viewModel.LeftFrameWidth += 10;
-                // animate the collapse button rotating
-                PageLeftFrameCollapseButton.Rotation += 15;
-                await Task.Delay(1);
-            }
-            // set the Left Panel properties in the ViewModel
-            _viewModel.LeftFrameShown = true;
-            _viewModel.LeftFrameHidden = false;
-        }
     }
 
     /// <summary>

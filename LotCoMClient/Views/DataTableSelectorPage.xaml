@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:datasources="clr-namespace:LotCoMClient.Models.Datasources"
-             xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
-             xmlns:views="clr-namespace:LotCoMClient.Views"
-             x:Class="LotCoMClient.Views.DataTableSelectorPage"
-             x:DataType="viewModels:DataTableSelectorViewModel"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+<views:DataTablePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:datasources="clr-namespace:LotCoMClient.Models.Datasources"
+                     xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
+                     xmlns:views="clr-namespace:LotCoMClient.Views"
+                     x:Class="LotCoMClient.Views.DataTableSelectorPage"
+                     x:DataType="viewModels:DataTableSelectorViewModel"
+                     BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
 
     <!-- Customize NavigationPage Bar and Properties -->
     <NavigationPage.HasBackButton>
@@ -384,4 +384,4 @@
             </ScrollView>
         </Grid>
     </Grid>
-</ContentPage>
+</views:DataTablePage>

@@ -230,6 +230,7 @@
                 <ListView
                     x:Name="PageDataTableListView"
                     ItemsSource="{Binding Data.Result}"
+                    PropertyChanged="OnPageDataTableListViewPropertyChanged"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->
                     <ListView.ItemTemplate>

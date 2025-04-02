@@ -10,6 +10,34 @@ public partial class DataTablePage : ContentPage {
 	private readonly ViewModels.DataTableViewModel _viewModel;
 
     /// <summary>
+    /// Asynchronously evaluates the state of the Data property and sets the BodyTableHeader property accordingly.
+    /// If Data is loaded, shows the Record count. Else, shows "Loading Records...".
+    /// </summary>
+    private async Task ConfigureBodyTableHeader() {
+        await Task.Run(() => {
+            // get the count of Data entries
+            int DataCount;
+            // do not do any processing if Data is null (no-Process instantiation)
+            if (_viewModel.Data == null) {
+                return;
+            }
+            // the Data property is set and is either loading or completed
+            if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) {
+                DataCount = _viewModel.Data.Result.Count;
+                // update the BodyTableHeader to show the item count
+                if (DataCount > 1) {
+                    _viewModel.BodyTableHeader = $"Showing {DataCount} records";
+                } else {
+                    _viewModel.BodyTableHeader = $"Showing {DataCount} records";
+                }
+            // the data is not loaded yet; default BodyTableHeader property
+            } else {
+                _viewModel.BodyTableHeader = "Loading records...";
+            }
+        });
+    }
+
+    /// <summary>
     /// Creates a new DataTablePage.
     /// </summary>
     /// <param name="DataTablePath"></param>
@@ -58,5 +86,15 @@ public partial class DataTablePage : ContentPage {
             _viewModel.LeftFrameShown = true;
             _viewModel.LeftFrameHidden = false;
         }
+    }
+
+    /// <summary>
+    /// Handler for the PropertyChanged event from the PageDataTableListView control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) {
+        // update BodyTableHeader property
+        await ConfigureBodyTableHeader();
     }
 }

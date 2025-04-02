@@ -198,7 +198,7 @@
             <!-- Page Body Table Header Label -->
             <Label 
                 x:Name="PageBodyTableHeaderLabel"
-                Text="Header Row"
+                Text="{Binding BodyTableHeader}"
                 Grid.Row="0"
                 Grid.Column="0"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
@@ -209,14 +209,28 @@
                 VerticalOptions="Center"/>
                 
             <!-- Page Body Table ScrollView -->
+            <!-- Activity Indicator (Shows While Loading Data) -->
+            <ActivityIndicator 
+                x:Name="PageDataLoadingActivityIndicator"
+                IsEnabled="{Binding Data.IsNotCompleted}"
+                IsVisible="{Binding Data.IsNotCompleted}"
+                IsRunning="{Binding Data.IsNotCompleted}"
+                Grid.Row="1"
+                Grid.Column="0"
+                Color="{StaticResource Secondary}"
+                WidthRequest="200"
+                HeightRequest="200"/>
+            <!-- Actual View -->
             <ScrollView
                 x:Name="PageBodyTableScrollView"
+                IsVisible="{Binding Data.IsCompleted}"
                 Grid.Row="1"
                 Grid.Column="0">
                 <!-- Page Data Table List View -->
                 <ListView
                     x:Name="PageDataTableListView"
-                    ItemsSource="{Binding Data}"
+                    ItemsSource="{Binding Data.Result}"
+                    PropertyChanged="OnPageDataTableListViewPropertyChanged"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->
                     <ListView.ItemTemplate>

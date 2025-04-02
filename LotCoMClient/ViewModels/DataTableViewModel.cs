@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
+using LotCoMClient.Models.Services;
 
 namespace LotCoMClient.ViewModels;
 
@@ -100,6 +101,15 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameWidth));
         }
     }
+    private string _bodyTableHeader;
+    public string BodyTableHeader {
+        get {return _bodyTableHeader;} 
+        set {
+            _bodyTableHeader = value;
+            OnPropertyChanged(nameof(_bodyTableHeader));
+            OnPropertyChanged(nameof(BodyTableHeader));
+        }
+    }
     private DataTable? _table;
     /// <summary>
     /// Serves the DataTable object for this Page's Database Table. 
@@ -112,11 +122,11 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(Table));
         }
     }
-    private List<DataRecord> _data = [];
+    private NotifyTaskCompletion<List<DataRecord>>? _data;
     /// <summary>
     /// Serves the Data in the Page's assigned Database Table.
     /// </summary>
-    public List<DataRecord> Data {
+    public NotifyTaskCompletion<List<DataRecord>>? Data {
         get {return _data;}
         set {
             _data = value;
@@ -140,16 +150,18 @@ public partial class DataTableViewModel : ObservableObject {
         if (IsProcessAssigned) {
             // create a DataTable from the path passed in DataTablePath
             _table = new DataTable(DataTablePath);
-            _data = _table.GetRecords();
+            _data = new NotifyTaskCompletion<List<DataRecord>>(_table.GetRecordsAsync());
             // set the left frame panel's header
             _leftFramePanelHeader = Table!.TableProcess;
+            _bodyTableHeader = "Loading records...";
         // no Process is assigned at instantiation
         } else {
             // set the table to null
             _table = null;
-            _data = [];
+            _data = null;
             // set the left frame panel's header to a default no process string
             _leftFramePanelHeader = "Select Process...";
+            _bodyTableHeader = "";
         }
     }
 }

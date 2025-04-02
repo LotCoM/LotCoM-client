@@ -5,7 +5,7 @@
              xmlns:views="clr-namespace:LotCoMClient.Views"
              x:Class="LotCoMClient.Views.HomePage"
              x:DataType="viewModels:HomePageViewModel"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 
     <!-- Customize NavigationPage Bar and Properties -->
     <NavigationPage.HasBackButton>
@@ -37,14 +37,14 @@
             Grid.Row="0"
             Grid.Column="0"
             WidthRequest="{Binding LeftFrameWidth}"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
         <!-- Title Frame -->
         <VerticalStackLayout
             x:Name="PageTitleFrameLayout"
             Grid.Row="0"
             Grid.Column="1"
             Margin="0"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}">
             <!-- Title Label -->
             <Label
                 x:Name="PageTitleFrameLabel"
@@ -61,7 +61,7 @@
                 HeightRequest="1"
                 HorizontalOptions="Fill"
                 VerticalOptions="End"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
         </VerticalStackLayout>
 
         <!-- Left-Side Frame -->
@@ -70,7 +70,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Margin="0"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}">
 
             <!-- Grid to Control Vertical/Horizontal Elements -->
             <Grid>
@@ -115,14 +115,14 @@
                             <BoxView HeightRequest="1"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Center"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
-                            <Image
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                            <!-- <Image
                                 Source="{AppThemeBinding Light=printerblack.png, Dark=printerwhite.png}"
                                 WidthRequest="25"
                                 HeightRequest="25"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"
-                                Margin="0,5,0,0"/>
+                                Margin="0,5,0,0"/> -->
                             <Button
                                 x:Name="LeftFramePanelBody_PrintingMenuButton"
                                 Clicked="OnLeftFramePanelBody_PrintingMenuButtonClicked"
@@ -135,7 +135,7 @@
                             <BoxView HeightRequest="1"
                                 HorizontalOptions="Fill"
                                 VerticalOptions="Center"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         </VerticalStackLayout>
                         <!-- Vertical Stack Layout Creates Expanding/Collapsing Printing Menu Section -->
                         <VerticalStackLayout
@@ -143,7 +143,7 @@
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}">
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
                             <!-- Printing Data Page Navigation Buttons -->
                             <!-- Diecast -->
                             <Button
@@ -154,7 +154,6 @@
                                 FontAttributes="None"
                                 CornerRadius="0"
                                 WidthRequest="150"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                             <!-- Deburr -->
@@ -166,7 +165,6 @@
                                 FontAttributes="None"
                                 CornerRadius="0"
                                 WidthRequest="150"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                             <!-- Steel -->
@@ -178,7 +176,6 @@
                                 FontAttributes="None"
                                 CornerRadius="0"
                                 WidthRequest="150"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                             <!-- Aluminum -->
@@ -190,7 +187,6 @@
                                 FontAttributes="None"
                                 CornerRadius="0"
                                 WidthRequest="150"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                         </VerticalStackLayout>
@@ -235,7 +231,7 @@
                     WidthRequest="1"
                     HorizontalOptions="End"
                     VerticalOptions="Fill"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
             </Grid>
         </HorizontalStackLayout>
 

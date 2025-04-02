@@ -6,7 +6,7 @@
              xmlns:views="clr-namespace:LotCoMClient.Views"
              x:Class="LotCoMClient.Views.DataTablePage"
              x:DataType="viewModels:DataTableViewModel"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 
     <!-- Customize NavigationPage Bar and Properties -->
     <NavigationPage.HasBackButton>
@@ -38,14 +38,14 @@
             Grid.Row="0"
             Grid.Column="0"
             WidthRequest="{Binding LeftFrameWidth}"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}"/>
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
         <!-- Title Frame -->
         <VerticalStackLayout
             x:Name="PageTitleFrameLayout"
             Grid.Row="0"
             Grid.Column="1"
             Margin="0"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}">
             <!-- Title Label -->
             <Label
                 x:Name="PageTitleFrameLabel"
@@ -62,7 +62,7 @@
                 HeightRequest="1"
                 HorizontalOptions="Fill"
                 VerticalOptions="End"
-                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
         </VerticalStackLayout>
 
         <!-- Left-Side Frame -->
@@ -71,7 +71,7 @@
             Grid.Row="1"
             Grid.Column="0"
             Margin="0"
-            BackgroundColor="{AppThemeBinding Light=WhiteSmoke, Dark={StaticResource Gray900}}">
+            BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}">
 
             <!-- Grid to Control Vertical/Horizontal Elements -->
             <Grid>
@@ -150,7 +150,7 @@
                     WidthRequest="1"
                     HorizontalOptions="End"
                     VerticalOptions="Fill"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
             </Grid>
         </HorizontalStackLayout>
 
@@ -350,7 +350,7 @@
                                         HeightRequest="1"
                                         HorizontalOptions="Fill"
                                         VerticalOptions="Center"
-                                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                                        BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

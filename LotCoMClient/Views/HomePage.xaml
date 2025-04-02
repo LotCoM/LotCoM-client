@@ -87,119 +87,115 @@
                     <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Left Frame Body Sub-Grid -->
-                <Grid
+                <!-- Left Frame Body ScrollView -->
+                <ScrollView
                     Grid.Row="1"
                     Grid.Column="0"
                     IsVisible="{Binding LeftFrameShown}">
-                    <Grid.RowDefinitions>
-                        <!-- Main ScrollView Row -->
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <!-- Main ScrollView Column -->
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <!-- Left Frame ScrollView (allows indefinite Panel Body expansion) -->
-                    <ScrollView
-                        Grid.Row="0"
-                        Grid.Column="0">
-                        <!-- ScrollView Sub-Grid (allows layout customization) -->
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <!-- Printing Data Menu Entry Header -->
-                                <RowDefinition Height="50"/>
-                                <!-- Printing Data Menu Entry Expandable Dropdown Row -->
-                                <RowDefinition Height="Auto"/>
-                                <!-- Expand Rows to Add Frame Entries -->
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <!-- Frame Entry Icon Column -->
-                                <ColumnDefinition Width="50"/>
-                                <!-- Frame Entry Title Column -->
-                                <ColumnDefinition Width="*"/>
-                                <!-- Expand Columns to Add More Entry Formatting -->
-                            </Grid.ColumnDefinitions>
-                            <!-- Add ScrollView Entries Here -->
-                            <!-- Printing Data Menu Section -->
-                            <Image
-                                Grid.Row="0"
-                                Grid.Column="0"
-                                Source="{AppThemeBinding Light=printerblack.png, Dark=printerwhite.png}"
-                                HorizontalOptions="Center"
+                    <!-- Body ScrollView Sub-Grid (allows layout customization) -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <!-- Printing Data Menu Entry Header -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Printing Data Menu Entry Expandable Dropdown Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Expand Rows to Add Frame Entries -->
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <!-- Frame Entry Column -->
+                            <ColumnDefinition Width="*"/>
+                            <!-- Expand Columns to Add More Entry Formatting -->
+                        </Grid.ColumnDefinitions>
+                        <!-- Add ScrollView Entries Here -->
+                        <!-- Printing Data Menu Section -->
+                        <VerticalStackLayout
+                            Grid.Row="0"
+                            Grid.Column="0">
+                            <BoxView HeightRequest="1"
+                                HorizontalOptions="Fill"
                                 VerticalOptions="Center"
-                                Margin="20,0,0,5"/>
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                            <Image
+                                Source="{AppThemeBinding Light=printerblack.png, Dark=printerwhite.png}"
+                                WidthRequest="25"
+                                HeightRequest="25"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Start"
+                                Margin="0,5,0,0"/>
                             <Button
                                 x:Name="LeftFramePanelBody_PrintingMenuButton"
-                                Clicked="OnLeftFramePanelBody_PrintingMenuButtonClicked" 
-                                Grid.Row="0"
-                                Grid.Column="1"
+                                Clicked="OnLeftFramePanelBody_PrintingMenuButtonClicked"
                                 Text="Printing"
                                 CornerRadius="0"
                                 FontSize="12"
+                                WidthRequest="150"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Start"/>
+                            <BoxView HeightRequest="1"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray600}}"/>
+                        </VerticalStackLayout>
+                        <!-- Vertical Stack Layout Creates Expanding/Collapsing Printing Menu Section -->
+                        <VerticalStackLayout
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}">
+                            <!-- Printing Data Page Navigation Buttons -->
+                            <!-- Diecast -->
+                            <Button
+                                x:Name="LeftFramePanelBody_DiecastPrintingDataButton"
+                                Clicked="OnLeftFramePanelBody_DiecastPrintingDataButtonClicked"
+                                Text="Diecast"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
-                            <!-- Vertical Stack Layout Creates Expanding/Collapsing Printing Menu Section -->
-                            <VerticalStackLayout
-                                Grid.Row="1"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="2"
-                                IsVisible="{Binding LeftFramePanelBody_PrintingMenuExpanded}"
-                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}">
-                                <!-- Printing Data Page Navigation Buttons -->
-                                <!-- Diecast -->
-                                <Button
-                                    x:Name="LeftFramePanelBody_DiecastPrintingDataButton"
-                                    Clicked="OnLeftFramePanelBody_DiecastPrintingDataButtonClicked"
-                                    Text="Diecast"
-                                    FontSize="10"
-                                    FontAttributes="None"
-                                    CornerRadius="0"
-                                    WidthRequest="150"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"/>
-                                <!-- Deburr -->
-                                <Button
-                                    x:Name="LeftFramePanelBody_DeburrPrintingDataButton"
-                                    Clicked="OnLeftFramePanelBody_DeburrPrintingDataButtonClicked"
-                                    Text="Deburr"
-                                    FontSize="10"
-                                    FontAttributes="None"
-                                    CornerRadius="0"
-                                    WidthRequest="150"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"/>
-                                <!-- Steel -->
-                                <Button
-                                    x:Name="LeftFramePanelBody_SteelPrintingDataButton"
-                                    Clicked="OnLeftFramePanelBody_SteelPrintingDataButtonClicked"
-                                    Text="Steel"
-                                    FontSize="10"
-                                    FontAttributes="None"
-                                    CornerRadius="0"
-                                    WidthRequest="150"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"/>
-                                <!-- Aluminum -->
-                                <Button
-                                    x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
-                                    Clicked="OnLeftFramePanelBody_AluminumPrintingDataButtonClicked"
-                                    Text="Aluminum"
-                                    FontSize="10"
-                                    FontAttributes="None"
-                                    CornerRadius="0"
-                                    WidthRequest="150"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
-                                    HorizontalOptions="Start"
-                                    VerticalOptions="Center"/>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </ScrollView>
-                </Grid>
+                            <!-- Deburr -->
+                            <Button
+                                x:Name="LeftFramePanelBody_DeburrPrintingDataButton"
+                                Clicked="OnLeftFramePanelBody_DeburrPrintingDataButtonClicked"
+                                Text="Deburr"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"/>
+                            <!-- Steel -->
+                            <Button
+                                x:Name="LeftFramePanelBody_SteelPrintingDataButton"
+                                Clicked="OnLeftFramePanelBody_SteelPrintingDataButtonClicked"
+                                Text="Steel"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"/>
+                            <!-- Aluminum -->
+                            <Button
+                                x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
+                                Clicked="OnLeftFramePanelBody_AluminumPrintingDataButtonClicked"
+                                Text="Aluminum"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </ScrollView>
 
                 <!-- Left Frame Footer Label -->
                 <Label 
@@ -218,8 +214,8 @@
                 <Button
                     x:Name="PageLeftFrameCollapseButton"
                     Clicked="OnPageLeftFrameCollapseButtonClicked"
-                    Margin="0,0,1,0"
-                    Padding="0"
+                    Margin="10,10,1,0"
+                    Padding="10"
                     Grid.Row="2"
                     Grid.Column="0"
                     VerticalOptions="End"

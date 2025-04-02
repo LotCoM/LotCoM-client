@@ -101,6 +101,15 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameWidth));
         }
     }
+    private string _bodyTableHeader;
+    public string BodyTableHeader {
+        get {return _bodyTableHeader;} 
+        set {
+            _bodyTableHeader = value;
+            OnPropertyChanged(nameof(_bodyTableHeader));
+            OnPropertyChanged(nameof(BodyTableHeader));
+        }
+    }
     private DataTable? _table;
     /// <summary>
     /// Serves the DataTable object for this Page's Database Table. 
@@ -144,6 +153,7 @@ public partial class DataTableViewModel : ObservableObject {
             _data = new NotifyTaskCompletion<List<DataRecord>>(_table.GetRecordsAsync());
             // set the left frame panel's header
             _leftFramePanelHeader = Table!.TableProcess;
+            _bodyTableHeader = "Loading records...";
         // no Process is assigned at instantiation
         } else {
             // set the table to null
@@ -151,6 +161,7 @@ public partial class DataTableViewModel : ObservableObject {
             _data = null;
             // set the left frame panel's header to a default no process string
             _leftFramePanelHeader = "Select Process...";
+            _bodyTableHeader = "";
         }
     }
 }

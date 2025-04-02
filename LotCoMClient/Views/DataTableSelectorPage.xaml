@@ -225,7 +225,7 @@
             <!-- Page Body Table Header Label -->
             <Label 
                 x:Name="PageBodyTableHeaderLabel"
-                Text="Header Row"
+                Text="{Binding BodyTableHeader}"
                 Grid.Row="0"
                 Grid.Column="0"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"

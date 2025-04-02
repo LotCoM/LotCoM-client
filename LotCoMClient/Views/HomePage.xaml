@@ -135,12 +135,9 @@
                                 Clicked="OnLeftFramePanelBody_PrintingMenuButtonClicked" 
                                 Grid.Row="0"
                                 Grid.Column="1"
-                                Background="Transparent"
-                                BackgroundColor="Transparent"
                                 Text="Printing"
-                                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                                CornerRadius="0"
                                 FontSize="12"
-                                FontAttributes="None"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center"/>
                             <!-- Vertical Stack Layout Creates Expanding/Collapsing Printing Menu Section -->
@@ -155,48 +152,48 @@
                                 <Button
                                     x:Name="LeftFramePanelBody_DiecastPrintingDataButton"
                                     Clicked="OnLeftFramePanelBody_DiecastPrintingDataButtonClicked"
-                                    Background="Transparent"
-                                    BackgroundColor="Transparent"
                                     Text="Diecast"
-                                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                                     FontSize="10"
                                     FontAttributes="None"
+                                    CornerRadius="0"
+                                    WidthRequest="150"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
                                 <!-- Deburr -->
                                 <Button
                                     x:Name="LeftFramePanelBody_DeburrPrintingDataButton"
                                     Clicked="OnLeftFramePanelBody_DeburrPrintingDataButtonClicked"
-                                    Background="Transparent"
-                                    BackgroundColor="Transparent"
                                     Text="Deburr"
-                                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                                     FontSize="10"
                                     FontAttributes="None"
+                                    CornerRadius="0"
+                                    WidthRequest="150"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
                                 <!-- Steel -->
                                 <Button
                                     x:Name="LeftFramePanelBody_SteelPrintingDataButton"
                                     Clicked="OnLeftFramePanelBody_SteelPrintingDataButtonClicked"
-                                    Background="Transparent"
-                                    BackgroundColor="Transparent"
                                     Text="Steel"
-                                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                                     FontSize="10"
                                     FontAttributes="None"
+                                    CornerRadius="0"
+                                    WidthRequest="150"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
                                 <!-- Aluminum -->
                                 <Button
                                     x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
                                     Clicked="OnLeftFramePanelBody_AluminumPrintingDataButtonClicked"
-                                    Background="Transparent"
-                                    BackgroundColor="Transparent"
                                     Text="Aluminum"
-                                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                                     FontSize="10"
                                     FontAttributes="None"
+                                    CornerRadius="0"
+                                    WidthRequest="150"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Black}}"
                                     HorizontalOptions="Start"
                                     VerticalOptions="Center"/>
                             </VerticalStackLayout>
@@ -208,30 +205,30 @@
                 <Label 
                     x:Name="PageLeftFrameFooterLabel"
                     IsVisible="{Binding LeftFrameShown}"
-                    Margin="0,0,0,15"
+                    Margin="10,0,0,15"
                     Grid.Row="2"
                     Grid.Column="0"
                     Text="{Binding LeftFramePanelFooter}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontSize="10"
                     VerticalOptions="End"
-                    HorizontalOptions="Center"/>
+                    HorizontalOptions="Start"/>
                 
                 <!-- Panel Collapse Button -->
                 <Button
                     x:Name="PageLeftFrameCollapseButton"
                     Clicked="OnPageLeftFrameCollapseButtonClicked"
-                    Margin="-10,0,0,0"
-                    Padding="10"
+                    Margin="0,0,1,0"
+                    Padding="0"
                     Grid.Row="2"
                     Grid.Column="0"
                     VerticalOptions="End"
                     HorizontalOptions="End"
-                    HeightRequest="25"
-                    WidthRequest="25"
+                    HeightRequest="10"
+                    WidthRequest="10"
                     IsVisible="true"
-                    ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
-                    Background="Transparent"/>
+                    CornerRadius="0"
+                    ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"/>
 
                 <!-- Left Frame Right Border -->
                 <BoxView

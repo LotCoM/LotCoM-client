@@ -214,15 +214,14 @@
                 <Button
                     x:Name="PageLeftFrameCollapseButton"
                     Clicked="OnPageLeftFrameCollapseButtonClicked"
-                    Margin="10,10,1,0"
+                    Margin="-14,10,1,0"
                     Padding="10"
                     Grid.Row="2"
                     Grid.Column="0"
                     VerticalOptions="End"
                     HorizontalOptions="End"
-                    HeightRequest="10"
-                    WidthRequest="10"
-                    IsVisible="true"
+                    HeightRequest="30"
+                    WidthRequest="30"
                     CornerRadius="0"
                     ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"/>
 

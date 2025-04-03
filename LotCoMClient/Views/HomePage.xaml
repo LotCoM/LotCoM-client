@@ -180,11 +180,6 @@
                                                     <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
                                                 </VisualState.Setters>
                                             </VisualState>
-                                            <VisualState x:Name="Focused">
-                                                <VisualState.Setters>
-                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
-                                                </VisualState.Setters>
-                                            </VisualState>
                                             <VisualState x:Name="PointerOver">
                                                 <VisualState.Setters>
                                                     <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
@@ -221,11 +216,6 @@
                                             <VisualState x:Name="Pressed">
                                                 <VisualState.Setters>
                                                     <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
-                                                </VisualState.Setters>
-                                            </VisualState>
-                                            <VisualState x:Name="Focused">
-                                                <VisualState.Setters>
-                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
                                                 </VisualState.Setters>
                                             </VisualState>
                                             <VisualState x:Name="PointerOver">
@@ -266,11 +256,6 @@
                                                     <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
                                                 </VisualState.Setters>
                                             </VisualState>
-                                            <VisualState x:Name="Focused">
-                                                <VisualState.Setters>
-                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
-                                                </VisualState.Setters>
-                                            </VisualState>
                                             <VisualState x:Name="PointerOver">
                                                 <VisualState.Setters>
                                                     <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
@@ -307,11 +292,6 @@
                                             <VisualState x:Name="Pressed">
                                                 <VisualState.Setters>
                                                     <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
-                                                </VisualState.Setters>
-                                            </VisualState>
-                                            <VisualState x:Name="Focused">
-                                                <VisualState.Setters>
-                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
                                                 </VisualState.Setters>
                                             </VisualState>
                                             <VisualState x:Name="PointerOver">

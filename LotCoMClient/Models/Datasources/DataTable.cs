@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
 
 namespace LotCoMClient.Models.Datasources;
@@ -5,7 +6,7 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Provides controlled access and manipulation of database tables in the LotCoM Database.
 /// </summary>
-public class DataTable {
+public partial class DataTable : ObservableObject {
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
     /// </summary>
@@ -14,6 +15,9 @@ public class DataTable {
     /// The type of Data Record the table file contains (Prints || Scans).
     /// </summary>
     private readonly Type _recordType;
+    public Type RecordType {
+        get {return _recordType;}
+    }
     /// <summary>
     /// Holds the currently-read Data Records in the DataTable.
     /// </summary>
@@ -22,6 +26,41 @@ public class DataTable {
     /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.
     /// </summary>
     private List<string> _headers = [];
+    [ObservableProperty]
+    /// <summary>
+    /// Observable property exposing the Name of the Process producing the Records in this Table.
+    /// </summary>
+    public partial string TableProcess {get; set;}
+
+    /// <summary>
+    /// Constructs a new DataTable that provides controlled access and manipulation of data in the Database Table located at DataTablePath.
+    /// </summary>
+    /// <param name="DataTablePath">A full file path to a Database Table file in the LotCoM database.</param>
+    public DataTable(string DataTablePath) {
+        _path = DataTablePath;
+        // calculate the record type from the path string
+        if (_path.Contains("data_tables\\prints")) {
+            _recordType = typeof(PrintRecord);
+        } else if (_path.Contains("data_tables\\scans")) {
+            _recordType = typeof(ScanRecord);
+        // the path passed isn't a valid Database Table path; throw an exception
+        } else {
+            throw new ArgumentException($"Could not create a DataTable object from the file at {_path}.");
+        }
+        // read the database table and populate runtime
+        try {
+            _records = Read();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
+        // set the Table's Process from the first Record's RecordProcess property
+        try {
+            TableProcess = _records[0].RecordProcess.FullName;
+        // the file was empty, must use path to elicit name (more expensive)
+        } catch {
+            TableProcess = _path.Split("\\")[^1].Replace(".txt", "");
+        }
+    }
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's _recordType from CSVLine.
@@ -44,25 +83,6 @@ public class DataTable {
     }
 
     /// <summary>
-    /// Constructs a new DataTable that provides controlled access and manipulation of data in the Database Table located at DataTablePath.
-    /// </summary>
-    /// <param name="DataTablePath">A full file path to a Database Table file in the LotCoM database.</param>
-    public DataTable(string DataTablePath) {
-        _path = DataTablePath;
-        // calculate the record type from the path string
-        if (_path.Contains("data_tables\\prints")) {
-            _recordType = typeof(PrintRecord);
-        } else if (_path.Contains("data_tables\\scans")) {
-            _recordType = typeof(ScanRecord);
-        // the path passed isn't a valid Database Table path; throw an exception
-        } else {
-            throw new ArgumentException($"Could not create a DataTable object from the file at {_path}.");
-        }
-        // read the database table and populate runtime
-        _records = Read();
-    }
-
-    /// <summary>
     /// Opens, reads, and formats the text in DataTable._path as a list of DataRecords.
     /// </summary>
     /// <exception cref="ArgumentException"></exception>
@@ -78,7 +98,12 @@ public class DataTable {
     /// <returns>A List of DataRecords.</returns>
     private List<DataRecord> Read() {
         // read the Database Table at the _path property
-        string Text = File.ReadAllText(_path);
+        string Text;
+        try {
+            Text = File.ReadAllText(_path);
+        } catch (Exception _ex) {
+            throw new FileNotFoundException($"Failed to read the Database file: '{_path}' due to the following exception:\n{_ex.Message}.");
+        }
         // separate the read text into record lines (split by newline character)
         List<string> RecordLines = Text.Split("\n").ToList();
         // remove the first entry and save it as the headers property
@@ -198,7 +223,11 @@ public class DataTable {
     /// <returns>A List of DataRecords.</returns>
     public List<DataRecord> GetRecords() {
         // update the DataRecords in runtime
-        _records = Read();
+        try {
+            _records = Read();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
         // return the DataRecords stored in runtime
         return _records;
     }
@@ -210,7 +239,11 @@ public class DataTable {
     /// <returns>A List of DataRecords.</returns>
     public async Task<List<DataRecord>> GetRecordsAsync() {
         // update the DataRecords in runtime
-        _records = await ReadAsync();
+        try {
+            _records = await ReadAsync();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to create a DataTable from the file '{_path}' due to the following read error:\n{_ex.Message}");
+        }
         // return the DataRecords stored in runtime
         return _records;
     }
@@ -232,7 +265,11 @@ public class DataTable {
         // update the _records property
         _records = Records;
         // save the DataTable
-        Save();
+        try {
+            Save();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
+        }
         // update the _records property to the post-save entries list
         _records = GetRecords();
     }
@@ -247,7 +284,11 @@ public class DataTable {
         // update the _records property
         _records = Records;
         // save the DataTable asynchronously
-        await SaveAsync();
+        try {
+            await SaveAsync();
+        } catch (Exception _ex) {
+            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
+        }
         // update the _records property to the post-save DataRecords list asynchronously
         _records = await GetRecordsAsync();
     }

@@ -24,7 +24,7 @@
   - Implement synchronous versions of some lightweight Process data methods.
   - Integrate Process data classes with Data Record classes.
   - Add new dependencies `CommunityToolkit.MVVM` and `Newtonsoft.Json`.
-  - **New Classes**
+  - **New Classes:**
     - `Process.cs`: Represents a single Process in the YNA production flow.
     - `ProcessData.cs`: Provides access to and methods on the Process datasource.
     - `Part.cs`: Represents a single Part in the YNA production flow.
@@ -32,3 +32,45 @@
     - `Timestamp`: Provides quick and consistent formatting of DateTime objects into timestamps of `mm/dd/yyyy-hh:mm:ss`.
 - **[feature/7](https://github.com/LotCoM/LotCoM-client/pull/9)**
   - Remove ambiguity in variable data fields of `DataRecord.cs` ([#7](https://github.com/LotCoM/LotCoM-client/issues/7))
+
+# `0.2.0`
+### Print Data Pages
+- **[feature/11](https://github.com/LotCoM/LotCoM-client/pull/14)**
+  - Implement `DataTablePage` class to display `DataTable` data in a `ListView` ([#11](https://github.com/LotCoM/LotCoM-client/issues/11)).
+  - Remove reliance on `Shell`/`AppShell` Navigation.
+  - Fix several `Model` class issues.
+  - Convert `DataRecord` and `DataTable` classes to `ObservableObject` class extensions.
+  - **New Classes:**
+    - `DataTableViewModel.cs`: Provides `View-Model` layer logic and control over `DataTablePage` instances.
+    - `DataTablePage.xaml.cs` & `DataTablePage.xaml`: Provides a `Page` to display a given `DataTable` on.
+- **[feature/13](https://github.com/LotCoM/LotCoM-client/pull/15)**
+  - Implement an improved `Taskbar` application Icon ([#13](https://github.com/LotCoM/LotCoM-client/issues/13)).
+- **[bug/18](https://github.com/LotCoM/LotCoM-client/pull/19)**
+  - Resolve an issue in `DataTable` that causes an application crash when instantiating from an empty database table ([#18](https://github.com/LotCoM/LotCoM-client/issues/18)).
+- **[feature/16](https://github.com/LotCoM/LotCoM-client/pull/20)**
+  - Implement `NavigationPage` navigation in `App.xaml` class ([#16](https://github.com/LotCoM/LotCoM-client/issues/16)).
+  - Implement a new `HomePage` to start the application on.
+    - Implements Navigation to `DataTablePage` Views for all of the YNA production departments.
+  - Implement `DataTableSelectorPage`, an extension of `DataTablePage`. 
+    - Extension allows selection of (toggling between) multiple processes from a single Department Page.
+  - Implement `Department` Model class to encapsulate Department data from the database.
+  - Implement "No-Process" instantiation of `DataTablePage` classes.
+    - Functionality allows a `DataTablePage` to be created without actually containing a `DataTable`.
+  - Minor bugfixing and UI tweaking.
+  - **New Classes:**
+    - `Department.cs`: Encapsulates a Department from the Database and allows quick access to Department process and line data.
+    - `DataTableSelectorViewModel.cs`: Provides `View-Model` layer logic and control over `DataTableSelectorPage` instances.
+    - `DataTableSelectorPage.xaml.cs` & `DataTableSelectorPage.xaml`: Provides a `Page` to display a given `DataTable` on, with the added Process selection functionality.
+    - `HomePageViewModel.cs`: Provides `View-Model` layer logic and control over `HomePage` instances.
+    - `HomePage.xaml.cs` & `HomePage.xaml`: Provides a landing for the application after starting. Provides initial Navigation.
+- **[feature/17](https://github.com/LotCoM/LotCoM-client/pull/21)**
+  - Asynchronize `DataTable` and `DataTablePage` data loading actions ([#17](https://github.com/LotCoM/LotCoM-client/issues/17)).
+  - Implement `NotifyTaskCompletion` service class.
+  - **New Classes**
+    - Allows instantiation of "observable" tasks. These tasks can be used as the value of a property on instantiation without blocking threads.
+- **[feature/22](https://github.com/LotCoM/LotCoM-client/pull/23)**
+  - Major UI Color and Style tweaks ([#22](https://github.com/LotCoM/LotCoM-client/issues/22)).
+  - Implement `RecessedButton` resource library.
+    - Allows easy application of a "recessed" look to `Button` controls.
+    - Cuts down on repetitive code (DRY!).
+  - Implement and convert default `MAUI` styling to a new, more-rigid `AppTheme` constant color group.

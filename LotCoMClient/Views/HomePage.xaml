@@ -7,6 +7,32 @@
              x:DataType="viewModels:HomePageViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 
+    <!-- Create Custom RecessedButton Style Dictionary -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="RecessedNormalStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}"/>                         
+            </Style>
+            <Style x:Key="RecessedDisabledStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}" />
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}" />
+            </Style>
+            <Style x:Key="RecessedPressedStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+            </Style>
+            <Style x:Key="RecessedFocusedStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+            </Style>
+            <Style x:Key="RecessedPointerOverStyle" TargetType="Button">
+                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <!-- Customize NavigationPage Bar and Properties -->
     <NavigationPage.HasBackButton>
         <x:Boolean>False</x:Boolean>
@@ -155,7 +181,39 @@
                                 CornerRadius="0"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
-                                VerticalOptions="Center"/>
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Focused">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
                             <!-- Deburr -->
                             <Button
                                 x:Name="LeftFramePanelBody_DeburrPrintingDataButton"
@@ -166,7 +224,39 @@
                                 CornerRadius="0"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
-                                VerticalOptions="Center"/>
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Focused">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
                             <!-- Steel -->
                             <Button
                                 x:Name="LeftFramePanelBody_SteelPrintingDataButton"
@@ -177,7 +267,39 @@
                                 CornerRadius="0"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
-                                VerticalOptions="Center"/>
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Focused">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
                             <!-- Aluminum -->
                             <Button
                                 x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
@@ -188,7 +310,39 @@
                                 CornerRadius="0"
                                 WidthRequest="150"
                                 HorizontalOptions="Start"
-                                VerticalOptions="Center"/>
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Focused">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedFocusedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
                         </VerticalStackLayout>
                     </Grid>
                 </ScrollView>

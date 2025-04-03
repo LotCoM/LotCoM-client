@@ -7,7 +7,7 @@
              x:DataType="viewModels:HomePageViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 
-    <!-- Merge and Consume the RecessedButton ResourceDictionary -->
+    <!-- Merge and Consume Custom ResourceDictionaries -->
     <ContentPage.Resources>
         <!-- RecessedButton Styles -->
         <ResourceDictionary Source="/Resources/Styles/RecessedButton.xaml"/>

@@ -10,7 +10,7 @@
     <!-- Merge and Consume the RecessedButton ResourceDictionary -->
     <ContentPage.Resources>
         <!-- RecessedButton Styles -->
-        <ResourceDictionary Source="/Controls/ResourceDictionaries/RecessedButton.xaml"/>
+        <ResourceDictionary Source="/Resources/Styles/RecessedButton.xaml"/>
     </ContentPage.Resources>
 
     <!-- Customize NavigationPage Bar and Properties -->

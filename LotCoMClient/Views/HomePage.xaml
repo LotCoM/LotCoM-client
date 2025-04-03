@@ -7,30 +7,10 @@
              x:DataType="viewModels:HomePageViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 
-    <!-- Create Custom RecessedButton Style Dictionary -->
+    <!-- Merge and Consume the RecessedButton ResourceDictionary -->
     <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="RecessedNormalStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}"/>                         
-            </Style>
-            <Style x:Key="RecessedDisabledStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}" />
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}" />
-            </Style>
-            <Style x:Key="RecessedPressedStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
-            </Style>
-            <Style x:Key="RecessedFocusedStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
-            </Style>
-            <Style x:Key="RecessedPointerOverStyle" TargetType="Button">
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
-            </Style>
-        </ResourceDictionary>
+        <!-- RecessedButton Styles -->
+        <ResourceDictionary Source="/Controls/ResourceDictionaries/RecessedButton.xaml"/>
     </ContentPage.Resources>
 
     <!-- Customize NavigationPage Bar and Properties -->

@@ -332,7 +332,7 @@
                     HorizontalOptions="End"
                     HeightRequest="30"
                     WidthRequest="30"
-                    CornerRadius="0"
+                    CornerRadius="30"
                     ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"/>
 
                 <!-- Left Frame Right Border -->

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LotCoMClient.Views.StyleTestPage"
+             BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary Source="/Resources/Styles/RecessedButton.xaml;assembly=LotCoMClient"/>
+    </ContentPage.Resources>
+
+    <!-- Customize NavigationPage Bar and Properties -->
+    <NavigationPage.HasBackButton>
+        <x:Boolean>False</x:Boolean>
+    </NavigationPage.HasBackButton>
+    <NavigationPage.HasNavigationBar>
+        <x:Boolean>False</x:Boolean>
+    </NavigationPage.HasNavigationBar>
+    
+    <ScrollView>
+        <VerticalStackLayout>
+            <HorizontalStackLayout
+                Padding="10"
+                Spacing="10"
+                Margin="10">
+                <Label 
+                    Text="Text Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Label 
+                        Text="Normal Primary"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"/>
+                    <Label 
+                        Text="Normal Secondary"
+                        TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <Label 
+                        Text="Disabled Primary"
+                        TextColor="{AppThemeBinding Light={StaticResource DisabledPrimaryText}, Dark={StaticResource DisabledPrimaryTextDark}}"/>
+                    <Label 
+                        Text="Disabled Secondary"
+                        TextColor="{AppThemeBinding Light={StaticResource DisabledSecondaryText}, Dark={StaticResource DisabledSecondaryTextDark}}"/>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Button Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Button
+                        Text="Normal"/>
+                    <Button
+                        Text="Disabled"
+                        IsEnabled="False"/>
+                    <Button
+                        Text="Pressed"
+                        TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                    <Button
+                        Text="Hovered"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <Button
+                        Text="Recessed Normal">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="RecessedStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                    <Button
+                        Text="Recessed Disabled"
+                        Style="{StaticResource RecessedDisabledStyle}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="RecessedStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                    <Button
+                        Text="Recessed Pressed"
+                        Style="{StaticResource RecessedPressedStyle}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="RecessedStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                    <Button
+                        Text="Recessed Hovered"
+                        Style="{StaticResource RecessedPointerOverStyle}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroupList>
+                                <VisualStateGroup x:Name="RecessedStates">
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateGroupList>
+                        </VisualStateManager.VisualStateGroups>
+                    </Button>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Checkbox Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <CheckBox />
+                    <CheckBox 
+                        IsEnabled="False"/>
+                    <CheckBox 
+                        Color="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                    <CheckBox 
+                        IsChecked="True"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout
+                Padding="10"
+                Spacing="10"
+                Margin="10">
+                <Label 
+                    Text="DatePicker Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <DatePicker />
+                    <DatePicker 
+                        IsEnabled="False"/>
+                    <DatePicker 
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Entry Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Entry />
+                    <Entry 
+                        IsEnabled="False"/>
+                    <Entry
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        PlaceholderColor="{AppThemeBinding Light={StaticResource DisabledPrimaryText}, Dark={StaticResource DisabledPrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                    <Entry
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        PlaceholderColor="{AppThemeBinding Light={StaticResource DisabledPrimaryText}, Dark={StaticResource DisabledPrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                </VerticalStackLayout>
+                <Label 
+                    Text="ListView Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <ListView>
+                        <ListView.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Enabled</x:String>
+                                <x:String>Enabled</x:String>
+                                <x:String>Enabled</x:String>
+                                <x:String>Enabled</x:String>
+                                <x:String>Enabled</x:String>
+                            </x:Array>
+                        </ListView.ItemsSource>
+                    </ListView>
+                    <ListView 
+                        IsEnabled="False">
+                        <ListView.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Disabled</x:String>
+                                <x:String>Disabled</x:String>
+                                <x:String>Disabled</x:String>
+                                <x:String>Disabled</x:String>
+                                <x:String>Disabled</x:String>
+                            </x:Array>
+                        </ListView.ItemsSource>
+                    </ListView>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Picker Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Picker />
+                    <Picker 
+                        IsEnabled="False"/>
+                    <Picker 
+                        TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
+                        TitleColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout
+                Padding="10"
+                Spacing="10"
+                Margin="10">
+                <Label 
+                    Text="Radio Button Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <RadioButton 
+                        Content="Radio"/>
+                    <RadioButton 
+                        IsEnabled="False"
+                        Content="Radio"/>
+                    <RadioButton
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"
+                        Content="Radio"/>
+                    <RadioButton 
+                        IsChecked="True"
+                        Content="Radio"/>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Slider Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Slider 
+                        WidthRequest="300"
+                        Minimum="0"
+                        Maximum="300"
+                        Value="150"/>
+                    <Slider 
+                        IsEnabled="False"
+                        WidthRequest="300"
+                        Minimum="0"
+                        Maximum="300"
+                        Value="150"/>
+                </VerticalStackLayout>
+                <Label 
+                    Text="Switch Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <Switch />
+                    <Switch 
+                        IsEnabled="False"/>
+                    <Switch 
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"
+                        ThumbColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        OnColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    <Switch 
+                        IsToggled="True"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <Label 
+                    Text="Time Picker Styles"
+                    FontAttributes="Bold"/>
+                <VerticalStackLayout>
+                    <TimePicker />
+                    <TimePicker 
+                        IsEnabled="False"/>
+                    <TimePicker 
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"/>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -44,6 +44,7 @@ public static class RecordParser {
         string LotNumber = "";
         string DeburrJBKNumber = "";
         string DieNumber = "";
+        string ModelNumber = "";
         string HeatNumber = "";
         string RecordDate = SplitLine[^3].Split("-")[0];
         string RecordTime = SplitLine[^3].Split("-")[1];
@@ -94,6 +95,13 @@ public static class RecordParser {
             // increment to the next parsable index
             _parsingIndex += 1;
         }
+        // attempt to parse a Model number
+        if (Requirements.Contains("ModelNumber")) {
+            // assign the value of the current parsing index to the Model Number property
+            ModelNumber = SplitLine[4 + _parsingIndex];
+            // increment to the next parsable index
+            _parsingIndex += 1;
+        }
         // attempt to parse a Heat number
         if (Requirements.Contains("HeatNumber")) {
             // assign the value of the current parsing index to the Heat Number property
@@ -101,10 +109,9 @@ public static class RecordParser {
             // increment to the next parsable index
             _parsingIndex += 1;
         }
-
         // attempt to create a DataRecord from the parsed data
         try {
-            return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress);
+            return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress);
         // there was a problem constructing a DataRecord from the parsed data
         } catch {
             throw new RecordParseException();

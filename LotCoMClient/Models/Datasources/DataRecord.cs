@@ -7,6 +7,8 @@ namespace LotCoMClient.Models.Datasources;
 /// </summary>
 public partial class DataRecord : ObservableObject {
     [ObservableProperty]
+    public partial string? ScanAddress {get; set;}
+    [ObservableProperty]
     public partial Process RecordProcess {get; set;}
     [ObservableProperty]
     public partial Part RecordPart {get; set;}
@@ -58,7 +60,8 @@ public partial class DataRecord : ObservableObject {
     /// <param name="RecordTime">The Time assigned to this record.</param>
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>
     /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID) {
+    /// <param name="ScanAddress">(Optional) the IP Address of the Scanner producing this record. Only applicable to ScanRecords.</param>
+    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null) {
         // set the Record's properties
         this.RecordProcess = RecordProcess;
         this.RecordPart = RecordPart;
@@ -72,6 +75,7 @@ public partial class DataRecord : ObservableObject {
         this.RecordTime = RecordTime;
         this.RecordShift = RecordShift;
         this.OperatorID = OperatorID;
+        this.ScanAddress = ScanAddress;
         // configure the Includes flags using the RecordProcess' requirements
         List<string> Requirements = RecordProcess.RequiredFields;
         // configure the JBK flag

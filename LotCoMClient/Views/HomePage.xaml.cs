@@ -139,10 +139,10 @@ public partial class HomePage : ContentPage {
     /// <param name="e"></param>
     public async void OnLeftFramePanelBody_ScanningMenuButtonClicked(object sender, EventArgs e) {
         // invert the Scanning Menu Shown property
-        if (_viewModel.LeftFramePanelBody_PrintingMenuExpanded) {
-            _viewModel.LeftFramePanelBody_PrintingMenuExpanded = false;
+        if (_viewModel.LeftFramePanelBody_ScanningMenuExpanded) {
+            _viewModel.LeftFramePanelBody_ScanningMenuExpanded = false;
         } else {
-            _viewModel.LeftFramePanelBody_PrintingMenuExpanded = true;
+            _viewModel.LeftFramePanelBody_ScanningMenuExpanded = true;
         }
         await Task.Delay(0);
     }

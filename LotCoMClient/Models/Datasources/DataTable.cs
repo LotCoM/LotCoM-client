@@ -76,7 +76,7 @@ public partial class DataTable : ObservableObject {
             ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
         // parse a ScanRecord
         } else {
-            ParsedRecord = PrintRecord.ParseFromCSV(CSVLine);
+            ParsedRecord = ScanRecord.ParseFromCSV(CSVLine);
         }
         // return the parsed DataRecord
         return ParsedRecord;

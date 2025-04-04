@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using LotCoMClient.Models.Exceptions;
 
 namespace LotCoMClient.Models.Datasources;
@@ -26,7 +27,16 @@ public static class RecordParser {
         if (SplitLine.Count < 7) {
             throw new RecordParseException();
         }
-        // prepare DataRecord properties
+        // peek the first element and test it as an IP Address using a Regex pattern
+        string? ScanAddress = null;
+        string AddressPattern = @"^\d\d?\d?\.\d\d?\d?\.\d\d?\d?\.\d\d?\d?$";
+        Regex AddressRegex = new Regex(AddressPattern);
+        if (AddressRegex.IsMatch(SplitLine[0])) {
+            // set the ScanAddress property using this field and pop it off of the front
+            ScanAddress = SplitLine[0];
+            SplitLine.RemoveAt(0);
+        }
+        // prepare remaining universal DataRecord properties
         Process RecordProcess;
         Part RecordPart;
         string Quantity = SplitLine[3];
@@ -53,7 +63,6 @@ public static class RecordParser {
         }
         // parse the required variable data fields
         List<string> Requirements = RecordProcess.RequiredFields;
-        List<string> InnerFields = [JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber];
         // references next parsable index after the static Quantity, position 4 (index 3); 
         // increments when a property is found to be required and is assigned a parsable index
         int _parsingIndex = 0;
@@ -95,7 +104,7 @@ public static class RecordParser {
 
         // attempt to create a DataRecord from the parsed data
         try {
-            return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID);
+            return new DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress);
         // there was a problem constructing a DataRecord from the parsed data
         } catch {
             throw new RecordParseException();

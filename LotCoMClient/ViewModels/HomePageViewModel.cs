@@ -31,6 +31,9 @@ public partial class HomePageViewModel : ObservableObject {
     
     // UI visual controls
     private bool _leftFrameShown = true;
+    /// <summary>
+    /// Controls the Shown state of the Left Frame Panel.
+    /// </summary>
     public bool LeftFrameShown {
         get {return _leftFrameShown;} 
         set {
@@ -40,6 +43,9 @@ public partial class HomePageViewModel : ObservableObject {
         }
     }
     private bool _leftFrameHidden = false;
+    /// <summary>
+    /// Controls the Hidden state of the Left Frame Panel.
+    /// </summary>
     public bool LeftFrameHidden {
         get {return _leftFrameHidden;} 
         set {
@@ -49,6 +55,10 @@ public partial class HomePageViewModel : ObservableObject {
         }
     }
     private int _leftFrameWidth = 150;
+    /// <summary>
+    /// Controls the width of the Left Frame Panel.
+    /// 30 = collapsed; 150 = raised.
+    /// </summary>
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 
         set {
@@ -58,12 +68,27 @@ public partial class HomePageViewModel : ObservableObject {
         }
     }
     private bool _leftFramePanelBody_PrintingMenuExpanded = false;
+    /// <summary>
+    /// Controls the expanded state of the Printing Navigation Sub-Menu in the Left Frame Panel.
+    /// </summary>
     public bool LeftFramePanelBody_PrintingMenuExpanded {
         get {return _leftFramePanelBody_PrintingMenuExpanded;} 
         set {
             _leftFramePanelBody_PrintingMenuExpanded = value;
             OnPropertyChanged(nameof(_leftFramePanelBody_PrintingMenuExpanded));
             OnPropertyChanged(nameof(LeftFramePanelBody_PrintingMenuExpanded));
+        }
+    }
+    private bool _leftFramePanelBody_ScanningMenuExpanded = false;
+    /// <summary>
+    /// Controls the expanded state of the Scanning Navigation Sub-Menu in the Left Frame Panel.
+    /// </summary>
+    public bool LeftFramePanelBody_ScanningMenuExpanded {
+        get {return _leftFramePanelBody_ScanningMenuExpanded;} 
+        set {
+            _leftFramePanelBody_ScanningMenuExpanded = value;
+            OnPropertyChanged(nameof(_leftFramePanelBody_ScanningMenuExpanded));
+            OnPropertyChanged(nameof(LeftFramePanelBody_ScanningMenuExpanded));
         }
     }
     

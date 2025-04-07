@@ -102,12 +102,27 @@ public partial class DataTableViewModel : ObservableObject {
         }
     }
     private string _bodyTableHeader;
+    /// <summary>
+    /// Serves the Header for the Page's Table.
+    /// </summary>
     public string BodyTableHeader {
         get {return _bodyTableHeader;} 
         set {
             _bodyTableHeader = value;
             OnPropertyChanged(nameof(_bodyTableHeader));
             OnPropertyChanged(nameof(BodyTableHeader));
+        }
+    }
+    private List<string> _sortingFields;
+    /// <summary>
+    /// Serves the fields that can be used to sort the Page's ListView.
+    /// </summary>
+    public List<string> SortingFields {
+        get {return _sortingFields;} 
+        set {
+            _sortingFields = value;
+            OnPropertyChanged(nameof(_sortingFields));
+            OnPropertyChanged(nameof(SortingFields));
         }
     }
     private DataTable? _table;
@@ -163,5 +178,7 @@ public partial class DataTableViewModel : ObservableObject {
             _leftFramePanelHeader = "Select Process...";
             _bodyTableHeader = "";
         }
+        // configure the sortable fields for this Page's table
+        _sortingFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     }
 }

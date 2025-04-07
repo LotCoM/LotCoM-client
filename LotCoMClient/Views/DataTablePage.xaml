@@ -96,9 +96,11 @@
                     <!-- Body ScrollView Sub-Grid (allows layout customization) -->
                     <Grid>
                         <Grid.RowDefinitions>
-                            <!-- Printing Data Menu Entry Header -->
+                            <!-- ListView Sorting Label Row -->
                             <RowDefinition Height="Auto"/>
-                            <!-- Printing Data Menu Entry Expandable Dropdown Row -->
+                            <!-- ListView Sorting Field Picker Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ListView Sorting Order Picker Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
@@ -109,6 +111,62 @@
                             <!-- Expand Columns to Add More Entry Formatting -->
                         </Grid.ColumnDefinitions>
                         <!-- Add ScrollView Entries Here -->
+                        <!-- Sorting Panel Upper Border BoxView -->
+                        <BoxView
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="0,0,1,0"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Start"
+                            HeightRequest="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                        <!-- ListView Sorting Label -->
+                        <Label 
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Text="Sort Records"
+                            TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
+                            FontAttributes="None"
+                            FontSize="14"
+                            Margin="10"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
+                        <!-- ListView Sorting Field Picker -->
+                        <Picker
+                            x:Name="ListViewSortingFieldPicker"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10"
+                            Title="Sorting field"
+                            FontSize="12"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
+                        <!-- ListView Sorting Order Picker -->
+                        <Picker
+                            x:Name="ListViewSortingOrderPicker"
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="10"
+                            Title="Order"
+                            FontSize="12"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Ascending</x:String>
+                                    <x:String>Descending</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        <!-- Sorting Panel Lower Border BoxView -->
+                        <BoxView
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,0,1,0"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="End"
+                            HeightRequest="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                     </Grid>
                 </ScrollView>
 

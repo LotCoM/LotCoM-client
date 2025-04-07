@@ -138,7 +138,8 @@
                             Grid.Column="0"
                             Margin="10"
                             Title="Sorting field"
-                            FontSize="12"
+                            ItemsSource="{Binding SortingFields}"
+                            FontSize="10"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
                         <!-- ListView Sorting Order Picker -->
@@ -148,7 +149,7 @@
                             Grid.Column="0"
                             Margin="10"
                             Title="Order"
-                            FontSize="12"
+                            FontSize="10"
                             HorizontalOptions="Start"
                             VerticalOptions="Center">
                             <Picker.ItemsSource>

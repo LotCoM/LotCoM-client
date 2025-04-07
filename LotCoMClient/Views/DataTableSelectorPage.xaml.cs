@@ -40,6 +40,49 @@ public partial class DataTableSelectorPage : ContentPage {
     }
 
     /// <summary>
+    /// Checks that the Table has DataRecords available. Updates the sorting fields based on that Data.
+    /// </summary>
+    /// <returns></returns>
+    private async Task ConfigureSortingFields() {
+        // perform the config logic on a new CPU thread
+        await Task.Run(() => {
+            // confirm that the Data property has completed its async task
+            if (_viewModel.Data == null || _viewModel.Data!.IsNotCompleted) {
+                return;
+            }
+            List<string> Sortables = ["Part Number", "Part Name", "Quantity"];
+            // add the variably-required DataRecord fields
+            Console.WriteLine("Updating Sorting Fields");
+            DataRecord SampleRecord = _viewModel.Data.Result![0];
+            if (SampleRecord.IncludesJBKNumber) {
+                Sortables.Add("JBK Number");
+            }
+            if (SampleRecord.IncludesLotNumber) {
+                Sortables.Add("Lot Number");
+            }
+            if (SampleRecord.IncludesDeburrJBKNumber) {
+                Sortables.Add("Deburr JBK Number");
+            }
+            if (SampleRecord.IncludesDieNumber) {
+                Sortables.Add("Die Number");
+            }
+            if (SampleRecord.IncludesModelNumber) {
+                Sortables.Add("Model Number");
+            }
+            if (SampleRecord.IncludesHeatNumber) {
+                Sortables.Add("Heat Number");
+            }
+            Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
+            // update the ViewModel SortingField property
+            _viewModel.SortingFields = Sortables;
+            Console.WriteLine("Sortables:");
+            foreach (string _field in _viewModel.SortingFields) {
+                Console.WriteLine($"    Field: {_field}");
+            }
+        });
+    }
+
+    /// <summary>
     /// Creates a new DataTableSelectorPage.
     /// </summary>
     /// <param name="PageTitle">A string to apply as the Page's Title.</param>
@@ -117,5 +160,6 @@ public partial class DataTableSelectorPage : ContentPage {
     public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) {
         // update BodyTableHeader property
         await ConfigureBodyTableHeader();
+        await ConfigureSortingFields();
     }
 }

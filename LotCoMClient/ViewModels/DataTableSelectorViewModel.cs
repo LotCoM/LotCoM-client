@@ -27,6 +27,18 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
             OnPropertyChanged(nameof(SelectedProcessIndex));
         }
     }
+    private bool _isProcessAssigned;
+    /// <summary>
+    /// Serves the boolean condition of Process assignment for this Data Table Page.
+    /// </summary>
+    public bool IsProcessAssigned {
+        get {return _isProcessAssigned;}
+        set {
+            _isProcessAssigned = value;
+            OnPropertyChanged(nameof(_isProcessAssigned));
+            OnPropertyChanged(nameof(IsProcessAssigned));
+        }
+    }
 
     /// <summary>
     /// Creates a ViewModel for the DataTableSelectorPage.
@@ -47,6 +59,8 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
         }
         // configure Processes list to only contain the necessary Lines
         _processes = _processes.Where(x => PageDepartment.Lines.Contains(x.Line)).ToList();
+        // configure the IsProcessAssigned property
+        _isProcessAssigned = IsProcessAssigned;
     }
 
     /// <summary>
@@ -72,5 +86,6 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
         Table = new DataTable(Path);
         // update the Page's Data
         Data = new NotifyTaskCompletion<List<DataRecord>>(Table.GetRecordsAsync());
+        IsProcessAssigned = true;
     }
 }

@@ -12,19 +12,25 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
 /// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
 /// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="ModelNumber">The Model Number assigned to this record (if required for RecordProcess).</param>
 /// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
 /// <param name="RecordDate">The Date assigned to this record.</param>
 /// <param name="RecordTime">The Time assigned to this record.</param>
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID) {
+/// <param name="ScanAddress">The IP Address of the Scanner producing this record.</param>
+public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string ScanAddress): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress) {
     /// <summary>
     /// Converts a DataRecord base class type object into a ScanRecord object (explicit cast).
     /// </summary>
     /// <param name="BaseRecord"></param>
     /// <returns></returns>
     private static ScanRecord ConvertFromBase(DataRecord BaseRecord) {
-        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
+        // confirm there is an IP Address in the base Record object
+        if (BaseRecord.ScanAddress == null) {
+            throw new ArgumentException($"Cannot convert base DataRecord into a ScanRecord without a non-null 'ScanAddress' property value.");
+        }
+        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.ModelNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID, BaseRecord.ScanAddress);
     }
     
     /// <summary>
@@ -54,6 +60,9 @@ public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Q
         // the parsed DataRecord object could not be cast to ScanRecord
         } catch (RecordParseException _ex) {
             throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");
+        // the parsed DataRecord object did not contain an IP Address
+        } catch (ArgumentException) {
+            throw new RecordParseException($"The line {CSVLine} did not contain a Scanner Address.");
         }
     }
 }

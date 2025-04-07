@@ -105,6 +105,10 @@
                             <RowDefinition Height="Auto"/>
                             <!-- Printing Data Menu Entry Expandable Dropdown Row -->
                             <RowDefinition Height="Auto"/>
+                            <!-- Scanning Data Menu Entry Header -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Scanning Data Menu Entry Expandable Dropdown Row -->
+                            <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -269,6 +273,196 @@
                             <Button
                                 x:Name="LeftFramePanelBody_AluminumPrintingDataButton"
                                 Clicked="OnLeftFramePanelBody_AluminumPrintingDataButtonClicked"
+                                Text="Aluminum"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                        </VerticalStackLayout>
+                        <!-- Scanning Data Menu Section -->
+                        <VerticalStackLayout
+                            Grid.Row="2"
+                            Grid.Column="0">
+                            <BoxView HeightRequest="1"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                            <!-- <Image
+                                Source="{AppThemeBinding Light=printerblack.png, Dark=printerwhite.png}"
+                                WidthRequest="25"
+                                HeightRequest="25"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Start"
+                                Margin="0,5,0,0"/> -->
+                            <Button
+                                x:Name="LeftFramePanelBody_ScanningMenuButton"
+                                Clicked="OnLeftFramePanelBody_ScanningMenuButtonClicked"
+                                Text="Scanning"
+                                CornerRadius="0"
+                                FontSize="12"
+                                WidthRequest="150"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Start"/>
+                            <BoxView HeightRequest="1"
+                                HorizontalOptions="Fill"
+                                VerticalOptions="Center"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                        </VerticalStackLayout>
+                        <!-- Vertical Stack Layout Creates Expanding/Collapsing Scanning Menu Section -->
+                        <VerticalStackLayout
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            IsVisible="{Binding LeftFramePanelBody_ScanningMenuExpanded}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
+                            <!-- Scanning Data Page Navigation Buttons -->
+                            <!-- Diecast -->
+                            <Button
+                                x:Name="LeftFramePanelBody_DiecastScanningDataButton"
+                                Clicked="OnLeftFramePanelBody_DiecastScanningDataButtonClicked"
+                                Text="Diecast"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                            <!-- Deburr -->
+                            <Button
+                                x:Name="LeftFramePanelBody_DeburrScanningDataButton"
+                                Clicked="OnLeftFramePanelBody_DeburrScanningDataButtonClicked"
+                                Text="Deburr"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                            <!-- Steel -->
+                            <Button
+                                x:Name="LeftFramePanelBody_SteelScanningDataButton"
+                                Clicked="OnLeftFramePanelBody_SteelScanningDataButtonClicked"
+                                Text="Steel"
+                                FontSize="10"
+                                FontAttributes="None"
+                                CornerRadius="0"
+                                WidthRequest="150"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroupList>
+                                        <VisualStateGroup x:Name="RecessedStates">
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedNormalStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Disabled">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedDisabledStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Pressed">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPressedStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Style" Value="{StaticResource RecessedPointerOverStyle}"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateGroupList>
+                                </VisualStateManager.VisualStateGroups>
+                            </Button>
+                            <!-- Aluminum -->
+                            <Button
+                                x:Name="LeftFramePanelBody_AluminumScanningDataButton"
+                                Clicked="OnLeftFramePanelBody_AluminumScanningDataButtonClicked"
                                 Text="Aluminum"
                                 FontSize="10"
                                 FontAttributes="None"

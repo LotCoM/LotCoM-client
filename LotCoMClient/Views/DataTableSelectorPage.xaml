@@ -325,6 +325,13 @@
                                             Text="{Binding DieNumber, StringFormat='Die #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
+                                        <!-- DataRecord Model Number -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IncludesModelNumber}"
+                                            Text="{Binding ModelNumber, StringFormat='Model #: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Heat Number -->
                                         <Label
                                             Margin="20,0,0,0"

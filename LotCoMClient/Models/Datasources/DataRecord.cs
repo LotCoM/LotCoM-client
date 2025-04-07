@@ -7,6 +7,8 @@ namespace LotCoMClient.Models.Datasources;
 /// </summary>
 public partial class DataRecord : ObservableObject {
     [ObservableProperty]
+    public partial string? ScanAddress {get; set;}
+    [ObservableProperty]
     public partial Process RecordProcess {get; set;}
     [ObservableProperty]
     public partial Part RecordPart {get; set;}
@@ -20,6 +22,8 @@ public partial class DataRecord : ObservableObject {
     public partial string DeburrJBKNumber {get; set;}
     [ObservableProperty]
     public partial string DieNumber {get; set;}
+    [ObservableProperty]
+    public partial string ModelNumber {get; set;}
     [ObservableProperty]
     public partial string HeatNumber {get; set;}
     [ObservableProperty]
@@ -41,6 +45,8 @@ public partial class DataRecord : ObservableObject {
     [ObservableProperty]
     public partial bool IncludesDieNumber {get; set;} = false;
     [ObservableProperty]
+    public partial bool IncludesModelNumber {get; set;} = false;
+    [ObservableProperty]
     public partial bool IncludesHeatNumber {get; set;} = false;
 
     /// <summary>
@@ -53,12 +59,14 @@ public partial class DataRecord : ObservableObject {
     /// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
     /// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
     /// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
+    /// <param name="ModelNumber">The Model Number assigned to this record (if required for RecordProcess).</param>
     /// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
     /// <param name="RecordDate">The Date assigned to this record.</param>
     /// <param name="RecordTime">The Time assigned to this record.</param>
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>
     /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID) {
+    /// <param name="ScanAddress">(Optional) the IP Address of the Scanner producing this record. Only applicable to ScanRecords.</param>
+    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null) {
         // set the Record's properties
         this.RecordProcess = RecordProcess;
         this.RecordPart = RecordPart;
@@ -67,11 +75,13 @@ public partial class DataRecord : ObservableObject {
         this.LotNumber = LotNumber;
         this.DeburrJBKNumber = DeburrJBKNumber;
         this.DieNumber = DieNumber;
+        this.ModelNumber = ModelNumber;
         this.HeatNumber = HeatNumber;
         this.RecordDate = RecordDate;
         this.RecordTime = RecordTime;
         this.RecordShift = RecordShift;
         this.OperatorID = OperatorID;
+        this.ScanAddress = ScanAddress;
         // configure the Includes flags using the RecordProcess' requirements
         List<string> Requirements = RecordProcess.RequiredFields;
         // configure the JBK flag
@@ -90,6 +100,10 @@ public partial class DataRecord : ObservableObject {
         if (Requirements.Contains("DieNumber")) {
             IncludesDieNumber = true;
         }
+        // configure the Model flag
+        if (Requirements.Contains("ModelNumber")) {
+            IncludesDieNumber = true;
+        }
         // configure the Heat flag
         if (Requirements.Contains("HeatNumber")) {
             IncludesHeatNumber = true;
@@ -105,13 +119,24 @@ public partial class DataRecord : ObservableObject {
         string CSVLine = $",{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
         // retrieve the RecordProcess' required fields
         List<string> Requirements = RecordProcess.RequiredFields;
-        List<string> InnerFields = [JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, HeatNumber];
-        // add the inner (variable) data
-        foreach (string _field in InnerFields) {
-            // only add if the field is required
-            if (Requirements.Contains(nameof(_field))) {
-                CSVLine = $"{CSVLine},{_field}";
-            }
+        // add the variably-required data fields to the Line
+        if (IncludesJBKNumber) {
+            CSVLine = $"{CSVLine},{JBKNumber}";
+        }
+        if (IncludesLotNumber) {
+            CSVLine = $"{CSVLine},{LotNumber}";
+        }
+        if (IncludesDeburrJBKNumber) {
+            CSVLine = $"{CSVLine},{DeburrJBKNumber}";
+        }
+        if (IncludesDieNumber) {
+            CSVLine = $"{CSVLine},{DieNumber}";
+        }
+        if (IncludesModelNumber) {
+            CSVLine = $"{CSVLine},{ModelNumber}";
+        }
+        if (IncludesHeatNumber) {
+            CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
         CSVLine = $"{CSVLine},{RecordDate},{RecordTime},{RecordShift},{OperatorID}";

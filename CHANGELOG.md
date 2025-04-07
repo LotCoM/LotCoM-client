@@ -74,3 +74,12 @@
     - Allows easy application of a "recessed" look to `Button` controls.
     - Cuts down on repetitive code (DRY!).
   - Implement and convert default `MAUI` styling to a new, more-rigid `AppTheme` constant color group.
+
+# `0.3.0`
+### Scan Data Pages
+- **[feature/25](https://github.com/LotCoM/LotCoM-client/pull/26)**
+  - Implement Scanning Data Page navigation and logic ([#25](https://github.com/LotCoM/LotCoM-client/issues/25))
+  - Implement ScanAddress property in DataRecord classes (for ScanRecords).
+- **[bug/27](https://github.com/LotCoM/LotCoM-client/pull/28)**
+  - Resolve ([#27](https://github.com/LotCoM/LotCoM-client/issues/27)).
+    - Implement missing ModelNumber property in DataRecord classes.

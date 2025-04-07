@@ -131,4 +131,67 @@ public partial class HomePage : ContentPage {
         // push the new Aluminum Data Page to the Navigation Stack
         await Navigation.PushAsync(AluminumPage);
     }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_ScanningMenuButton control. 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_ScanningMenuButtonClicked(object sender, EventArgs e) {
+        // invert the Scanning Menu Shown property
+        if (_viewModel.LeftFramePanelBody_ScanningMenuExpanded) {
+            _viewModel.LeftFramePanelBody_ScanningMenuExpanded = false;
+        } else {
+            _viewModel.LeftFramePanelBody_ScanningMenuExpanded = true;
+        }
+        await Task.Delay(0);
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_DiecastScanningDataButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_DiecastScanningDataButtonClicked(object sender, EventArgs e) {
+        // create a new DataTablePage instance for the Diecast Database Table
+        DataTablePage DiecastPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\scans\\4420-DC-Diecast.txt", "Diecast Scanning Data", typeof(ScanRecord));
+        // push the new Diecast Data Page to the Navigation Stack
+        await Navigation.PushAsync(DiecastPage);
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_DeburrScanningDataButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_DeburrScanningDataButtonClicked(object sender, EventArgs e) {
+        // create a new DataTablePage instance for the Deburr Database Table
+        DataTablePage DeburrPage = new DataTablePage("\\\\144.133.122.1\\Lot Control Management\\Database\\data_tables\\scans\\4470-DC-Deburr.txt", "Deburr Scanning Data", typeof(ScanRecord));
+        // push the new Deburr Data Page to the Navigation Stack
+        await Navigation.PushAsync(DeburrPage);
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_SteelScanningDataButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_SteelScanningDataButtonClicked(object sender, EventArgs e) {
+        // create a new DataTablePage instance for the Steel Database Table
+        DataTableSelectorPage SteelPage = new DataTableSelectorPage("", "Steel Scanning Data", "Steel", typeof(ScanRecord), false);
+        // push the new Steel Data Page to the Navigation Stack
+        await Navigation.PushAsync(SteelPage);
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the LeftFramePanelBody_AluminumScanningDataButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnLeftFramePanelBody_AluminumScanningDataButtonClicked(object sender, EventArgs e) {
+        // create a new DataTablePage instance for the Aluminum Database Table
+        DataTableSelectorPage AluminumPage = new DataTableSelectorPage("", "Aluminum Scanning Data", "Aluminum", typeof(ScanRecord), false);
+        // push the new Aluminum Data Page to the Navigation Stack
+        await Navigation.PushAsync(AluminumPage);
+    }
 }

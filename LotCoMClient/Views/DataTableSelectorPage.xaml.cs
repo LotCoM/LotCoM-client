@@ -108,7 +108,7 @@ public partial class DataTableSelectorPage : ContentPage {
             // non-animated collapse
             _viewModel.LeftFrameWidth = 30;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (150 -> 30 by increments of 10)
+            // // 12 frame animation (250 -> 30 by increments of 10)
             // while (_viewModel.LeftFrameWidth > 30) {
             //     // animate the panel shrinking
             //     _viewModel.LeftFrameWidth -= 10;
@@ -122,10 +122,10 @@ public partial class DataTableSelectorPage : ContentPage {
             _viewModel.LeftFrameShown = true;
             _viewModel.LeftFrameHidden = false;
             // non-animated raise
-            _viewModel.LeftFrameWidth = 150;
+            _viewModel.LeftFrameWidth = 250;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (30 -> 150 by increments of 10)
-            // while (_viewModel.LeftFrameWidth < 150) {
+            // // 12 frame animation (30 -> 250 by increments of 10)
+            // while (_viewModel.LeftFrameWidth < 250) {
             //     // animate the panel raising
             //     _viewModel.LeftFrameWidth += 10;
             //     // animate the collapse button rotating

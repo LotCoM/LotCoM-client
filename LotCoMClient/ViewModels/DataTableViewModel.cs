@@ -90,10 +90,10 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameHidden));
         }
     }
+    private int _leftFrameWidth = 250;
     /// <summary>
-    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 150 when raised).
+    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 250 when raised).
     /// </summary>
-    private int _leftFrameWidth = 150;
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 
         set {

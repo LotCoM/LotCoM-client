@@ -387,7 +387,7 @@
                         <VisualState.Setters>
                             <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"/>
                             <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
-                            <Setter Property="CancelButtonColor" Value="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                            <Setter Property="CancelButtonColor" Value="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
                             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
                         </VisualState.Setters>
                     </VisualState>
@@ -405,6 +405,14 @@
                             <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
                             <Setter Property="CancelButtonColor" Value="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                             <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Hovered}, Dark={StaticResource HoveredDark}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="Focused">
+                        <VisualState.Setters>
+                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"/>
+                            <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
+                            <Setter Property="CancelButtonColor" Value="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"/>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

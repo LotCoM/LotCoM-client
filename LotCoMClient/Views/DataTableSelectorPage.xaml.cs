@@ -77,10 +77,6 @@ public partial class DataTableSelectorPage : ContentPage {
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
             // update the ViewModel SortingField property
             _viewModel.SortingFields = Sortables;
-            Console.WriteLine("Sortables:");
-            foreach (string _field in _viewModel.SortingFields) {
-                Console.WriteLine($"    Field: {_field}");
-            }
         });
     }
 

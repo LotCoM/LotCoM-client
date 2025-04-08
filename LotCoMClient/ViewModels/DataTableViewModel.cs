@@ -216,8 +216,8 @@ public partial class DataTableViewModel : ObservableObject {
         await Task.Run(() => {
             // create a conversion Library to convert plaintext selections to DataRecord property names
             Dictionary<string, string> Conversions = [];
-            Conversions.Add("Part Number", "PartNumber");
-            Conversions.Add("Part Name", "PartName");
+            Conversions.Add("Part Number", "RecordPart.PartNumber");
+            Conversions.Add("Part Name", "RecordPart.PartName");
             Conversions.Add("Quantity", "Quantity");
             Conversions.Add("JBK Number", "JBKNumber");
             Conversions.Add("Lot Number", "LotNumber");

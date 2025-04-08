@@ -232,24 +232,8 @@ public partial class DataTableViewModel : ObservableObject {
             // get the selected Field from the Sorting Field Picker
             string SortField = SortingFields[SelectedSortingFieldIndex];
             SortField = Conversions[SortField];
-            // confirm that there is data in the Data property (not loading)
-            if (Data == null || Data.IsNotCompleted) {
-                return;
-            }
-            if (Data.Result == null) {
-                return;
-            }
-            // use LINQ dynamic to sort using the property selected in the sorting field picker
-            List<DataRecord> SortedData = Data.Result.AsQueryable().OrderBy(SortField).ToList();
-            // invert the order (ascending by default) if descending sort was selected
-            if (SelectedSortingOrderIndex == 1) {
-                SortedData.Reverse();
-            }
-            // update the Data property using a dummy async task
-            Data = new NotifyTaskCompletion<List<DataRecord>> (Task.Run(() => {
-                Task.Delay(0);
-                return SortedData;
-            }));
+            // sort using the Model class
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));
         });
     }
 }

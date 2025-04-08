@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
+using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;
 
@@ -291,5 +292,28 @@ public partial class DataTable : ObservableObject {
         }
         // update the _records property to the post-save DataRecords list asynchronously
         _records = await GetRecordsAsync();
+    }
+
+    /// <summary>
+    /// Sorts and updates the Table's Records list using SortingProperty as the sort.
+    /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
+    /// </summary>
+    /// <param name="SortingProperty">A Property name applicable to the DataRecord class.</param>
+    /// <param name="Order">0 (ascending) or 1 (descending).</param>
+    /// <returns></returns>
+    public async Task<List<DataRecord>> Sort(string SortingProperty, int Order) {
+        // perform the sort process on a new CPU thread
+        await Task.Run(() => {
+            // use LINQ dynamic to sort using the property selected in the sorting field picker
+            List<DataRecord> SortedData = _records.AsQueryable().OrderBy(SortingProperty).ToList();
+            // invert the order (ascending by default) if descending sort was selected
+            if (Order == 1) {
+                SortedData.Reverse();
+            }
+            // update the _records property
+            _records = SortedData;
+            return SortedData;
+        });
+        return _records;
     }
 }

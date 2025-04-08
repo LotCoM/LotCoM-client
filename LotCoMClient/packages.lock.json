@@ -45,9 +45,9 @@
       },
       "System.Linq.Dynamic": {
         "type": "Direct",
-        "requested": "[1.0.8, )",
-        "resolved": "1.0.8",
-        "contentHash": "nh+3I/wcZcyQ4p8DKMhy/PH4sGKONrrGlx+eqpqrRTDHe6gyDTF5nK0AIXitDuzvtNTOkvpJWvPd0xdzEmlQjA=="
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "ZctavbtTYaGYhdmdTfiVW6bY9xNFnOPhTPjhjZBIFLlBjAzus6REraAt4prrxrEpxZxMnO67XovsJclWHGzokA=="
       },
       "GoogleGson": {
         "type": "Transitive",
@@ -1194,9 +1194,9 @@
       },
       "System.Linq.Dynamic": {
         "type": "Direct",
-        "requested": "[1.0.8, )",
-        "resolved": "1.0.8",
-        "contentHash": "nh+3I/wcZcyQ4p8DKMhy/PH4sGKONrrGlx+eqpqrRTDHe6gyDTF5nK0AIXitDuzvtNTOkvpJWvPd0xdzEmlQjA=="
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "ZctavbtTYaGYhdmdTfiVW6bY9xNFnOPhTPjhjZBIFLlBjAzus6REraAt4prrxrEpxZxMnO67XovsJclWHGzokA=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -1372,9 +1372,9 @@
       },
       "System.Linq.Dynamic": {
         "type": "Direct",
-        "requested": "[1.0.8, )",
-        "resolved": "1.0.8",
-        "contentHash": "nh+3I/wcZcyQ4p8DKMhy/PH4sGKONrrGlx+eqpqrRTDHe6gyDTF5nK0AIXitDuzvtNTOkvpJWvPd0xdzEmlQjA=="
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "ZctavbtTYaGYhdmdTfiVW6bY9xNFnOPhTPjhjZBIFLlBjAzus6REraAt4prrxrEpxZxMnO67XovsJclWHGzokA=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
@@ -1544,9 +1544,9 @@
       },
       "System.Linq.Dynamic": {
         "type": "Direct",
-        "requested": "[1.0.8, )",
-        "resolved": "1.0.8",
-        "contentHash": "nh+3I/wcZcyQ4p8DKMhy/PH4sGKONrrGlx+eqpqrRTDHe6gyDTF5nK0AIXitDuzvtNTOkvpJWvPd0xdzEmlQjA=="
+        "requested": "[1.0.0, )",
+        "resolved": "1.0.0",
+        "contentHash": "ZctavbtTYaGYhdmdTfiVW6bY9xNFnOPhTPjhjZBIFLlBjAzus6REraAt4prrxrEpxZxMnO67XovsJclWHGzokA=="
       },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",

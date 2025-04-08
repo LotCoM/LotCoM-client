@@ -129,6 +129,10 @@
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Sorting Order Picker Row -->
                             <RowDefinition Height="Auto"/>
+                            <!-- ListView Searching Label Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ListView Searching Control Row -->
+                            <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
@@ -196,6 +200,48 @@
                         <BoxView
                             IsVisible="{Binding IsProcessAssigned}"
                             Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="0,0,1,0"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="End"
+                            HeightRequest="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                        <!-- Searching Panel Upper Border BoxView -->
+                        <BoxView
+                            IsVisible="{Binding IsProcessAssigned}"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="0,0,1,0"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Start"
+                            HeightRequest="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
+                        <!-- ListView Searching Label -->
+                        <Label 
+                            IsVisible="{Binding IsProcessAssigned}"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="Search Records"
+                            TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
+                            FontAttributes="None"
+                            FontSize="14"
+                            Margin="10"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
+                        <!-- ListView Searching Search Bar -->
+                        <SearchBar
+                            x:Name="ListViewSearchingSearchBar"
+                            IsVisible="{Binding IsProcessAssigned}"
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="10"
+                            FontSize="10"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
+                        <!-- Searching Panel Lower Border BoxView -->
+                        <BoxView
+                            IsVisible="{Binding IsProcessAssigned}"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"

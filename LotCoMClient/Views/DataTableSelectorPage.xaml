@@ -175,6 +175,8 @@
                             Title="Sorting field"
                             ItemsSource="{Binding SortingFields}"
                             FontSize="10"
+                            WidthRequest="200"
+                            HeightRequest="65"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
                         <!-- ListView Sorting Order Picker -->
@@ -187,6 +189,8 @@
                             Margin="10"
                             Title="Order"
                             FontSize="10"
+                            WidthRequest="200"
+                            HeightRequest="65"
                             HorizontalOptions="Start"
                             VerticalOptions="Center">
                             <Picker.ItemsSource>
@@ -236,6 +240,7 @@
                             Grid.Column="0"
                             Margin="10"
                             FontSize="10"
+                            WidthRequest="200"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
                         <!-- Searching Panel Lower Border BoxView -->

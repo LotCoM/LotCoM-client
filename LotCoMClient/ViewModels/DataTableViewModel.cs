@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Services;
+using System.Linq.Dynamic;
 
 namespace LotCoMClient.ViewModels;
 
@@ -149,6 +150,30 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(Data));
         }
     }
+    private int _selectedSortingFieldIndex;
+    /// <summary>
+    /// Serves the currently selected index of the SortingField Picker.
+    /// </summary>
+    public int SelectedSortingFieldIndex {
+        get {return _selectedSortingFieldIndex;}
+        set {
+            _selectedSortingFieldIndex = value;
+            OnPropertyChanged(nameof(_selectedSortingFieldIndex));
+            OnPropertyChanged(nameof(SelectedSortingFieldIndex));
+        }
+    }
+    private int _selectedSortingOrderIndex;
+    /// <summary>
+    /// Serves the currently selected index of the SortingOrder Picker.
+    /// </summary>
+    public int SelectedSortingOrderIndex {
+        get {return _selectedSortingOrderIndex;}
+        set {
+            _selectedSortingOrderIndex = value;
+            OnPropertyChanged(nameof(_selectedSortingOrderIndex));
+            OnPropertyChanged(nameof(SelectedSortingOrderIndex));
+        }
+    }
 
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.
@@ -180,5 +205,51 @@ public partial class DataTableViewModel : ObservableObject {
         }
         // configure the sortable fields for this Page's table
         _sortingFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
+    }
+
+    /// <summary>
+    /// Sorts the DataRecords in the Data property using the Sorting Field and orders it according to the Order selection.
+    /// </summary>
+    /// <returns></returns>
+    public async Task SortDataTable() {
+        // perform the sort process on a new CPU thread
+        await Task.Run(() => {
+            // create a conversion Library to convert plaintext selections to DataRecord property names
+            Dictionary<string, string> Conversions = [];
+            Conversions.Add("Part Number", "RecordPart.PartNumber");
+            Conversions.Add("Part Name", "RecordPart.PartName");
+            Conversions.Add("Quantity", "Quantity");
+            Conversions.Add("JBK Number", "JBKNumber");
+            Conversions.Add("Lot Number", "LotNumber");
+            Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
+            Conversions.Add("Die Number", "DieNumber");
+            Conversions.Add("Model Number", "ModelNumber");
+            Conversions.Add("Heat Number", "HeatNumber");
+            Conversions.Add("Production Date", "RecordDate");
+            Conversions.Add("Production Time", "RecordTime");
+            Conversions.Add("Production Shift", "RecordShift");
+            Conversions.Add("Operator ID", "OperatorID");
+            // get the selected Field from the Sorting Field Picker
+            string SortField = SortingFields[SelectedSortingFieldIndex];
+            SortField = Conversions[SortField];
+            // confirm that there is data in the Data property (not loading)
+            if (Data == null || Data.IsNotCompleted) {
+                return;
+            }
+            if (Data.Result == null) {
+                return;
+            }
+            // use LINQ dynamic to sort using the property selected in the sorting field picker
+            List<DataRecord> SortedData = Data.Result.AsQueryable().OrderBy(SortField).ToList();
+            // invert the order (ascending by default) if descending sort was selected
+            if (SelectedSortingOrderIndex == 1) {
+                SortedData.Reverse();
+            }
+            // update the Data property using a dummy async task
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Task.Run(() => {
+                Task.Delay(0);
+                return SortedData;
+            }));
+        });
     }
 }

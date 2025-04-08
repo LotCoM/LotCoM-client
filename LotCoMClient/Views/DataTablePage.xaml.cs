@@ -47,38 +47,36 @@ public partial class DataTablePage : ContentPage {
         // perform the config logic on a new CPU thread
         await Task.Run(() => {
             // confirm that the Data property has completed its async task
-            if (_viewModel.Data!.IsNotCompleted) {
+            if (_viewModel.Data == null || _viewModel.Data.IsNotCompleted) {
                 return;
             }
             List<string> Sortables = ["Part Number", "Part Name", "Quantity"];
-            // add the variably-required DataRecord fields
-            Console.WriteLine("Updating Sorting Fields");
-            DataRecord SampleRecord = _viewModel.Data.Result![0];
-            if (SampleRecord.IncludesJBKNumber) {
-                Sortables.Add("JBK Number");
-            }
-            if (SampleRecord.IncludesLotNumber) {
-                Sortables.Add("Lot Number");
-            }
-            if (SampleRecord.IncludesDeburrJBKNumber) {
-                Sortables.Add("Deburr JBK Number");
-            }
-            if (SampleRecord.IncludesDieNumber) {
-                Sortables.Add("Die Number");
-            }
-            if (SampleRecord.IncludesModelNumber) {
-                Sortables.Add("Model Number");
-            }
-            if (SampleRecord.IncludesHeatNumber) {
-                Sortables.Add("Heat Number");
+            // add the variably-required DataRecord fields (only if Data is loaded)
+            DataRecord SampleRecord;
+            if (_viewModel.Data.Result != null && _viewModel.Data.Result.Count > 0) {
+                SampleRecord = _viewModel.Data.Result[0];
+                if (SampleRecord.IncludesJBKNumber) {
+                    Sortables.Add("JBK Number");
+                }
+                if (SampleRecord.IncludesLotNumber) {
+                    Sortables.Add("Lot Number");
+                }
+                if (SampleRecord.IncludesDeburrJBKNumber) {
+                    Sortables.Add("Deburr JBK Number");
+                }
+                if (SampleRecord.IncludesDieNumber) {
+                    Sortables.Add("Die Number");
+                }
+                if (SampleRecord.IncludesModelNumber) {
+                    Sortables.Add("Model Number");
+                }
+                if (SampleRecord.IncludesHeatNumber) {
+                    Sortables.Add("Heat Number");
+                }
             }
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
             // update the ViewModel SortingField property
             _viewModel.SortingFields = Sortables;
-            Console.WriteLine("Sortables:");
-            foreach (string _field in _viewModel.SortingFields) {
-                Console.WriteLine($"    Field: {_field}");
-            }
         });
     }
 
@@ -149,5 +147,18 @@ public partial class DataTablePage : ContentPage {
         // update BodyTableHeader property
         await ConfigureBodyTableHeader();
         await ConfigureSortingFields();
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the ListViewSortingFieldPicker and ListViewSortingOrderPicker controls.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) {
+        // update ViewModel sorting indexes
+        _viewModel.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+        _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+        // invoke the ViewModel sort method
+        await _viewModel.SortDataTable();
     }
 }

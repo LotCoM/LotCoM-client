@@ -163,6 +163,7 @@
                         <!-- ListView Sorting Field Picker -->
                         <Picker
                             x:Name="ListViewSortingFieldPicker"
+                            SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             IsVisible="{Binding IsProcessAssigned}"
                             Grid.Row="1"
                             Grid.Column="0"
@@ -175,6 +176,7 @@
                         <!-- ListView Sorting Order Picker -->
                         <Picker
                             x:Name="ListViewSortingOrderPicker"
+                            SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             IsVisible="{Binding IsProcessAssigned}"
                             Grid.Row="2"
                             Grid.Column="0"

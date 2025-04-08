@@ -134,6 +134,7 @@
                         <!-- ListView Sorting Field Picker -->
                         <Picker
                             x:Name="ListViewSortingFieldPicker"
+                            SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             Grid.Row="1"
                             Grid.Column="0"
                             Margin="10"
@@ -145,6 +146,7 @@
                         <!-- ListView Sorting Order Picker -->
                         <Picker
                             x:Name="ListViewSortingOrderPicker"
+                            SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             Grid.Row="2"
                             Grid.Column="0"
                             Margin="10"

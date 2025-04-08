@@ -150,4 +150,17 @@ public partial class DataTablePage : ContentPage {
         await ConfigureBodyTableHeader();
         await ConfigureSortingFields();
     }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the ListViewSortingFieldPicker and ListViewSortingOrderPicker controls.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) {
+        // update ViewModel sorting indexes
+        _viewModel.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+        _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+        // invoke the ViewModel sort method
+        await _viewModel.SortDataTable();
+    }
 }

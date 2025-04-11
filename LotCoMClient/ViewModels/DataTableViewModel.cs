@@ -114,7 +114,7 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(BodyTableHeader));
         }
     }
-    private List<string> _dataFields;
+    private List<string> _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     /// <summary>
     /// Serves the data fields that are included in DataRecords for this Page's ListView.
     /// </summary>
@@ -126,19 +126,16 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(DataFields));
         }
     }
+    private List<string> _searchableFields = ["All", "Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     /// <summary>
     /// Serves the fields that can be used to search the Page's ListView.
     /// </summary>
     public List<string> SearchableFields {
-        get {
-            List<string> _searchableFields = ["All"];
-            _searchableFields.AddRange(_dataFields);
-            return _searchableFields;
-        } 
+        get {return _searchableFields;}
         set {
-            _dataFields = value;
-            OnPropertyChanged(nameof(_dataFields));
-            OnPropertyChanged(nameof(DataFields));
+            _searchableFields = value;
+            OnPropertyChanged(nameof(_searchableFields));
+            OnPropertyChanged(nameof(SearchableFields));
         }
     }
     private DataTable? _table;
@@ -272,8 +269,6 @@ public partial class DataTableViewModel : ObservableObject {
             _leftFramePanelHeader = "Select Process...";
             _bodyTableHeader = "";
         }
-        // configure the sortable fields for this Page's table
-        _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     }
 
     /// <summary>
@@ -301,7 +296,9 @@ public partial class DataTableViewModel : ObservableObject {
         await Task.Run(() => {
             // get the selected Field from the Searching Field Picker
             string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
-            PropertyName = ResolveDataRecordPropertyName(PropertyName);
+            if (PropertyName != "All") {
+                PropertyName = ResolveDataRecordPropertyName(PropertyName);
+            }
             // Search using the Model class
             Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm, PropertyName));
         });

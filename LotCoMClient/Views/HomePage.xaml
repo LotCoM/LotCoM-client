@@ -139,7 +139,7 @@
                                 Text="Printing"
                                 CornerRadius="0"
                                 FontSize="12"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"/>
                             <BoxView HeightRequest="1"
@@ -163,7 +163,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -201,7 +201,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -239,7 +239,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -277,7 +277,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -329,7 +329,7 @@
                                 Text="Scanning"
                                 CornerRadius="0"
                                 FontSize="12"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Center"
                                 VerticalOptions="Start"/>
                             <BoxView HeightRequest="1"
@@ -353,7 +353,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -391,7 +391,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -429,7 +429,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>
@@ -467,7 +467,7 @@
                                 FontSize="10"
                                 FontAttributes="None"
                                 CornerRadius="0"
-                                WidthRequest="150"
+                                WidthRequest="250"
                                 HorizontalOptions="Start"
                                 VerticalOptions="Center">
                                 <VisualStateManager.VisualStateGroups>

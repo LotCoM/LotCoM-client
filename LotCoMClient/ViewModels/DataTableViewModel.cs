@@ -90,10 +90,10 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameHidden));
         }
     }
+    private int _leftFrameWidth = 250;
     /// <summary>
-    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 150 when raised).
+    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 250 when raised).
     /// </summary>
-    private int _leftFrameWidth = 150;
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 
         set {
@@ -114,16 +114,28 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(BodyTableHeader));
         }
     }
-    private List<string> _sortingFields;
+    private List<string> _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     /// <summary>
-    /// Serves the fields that can be used to sort the Page's ListView.
+    /// Serves the data fields that are included in DataRecords for this Page's ListView.
     /// </summary>
-    public List<string> SortingFields {
-        get {return _sortingFields;} 
+    public List<string> DataFields {
+        get {return _dataFields;} 
         set {
-            _sortingFields = value;
-            OnPropertyChanged(nameof(_sortingFields));
-            OnPropertyChanged(nameof(SortingFields));
+            _dataFields = value;
+            OnPropertyChanged(nameof(_dataFields));
+            OnPropertyChanged(nameof(DataFields));
+        }
+    }
+    private List<string> _searchableFields = ["All", "Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
+    /// <summary>
+    /// Serves the fields that can be used to search the Page's ListView.
+    /// </summary>
+    public List<string> SearchableFields {
+        get {return _searchableFields;}
+        set {
+            _searchableFields = value;
+            OnPropertyChanged(nameof(_searchableFields));
+            OnPropertyChanged(nameof(SearchableFields));
         }
     }
     private DataTable? _table;
@@ -174,6 +186,60 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(SelectedSortingOrderIndex));
         }
     }
+    private int _selectedSearchingFieldIndex;
+    /// <summary>
+    /// Serves the currently selected index of the SearchingField Picker.
+    /// </summary>
+    public int SelectedSearchingFieldIndex {
+        get {return _selectedSearchingFieldIndex;}
+        set {
+            _selectedSearchingFieldIndex = value;
+            OnPropertyChanged(nameof(_selectedSearchingFieldIndex));
+            OnPropertyChanged(nameof(SelectedSearchingFieldIndex));
+        }
+    }
+    private string _searchTerm = "";
+    /// <summary>
+    /// Serves the currently entered Text value of the ListViewSearchBar.
+    /// </summary>
+    public string SearchTerm {
+        get {return _searchTerm;}
+        set {
+            _searchTerm = value;
+            OnPropertyChanged(nameof(_searchTerm));
+            OnPropertyChanged(nameof(SearchTerm));
+        }
+    }
+
+    /// <summary>
+    /// Resolves a defined Property Name on DataRecord from a passed String.
+    /// </summary>
+    /// <param name="String"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    private string ResolveDataRecordPropertyName(string String) {
+        // create a conversion Library to convert plaintext selections to DataRecord property names
+        Dictionary<string, string> Conversions = [];
+        Conversions.Add("Part Number", "RecordPart.PartNumber");
+        Conversions.Add("Part Name", "RecordPart.PartName");
+        Conversions.Add("Quantity", "Quantity");
+        Conversions.Add("JBK Number", "JBKNumber");
+        Conversions.Add("Lot Number", "LotNumber");
+        Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
+        Conversions.Add("Die Number", "DieNumber");
+        Conversions.Add("Model Number", "ModelNumber");
+        Conversions.Add("Heat Number", "HeatNumber");
+        Conversions.Add("Production Date", "RecordDate");
+        Conversions.Add("Production Time", "RecordTime");
+        Conversions.Add("Production Shift", "RecordShift");
+        Conversions.Add("Operator ID", "OperatorID");
+        // resolve the property name from the Dictionary
+        try {
+            return Conversions[String];
+        } catch {
+            throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
+        }
+    }
 
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.
@@ -203,8 +269,6 @@ public partial class DataTableViewModel : ObservableObject {
             _leftFramePanelHeader = "Select Process...";
             _bodyTableHeader = "";
         }
-        // configure the sortable fields for this Page's table
-        _sortingFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     }
 
     /// <summary>
@@ -214,42 +278,29 @@ public partial class DataTableViewModel : ObservableObject {
     public async Task SortDataTable() {
         // perform the sort process on a new CPU thread
         await Task.Run(() => {
-            // create a conversion Library to convert plaintext selections to DataRecord property names
-            Dictionary<string, string> Conversions = [];
-            Conversions.Add("Part Number", "RecordPart.PartNumber");
-            Conversions.Add("Part Name", "RecordPart.PartName");
-            Conversions.Add("Quantity", "Quantity");
-            Conversions.Add("JBK Number", "JBKNumber");
-            Conversions.Add("Lot Number", "LotNumber");
-            Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
-            Conversions.Add("Die Number", "DieNumber");
-            Conversions.Add("Model Number", "ModelNumber");
-            Conversions.Add("Heat Number", "HeatNumber");
-            Conversions.Add("Production Date", "RecordDate");
-            Conversions.Add("Production Time", "RecordTime");
-            Conversions.Add("Production Shift", "RecordShift");
-            Conversions.Add("Operator ID", "OperatorID");
             // get the selected Field from the Sorting Field Picker
-            string SortField = SortingFields[SelectedSortingFieldIndex];
-            SortField = Conversions[SortField];
-            // confirm that there is data in the Data property (not loading)
-            if (Data == null || Data.IsNotCompleted) {
-                return;
+            string SortField = DataFields[SelectedSortingFieldIndex];
+            SortField = ResolveDataRecordPropertyName(SortField);
+            // sort using the Model class
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));
+        });
+    }
+
+    /// <summary>
+    /// Searches for match hits in the Data list of the DataTable.
+    /// Configures the Data property to only show those match hits.
+    /// </summary>
+    /// <returns></returns>
+    public async Task SearchDataTable() {
+        // perform the search process on a new CPU thread
+        await Task.Run(() => {
+            // get the selected Field from the Searching Field Picker
+            string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
+            if (PropertyName != "All") {
+                PropertyName = ResolveDataRecordPropertyName(PropertyName);
             }
-            if (Data.Result == null) {
-                return;
-            }
-            // use LINQ dynamic to sort using the property selected in the sorting field picker
-            List<DataRecord> SortedData = Data.Result.AsQueryable().OrderBy(SortField).ToList();
-            // invert the order (ascending by default) if descending sort was selected
-            if (SelectedSortingOrderIndex == 1) {
-                SortedData.Reverse();
-            }
-            // update the Data property using a dummy async task
-            Data = new NotifyTaskCompletion<List<DataRecord>> (Task.Run(() => {
-                Task.Delay(0);
-                return SortedData;
-            }));
+            // Search using the Model class
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm, PropertyName));
         });
     }
 }

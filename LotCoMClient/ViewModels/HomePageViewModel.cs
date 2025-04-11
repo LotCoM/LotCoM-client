@@ -54,10 +54,10 @@ public partial class HomePageViewModel : ObservableObject {
             OnPropertyChanged(nameof(LeftFrameHidden));
         }
     }
-    private int _leftFrameWidth = 150;
+    private int _leftFrameWidth = 250;
     /// <summary>
     /// Controls the width of the Left Frame Panel.
-    /// 30 = collapsed; 150 = raised.
+    /// 30 = collapsed; 250 = raised.
     /// </summary>
     public int LeftFrameWidth {
         get {return _leftFrameWidth;} 

@@ -40,10 +40,10 @@ public partial class DataTablePage : ContentPage {
     }
 
     /// <summary>
-    /// Checks that the Table has DataRecords available. Updates the sorting fields based on that Data.
+    /// Checks that the Table has DataRecords available. Updates the Data fields based on that Data.
     /// </summary>
     /// <returns></returns>
-    private async Task ConfigureSortingFields() {
+    private async Task ConfigureDataFields() {
         // perform the config logic on a new CPU thread
         await Task.Run(() => {
             // confirm that the Data property has completed its async task
@@ -75,8 +75,9 @@ public partial class DataTablePage : ContentPage {
                 }
             }
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
-            // update the ViewModel SortingField property
-            _viewModel.SortingFields = Sortables;
+            // update the ViewModel DataFields and SearchableFields property
+            _viewModel.DataFields = Sortables;
+            _viewModel.SearchableFields = Sortables.Prepend("All").ToList();
         });
     }
 
@@ -111,7 +112,7 @@ public partial class DataTablePage : ContentPage {
             // non-animated collapse
             _viewModel.LeftFrameWidth = 30;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (150 -> 30 by increments of 10)
+            // // 12 frame animation (250 -> 30 by increments of 10)
             // while (_viewModel.LeftFrameWidth > 30) {
             //     // animate the panel shrinking
             //     _viewModel.LeftFrameWidth -= 10;
@@ -125,10 +126,10 @@ public partial class DataTablePage : ContentPage {
             _viewModel.LeftFrameShown = true;
             _viewModel.LeftFrameHidden = false;
             // non-animated raise
-            _viewModel.LeftFrameWidth = 150;
+            _viewModel.LeftFrameWidth = 250;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (30 -> 150 by increments of 10)
-            // while (_viewModel.LeftFrameWidth < 150) {
+            // // 12 frame animation (30 -> 250 by increments of 10)
+            // while (_viewModel.LeftFrameWidth < 250) {
             //     // animate the panel raising
             //     _viewModel.LeftFrameWidth += 10;
             //     // animate the collapse button rotating
@@ -146,7 +147,7 @@ public partial class DataTablePage : ContentPage {
     public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) {
         // update BodyTableHeader property
         await ConfigureBodyTableHeader();
-        await ConfigureSortingFields();
+        await ConfigureDataFields();
     }
 
     /// <summary>
@@ -160,5 +161,17 @@ public partial class DataTablePage : ContentPage {
         _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
         // invoke the ViewModel sort method
         await _viewModel.SortDataTable();
+    }
+
+    /// <summary>
+    /// Handler for the SearchButtonPressed event from the ListViewSearchingSearchBar control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnListViewSearchButtonPressed(object sender, EventArgs e) {
+        // invoke the ViewModel local sort method using the current search term
+        _viewModel.SearchTerm = ListViewSearchingSearchBar.Text;
+        _viewModel.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+        await _viewModel.SearchDataTable();
     }
 }

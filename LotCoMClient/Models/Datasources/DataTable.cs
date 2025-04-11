@@ -295,25 +295,44 @@ public partial class DataTable : ObservableObject {
     }
 
     /// <summary>
-    /// Sorts and updates the Table's Records list using SortingProperty as the sort.
+    /// Sorts the Table's Records list using SortingProperty as the sort.
     /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
+    /// Does NOT overwrite with the sorted list.
     /// </summary>
     /// <param name="SortingProperty">A Property name applicable to the DataRecord class.</param>
     /// <param name="Order">0 (ascending) or 1 (descending).</param>
     /// <returns></returns>
     public async Task<List<DataRecord>> Sort(string SortingProperty, int Order) {
         // perform the sort process on a new CPU thread
-        await Task.Run(() => {
+        return await Task.Run(() => {
             // use LINQ dynamic to sort using the property selected in the sorting field picker
             List<DataRecord> SortedData = _records.AsQueryable().OrderBy(SortingProperty).ToList();
             // invert the order (ascending by default) if descending sort was selected
             if (Order == 1) {
                 SortedData.Reverse();
             }
-            // update the _records property
-            _records = SortedData;
             return SortedData;
         });
-        return _records;
+    }
+
+    /// <summary>
+    /// Performs a search on the current data in _records. 
+    /// Checks for matches in every field of the Data Record.
+    /// </summary>
+    /// <param name="SearchTerm"></param>
+    /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
+    public async Task<List<DataRecord>> Search(string SearchTerm) {
+        // perform the search algorithm on a new CPU thread
+        return await Task.Run(() => {
+            // convert each DataRecord in _records to a CSV Line and check for a hit
+            List<DataRecord> SearchHits = [];
+            foreach (DataRecord _record in _records) {
+                string _string = _record.ToCSV();
+                if (_string.Contains(SearchTerm)) {
+                    SearchHits.Add(_record);
+                }
+            }
+            return SearchHits;
+        });
     }
 }

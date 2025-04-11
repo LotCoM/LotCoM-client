@@ -236,4 +236,18 @@ public partial class DataTableViewModel : ObservableObject {
             Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));
         });
     }
+
+    /// <summary>
+    /// Searches for match hits in the Data list of the DataTable.
+    /// Configures the Data property to only show those match hits.
+    /// </summary>
+    /// <param name="SearchTerm"></param>
+    /// <returns></returns>
+    public async Task SearchDataTable(string SearchTerm) {
+        // perform the search process on a new CPU thread
+        await Task.Run(() => {
+            // Search using the Model class
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm));
+        });
+    }
 }

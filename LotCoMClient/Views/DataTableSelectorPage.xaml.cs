@@ -173,4 +173,15 @@ public partial class DataTableSelectorPage : ContentPage {
         // invoke the ViewModel sort method
         await _viewModel.SortDataTable();
     }
+
+    /// <summary>
+    /// Handler for the SearchButtonPressed event from the ListViewSearchingSearchBar control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public async void OnListViewSearchButtonPressed(object sender, EventArgs e) {
+        // invoke the ViewModel local sort method using the current search term
+        string SearchTerm = ListViewSearchingSearchBar.Text;
+        await _viewModel.SearchDataTable(SearchTerm);
+    }
 }

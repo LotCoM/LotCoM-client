@@ -201,6 +201,7 @@
                         <!-- ListView Searching Search Bar -->
                         <SearchBar
                             x:Name="ListViewSearchingSearchBar"
+                            SearchButtonPressed="OnListViewSearchButtonPressed"
                             Grid.Row="4"
                             Grid.Column="0"
                             Margin="10"

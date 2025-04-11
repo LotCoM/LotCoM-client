@@ -116,10 +116,25 @@ public partial class DataTableViewModel : ObservableObject {
     }
     private List<string> _dataFields;
     /// <summary>
-    /// Serves the fields that can be used to sort the Page's ListView.
+    /// Serves the data fields that are included in DataRecords for this Page's ListView.
     /// </summary>
     public List<string> DataFields {
         get {return _dataFields;} 
+        set {
+            _dataFields = value;
+            OnPropertyChanged(nameof(_dataFields));
+            OnPropertyChanged(nameof(DataFields));
+        }
+    }
+    /// <summary>
+    /// Serves the fields that can be used to search the Page's ListView.
+    /// </summary>
+    public List<string> SearchableFields {
+        get {
+            List<string> _searchableFields = ["All"];
+            _searchableFields.AddRange(_dataFields);
+            return _searchableFields;
+        } 
         set {
             _dataFields = value;
             OnPropertyChanged(nameof(_dataFields));
@@ -174,6 +189,60 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(SelectedSortingOrderIndex));
         }
     }
+    private int _selectedSearchingFieldIndex;
+    /// <summary>
+    /// Serves the currently selected index of the SearchingField Picker.
+    /// </summary>
+    public int SelectedSearchingFieldIndex {
+        get {return _selectedSearchingFieldIndex;}
+        set {
+            _selectedSearchingFieldIndex = value;
+            OnPropertyChanged(nameof(_selectedSearchingFieldIndex));
+            OnPropertyChanged(nameof(SelectedSearchingFieldIndex));
+        }
+    }
+    private string _searchTerm = "";
+    /// <summary>
+    /// Serves the currently entered Text value of the ListViewSearchBar.
+    /// </summary>
+    public string SearchTerm {
+        get {return _searchTerm;}
+        set {
+            _searchTerm = value;
+            OnPropertyChanged(nameof(_searchTerm));
+            OnPropertyChanged(nameof(SearchTerm));
+        }
+    }
+
+    /// <summary>
+    /// Resolves a defined Property Name on DataRecord from a passed String.
+    /// </summary>
+    /// <param name="String"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    private string ResolveDataRecordPropertyName(string String) {
+        // create a conversion Library to convert plaintext selections to DataRecord property names
+        Dictionary<string, string> Conversions = [];
+        Conversions.Add("Part Number", "RecordPart.PartNumber");
+        Conversions.Add("Part Name", "RecordPart.PartName");
+        Conversions.Add("Quantity", "Quantity");
+        Conversions.Add("JBK Number", "JBKNumber");
+        Conversions.Add("Lot Number", "LotNumber");
+        Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
+        Conversions.Add("Die Number", "DieNumber");
+        Conversions.Add("Model Number", "ModelNumber");
+        Conversions.Add("Heat Number", "HeatNumber");
+        Conversions.Add("Production Date", "RecordDate");
+        Conversions.Add("Production Time", "RecordTime");
+        Conversions.Add("Production Shift", "RecordShift");
+        Conversions.Add("Operator ID", "OperatorID");
+        // resolve the property name from the Dictionary
+        try {
+            return Conversions[String];
+        } catch {
+            throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
+        }
+    }
 
     /// <summary>
     /// Creates a ViewModel for the DataTablePage.
@@ -214,24 +283,9 @@ public partial class DataTableViewModel : ObservableObject {
     public async Task SortDataTable() {
         // perform the sort process on a new CPU thread
         await Task.Run(() => {
-            // create a conversion Library to convert plaintext selections to DataRecord property names
-            Dictionary<string, string> Conversions = [];
-            Conversions.Add("Part Number", "RecordPart.PartNumber");
-            Conversions.Add("Part Name", "RecordPart.PartName");
-            Conversions.Add("Quantity", "Quantity");
-            Conversions.Add("JBK Number", "JBKNumber");
-            Conversions.Add("Lot Number", "LotNumber");
-            Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
-            Conversions.Add("Die Number", "DieNumber");
-            Conversions.Add("Model Number", "ModelNumber");
-            Conversions.Add("Heat Number", "HeatNumber");
-            Conversions.Add("Production Date", "RecordDate");
-            Conversions.Add("Production Time", "RecordTime");
-            Conversions.Add("Production Shift", "RecordShift");
-            Conversions.Add("Operator ID", "OperatorID");
             // get the selected Field from the Sorting Field Picker
             string SortField = DataFields[SelectedSortingFieldIndex];
-            SortField = Conversions[SortField];
+            SortField = ResolveDataRecordPropertyName(SortField);
             // sort using the Model class
             Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));
         });
@@ -241,13 +295,15 @@ public partial class DataTableViewModel : ObservableObject {
     /// Searches for match hits in the Data list of the DataTable.
     /// Configures the Data property to only show those match hits.
     /// </summary>
-    /// <param name="SearchTerm"></param>
     /// <returns></returns>
-    public async Task SearchDataTable(string SearchTerm) {
+    public async Task SearchDataTable() {
         // perform the search process on a new CPU thread
         await Task.Run(() => {
+            // get the selected Field from the Searching Field Picker
+            string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
+            PropertyName = ResolveDataRecordPropertyName(PropertyName);
             // Search using the Model class
-            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm));
+            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm, PropertyName));
         });
     }
 }

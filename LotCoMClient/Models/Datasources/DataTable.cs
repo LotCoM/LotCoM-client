@@ -12,10 +12,10 @@ public partial class DataTable : ObservableObject {
     /// The Path of the database table file in the LotCoM database filing system.
     /// </summary>
     private readonly string _path = "";
+    private readonly Type _recordType;
     /// <summary>
     /// The type of Data Record the table file contains (Prints || Scans).
     /// </summary>
-    private readonly Type _recordType;
     public Type RecordType {
         get {return _recordType;}
     }
@@ -28,10 +28,13 @@ public partial class DataTable : ObservableObject {
     /// </summary>
     private List<string> _headers = [];
     [ObservableProperty]
+
+#pragma warning disable CS1587 // XML comment is not placed on a valid language element
     /// <summary>
     /// Observable property exposing the Name of the Process producing the Records in this Table.
     /// </summary>
     public partial string TableProcess {get; set;}
+#pragma warning restore CS1587 // XML comment is not placed on a valid language element
 
     /// <summary>
     /// Constructs a new DataTable that provides controlled access and manipulation of data in the Database Table located at DataTablePath.
@@ -210,6 +213,46 @@ public partial class DataTable : ObservableObject {
     }
 
     /// <summary>
+    /// Searches each DataRecord for a match in ANY field (as a continuous string). 
+    /// </summary>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <returns>A List of DataRecords that were match hits for the search.</returns>
+    private async Task<List<DataRecord>> SearchAllFields(string SearchTerm) {
+        return await Task.Run(() => {
+            // convert each DataRecord in _records to a CSV Line and check for a hit
+            List<DataRecord> SearchHits = [];
+            foreach (DataRecord _record in _records) {
+                string _string = _record.ToCSV();
+                if (_string.Contains(SearchTerm)) {
+                    SearchHits.Add(_record);
+                }
+            }
+            return SearchHits;
+        });
+    }
+
+    /// <summary>
+    /// Searches each DataRecord for a match in PropertyName field.
+    /// </summary>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <param name="PropertyName">The name of the Property to search in.</param>
+    /// <returns>A List of DataRecords that were match hits for the search.</returns>
+    private async Task<List<DataRecord>> SearchSingleField(string SearchTerm, string PropertyName) {
+        return await Task.Run(() => {
+            // convert each DataRecord in _records to a CSV Line and check for a hit
+            List<DataRecord> SearchHits = [];
+            SearchHits = _records.Where(
+                x => x.GetType()!
+                      .GetProperty(PropertyName)!
+                      .GetValue(x)!
+                      .ToString()!
+                      .Contains(SearchTerm))
+                      .ToList();
+            return SearchHits;
+        });
+    }
+
+    /// <summary>
     /// Updates the DataRecords currently stored in DataTable._records and returns the list held by the property.
     /// </summary>
     /// <exception cref="ArgumentException"></exception>
@@ -317,22 +360,24 @@ public partial class DataTable : ObservableObject {
 
     /// <summary>
     /// Performs a search on the current data in _records. 
-    /// Checks for matches in every field of the Data Record.
+    /// If All passed as PropertyName, checks for matches in every field of the Data Record.
+    /// Otherwise, searches for match hits in the singular field passed as PropertyName.
     /// </summary>
-    /// <param name="SearchTerm"></param>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <param name="PropertyName">The name of the Property to search in.</param>
     /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    public async Task<List<DataRecord>> Search(string SearchTerm) {
+    public async Task<List<DataRecord>> Search(string SearchTerm, string PropertyName) {
         // perform the search algorithm on a new CPU thread
-        return await Task.Run(() => {
-            // convert each DataRecord in _records to a CSV Line and check for a hit
-            List<DataRecord> SearchHits = [];
-            foreach (DataRecord _record in _records) {
-                string _string = _record.ToCSV();
-                if (_string.Contains(SearchTerm)) {
-                    SearchHits.Add(_record);
-                }
+        return await Task.Run(async () => {
+            List<DataRecord> Hits;
+            // search in all fields of each DataRecord
+            if (PropertyName.Equals("All")) {
+                Hits = await SearchAllFields(SearchTerm);
+            // search in a singular field of each DataRecord
+            } else {
+                Hits = await SearchSingleField(SearchTerm, PropertyName);
             }
-            return SearchHits;
+            return Hits;
         });
     }
 }

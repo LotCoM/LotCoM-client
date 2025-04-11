@@ -40,10 +40,10 @@ public partial class DataTableSelectorPage : ContentPage {
     }
 
     /// <summary>
-    /// Checks that the Table has DataRecords available. Updates the sorting fields based on that Data.
+    /// Checks that the Table has DataRecords available. Updates the Data fields based on that Data.
     /// </summary>
     /// <returns></returns>
-    private async Task ConfigureSortingFields() {
+    private async Task ConfigureDataFields() {
         // perform the config logic on a new CPU thread
         await Task.Run(() => {
             // confirm that the Data property has completed its async task
@@ -75,8 +75,8 @@ public partial class DataTableSelectorPage : ContentPage {
                 }
             }
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
-            // update the ViewModel SortingField property
-            _viewModel.SortingFields = Sortables;
+            // update the ViewModel DataField property
+            _viewModel.DataFields = Sortables;
         });
     }
 
@@ -158,7 +158,7 @@ public partial class DataTableSelectorPage : ContentPage {
     public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) {
         // update BodyTableHeader property
         await ConfigureBodyTableHeader();
-        await ConfigureSortingFields();
+        await ConfigureDataFields();
     }
 
     /// <summary>

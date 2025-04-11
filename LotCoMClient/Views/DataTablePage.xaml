@@ -145,7 +145,7 @@
                             Grid.Column="0"
                             Margin="10"
                             Title="Sorting field"
-                            ItemsSource="{Binding SortingFields}"
+                            ItemsSource="{Binding DataFields}"
                             FontSize="10"
                             WidthRequest="200"
                             HeightRequest="65"
@@ -214,12 +214,11 @@
                         <!-- ListView Searching Field Picker -->
                         <Picker
                             x:Name="ListViewSearchingFieldPicker"
-                            SelectedIndexChanged="OnListViewSearchButtonPressed"
                             Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"
                             Title="Search field"
-                            ItemsSource="{Binding SortingFields}"
+                            ItemsSource="{Binding DataFields}"
                             FontSize="10"
                             WidthRequest="200"
                             HeightRequest="65"

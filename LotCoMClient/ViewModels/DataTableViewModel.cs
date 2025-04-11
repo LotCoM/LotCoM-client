@@ -114,16 +114,16 @@ public partial class DataTableViewModel : ObservableObject {
             OnPropertyChanged(nameof(BodyTableHeader));
         }
     }
-    private List<string> _sortingFields;
+    private List<string> _dataFields;
     /// <summary>
     /// Serves the fields that can be used to sort the Page's ListView.
     /// </summary>
-    public List<string> SortingFields {
-        get {return _sortingFields;} 
+    public List<string> DataFields {
+        get {return _dataFields;} 
         set {
-            _sortingFields = value;
-            OnPropertyChanged(nameof(_sortingFields));
-            OnPropertyChanged(nameof(SortingFields));
+            _dataFields = value;
+            OnPropertyChanged(nameof(_dataFields));
+            OnPropertyChanged(nameof(DataFields));
         }
     }
     private DataTable? _table;
@@ -204,7 +204,7 @@ public partial class DataTableViewModel : ObservableObject {
             _bodyTableHeader = "";
         }
         // configure the sortable fields for this Page's table
-        _sortingFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
+        _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ public partial class DataTableViewModel : ObservableObject {
             Conversions.Add("Production Shift", "RecordShift");
             Conversions.Add("Operator ID", "OperatorID");
             // get the selected Field from the Sorting Field Picker
-            string SortField = SortingFields[SelectedSortingFieldIndex];
+            string SortField = DataFields[SelectedSortingFieldIndex];
             SortField = Conversions[SortField];
             // sort using the Model class
             Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));

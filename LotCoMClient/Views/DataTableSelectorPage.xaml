@@ -238,7 +238,7 @@
                         <SearchBar
                             x:Name="ListViewSearchingSearchBar"
                             SearchButtonPressed="OnListViewSearchButtonPressed"
-                            IsVisible="{Binding IsProcessAssigned}"
+                            Text="{Binding SearchTerm}"
                             Grid.Row="4"
                             Grid.Column="0"
                             Margin="10"
@@ -249,11 +249,12 @@
                         <!-- ListView Searching Field Picker -->
                         <Picker
                             x:Name="ListViewSearchingFieldPicker"
+                            SelectedIndex="{Binding SelectedSearchingFieldIndex}"
                             Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"
                             Title="Search field"
-                            ItemsSource="{Binding DataFields}"
+                            ItemsSource="{Binding SearchableFields}"
                             FontSize="10"
                             WidthRequest="200"
                             HeightRequest="65"

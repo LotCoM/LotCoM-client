@@ -75,8 +75,9 @@ public partial class DataTableSelectorPage : ContentPage {
                 }
             }
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
-            // update the ViewModel DataField property
+            // update the ViewModel DataFields and SearchableFields property
             _viewModel.DataFields = Sortables;
+            _viewModel.SearchableFields = Sortables.Prepend("All").ToList();
         });
     }
 
@@ -181,7 +182,8 @@ public partial class DataTableSelectorPage : ContentPage {
     /// <param name="e"></param>
     public async void OnListViewSearchButtonPressed(object sender, EventArgs e) {
         // invoke the ViewModel local sort method using the current search term
-        string SearchTerm = ListViewSearchingSearchBar.Text;
-        await _viewModel.SearchDataTable(SearchTerm);
+        _viewModel.SearchTerm = ListViewSearchingSearchBar.Text;
+        _viewModel.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+        await _viewModel.SearchDataTable();
     }
 }

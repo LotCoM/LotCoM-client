@@ -131,7 +131,9 @@
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Searching Label Row -->
                             <RowDefinition Height="Auto"/>
-                            <!-- ListView Searching Control Row -->
+                            <!-- ListView Searching SearchBar Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ListView Searching Field Picker Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
@@ -244,10 +246,23 @@
                             WidthRequest="200"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
+                        <!-- ListView Searching Field Picker -->
+                        <Picker
+                            x:Name="ListViewSearchingFieldPicker"
+                            SelectedIndexChanged="OnListViewSearchButtonPressed"
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Margin="10"
+                            Title="Search field"
+                            ItemsSource="{Binding SortingFields}"
+                            FontSize="10"
+                            WidthRequest="200"
+                            HeightRequest="65"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                         <!-- Searching Panel Lower Border BoxView -->
                         <BoxView
-                            IsVisible="{Binding IsProcessAssigned}"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"

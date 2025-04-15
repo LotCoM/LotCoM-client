@@ -40,11 +40,11 @@ public partial class PrintRecord(Process RecordProcess, Part RecordPart, string 
     /// <param name="CSVLine"></param>
     /// <returns>A PrintRecord object.</returns>
     /// <exception cref="RecordParseException"></exception>
-    public static PrintRecord ParseFromCSV(string CSVLine) {
+    public static async Task<PrintRecord> ParseFromCSVAsync(string CSVLine) {
         // attempt to parse a DataRecord object using the base Parser
         DataRecord BaseRecord;
         try {
-            BaseRecord = RecordParser.ParseFromCSV(CSVLine);
+            BaseRecord = await RecordParser.ParseFromCSVAsync(CSVLine);
         // the CSV Line could not be parsed
         } catch (RecordParseException _ex) {
             throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");

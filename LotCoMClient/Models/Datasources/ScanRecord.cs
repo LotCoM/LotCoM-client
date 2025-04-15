@@ -45,11 +45,11 @@ public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Q
     /// <param name="CSVLine"></param>
     /// <returns>A ScanRecord object.</returns>
     /// <exception cref="RecordParseException"></exception>
-    public static ScanRecord ParseFromCSV(string CSVLine) {
+    public static async Task<ScanRecord> ParseFromCSVAsync(string CSVLine) {
         // attempt to parse a DataRecord object using the base Parser
         DataRecord BaseRecord;
         try {
-            BaseRecord = RecordParser.ParseFromCSV(CSVLine);
+            BaseRecord = await RecordParser.ParseFromCSVAsync(CSVLine);
         // the CSV Line could not be parsed
         } catch (RecordParseException _ex) {
             throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");

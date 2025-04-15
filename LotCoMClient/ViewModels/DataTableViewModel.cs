@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Services;
-using System.Linq.Dynamic;
 
 namespace LotCoMClient.ViewModels;
 
@@ -217,28 +216,30 @@ public partial class DataTableViewModel : ObservableObject {
     /// <param name="String"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    private string ResolveDataRecordPropertyName(string String) {
-        // create a conversion Library to convert plaintext selections to DataRecord property names
-        Dictionary<string, string> Conversions = [];
-        Conversions.Add("Part Number", "RecordPart.PartNumber");
-        Conversions.Add("Part Name", "RecordPart.PartName");
-        Conversions.Add("Quantity", "Quantity");
-        Conversions.Add("JBK Number", "JBKNumber");
-        Conversions.Add("Lot Number", "LotNumber");
-        Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
-        Conversions.Add("Die Number", "DieNumber");
-        Conversions.Add("Model Number", "ModelNumber");
-        Conversions.Add("Heat Number", "HeatNumber");
-        Conversions.Add("Production Date", "RecordDate");
-        Conversions.Add("Production Time", "RecordTime");
-        Conversions.Add("Production Shift", "RecordShift");
-        Conversions.Add("Operator ID", "OperatorID");
-        // resolve the property name from the Dictionary
-        try {
-            return Conversions[String];
-        } catch {
-            throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
-        }
+    private static async Task<string> ResolveDataRecordPropertyName(string String) {
+        return await Task.Run(() => {
+            // create a conversion Library to convert plaintext selections to DataRecord property names
+            Dictionary<string, string> Conversions = [];
+            Conversions.Add("Part Number", "RecordPart.PartNumber");
+            Conversions.Add("Part Name", "RecordPart.PartName");
+            Conversions.Add("Quantity", "Quantity");
+            Conversions.Add("JBK Number", "JBKNumber");
+            Conversions.Add("Lot Number", "LotNumber");
+            Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
+            Conversions.Add("Die Number", "DieNumber");
+            Conversions.Add("Model Number", "ModelNumber");
+            Conversions.Add("Heat Number", "HeatNumber");
+            Conversions.Add("Production Date", "RecordDate");
+            Conversions.Add("Production Time", "RecordTime");
+            Conversions.Add("Production Shift", "RecordShift");
+            Conversions.Add("Operator ID", "OperatorID");
+            // resolve the property name from the Dictionary
+            try {
+                return Conversions[String];
+            } catch {
+                throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
+            }
+        });
     }
 
     /// <summary>
@@ -256,7 +257,7 @@ public partial class DataTableViewModel : ObservableObject {
         if (IsProcessAssigned) {
             // create a DataTable from the path passed in DataTablePath
             _table = new DataTable(DataTablePath);
-            _data = new NotifyTaskCompletion<List<DataRecord>>(_table.GetRecordsAsync());
+            _data = _table.RequestRecords();
             // set the left frame panel's header
             _leftFramePanelHeader = Table!.TableProcess;
             _bodyTableHeader = "Loading records...";
@@ -276,14 +277,11 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     /// <returns></returns>
     public async Task SortDataTable() {
-        // perform the sort process on a new CPU thread
-        await Task.Run(() => {
-            // get the selected Field from the Sorting Field Picker
-            string SortField = DataFields[SelectedSortingFieldIndex];
-            SortField = ResolveDataRecordPropertyName(SortField);
-            // sort using the Model class
-            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Sort(SortField, SelectedSortingOrderIndex));
-        });
+        // get the selected Field from the Sorting Field Picker
+        string SortField = DataFields[SelectedSortingFieldIndex];
+        SortField = await ResolveDataRecordPropertyName(SortField);
+        // sort using the Model class
+        Data = Table!.RequestSort(SortField, SelectedSortingOrderIndex);
     }
 
     /// <summary>
@@ -292,15 +290,12 @@ public partial class DataTableViewModel : ObservableObject {
     /// </summary>
     /// <returns></returns>
     public async Task SearchDataTable() {
-        // perform the search process on a new CPU thread
-        await Task.Run(() => {
-            // get the selected Field from the Searching Field Picker
-            string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
-            if (PropertyName != "All") {
-                PropertyName = ResolveDataRecordPropertyName(PropertyName);
-            }
-            // Search using the Model class
-            Data = new NotifyTaskCompletion<List<DataRecord>> (Table!.Search(SearchTerm, PropertyName));
-        });
+        // get the selected Field from the Searching Field Picker
+        string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
+        if (PropertyName != "All") {
+            PropertyName = await ResolveDataRecordPropertyName(PropertyName);
+        }
+        // Search using the Model class
+        Data = Table!.RequestSearch(SearchTerm, PropertyName);
     }
 }

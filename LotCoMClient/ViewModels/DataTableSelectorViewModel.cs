@@ -1,5 +1,4 @@
 using LotCoMClient.Models.Datasources;
-using LotCoMClient.Models.Services;
 
 namespace LotCoMClient.ViewModels;
 
@@ -85,7 +84,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel {
         Path = $"{Path}\\{SelectedProcess.FullName}.txt";
         Table = new DataTable(Path);
         // update the Page's Data
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table.GetRecordsAsync());
+        Data = Table.RequestRecords();
         IsProcessAssigned = true;
     }
 }

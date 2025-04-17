@@ -265,35 +265,33 @@ public partial class DataTableViewModel : ObservableObject
     /// <param name="String"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    private static async Task<string> ResolveDataRecordPropertyName(string String) 
+    private static string ResolveDataRecordPropertyName(string String) 
     {
-        return await Task.Run(() => 
+        // create a conversion Library to convert plaintext selections to DataRecord property names
+        Dictionary<string, string> Conversions = new Dictionary<string, string>() {
+            {"Part Number", "RecordPart.PartNumber"},
+            {"Part Name", "RecordPart.PartName"},
+            {"Quantity", "Quantity"},
+            {"JBK Number", "JBKNumber"},
+            {"Lot Number", "LotNumber"},
+            {"Deburr JBK Number", "DeburrJBKNumber"},
+            {"Die Number", "DieNumber"},
+            {"Model Number", "ModelNumber"},
+            {"Heat Number", "HeatNumber"},
+            {"Production Date", "RecordDate"},
+            {"Production Time", "RecordTime"},
+            {"Production Shift", "RecordShift"},
+            {"Operator ID", "OperatorID"}
+        };
+        // resolve the property name from the Dictionary
+        try 
         {
-            // create a conversion Library to convert plaintext selections to DataRecord property names
-            Dictionary<string, string> Conversions = [];
-            Conversions.Add("Part Number", "RecordPart.PartNumber");
-            Conversions.Add("Part Name", "RecordPart.PartName");
-            Conversions.Add("Quantity", "Quantity");
-            Conversions.Add("JBK Number", "JBKNumber");
-            Conversions.Add("Lot Number", "LotNumber");
-            Conversions.Add("Deburr JBK Number", "DeburrJBKNumber");
-            Conversions.Add("Die Number", "DieNumber");
-            Conversions.Add("Model Number", "ModelNumber");
-            Conversions.Add("Heat Number", "HeatNumber");
-            Conversions.Add("Production Date", "RecordDate");
-            Conversions.Add("Production Time", "RecordTime");
-            Conversions.Add("Production Shift", "RecordShift");
-            Conversions.Add("Operator ID", "OperatorID");
-            // resolve the property name from the Dictionary
-            try 
-            {
-                return Conversions[String];
-            } 
-            catch 
-            {
-                throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
-            }
-        });
+            return Conversions[String];
+        } 
+        catch 
+        {
+            throw new ArgumentException($"{String} is not a defined property on `DataRecord.`");
+        }
     }
 
     /// <summary>
@@ -334,15 +332,13 @@ public partial class DataTableViewModel : ObservableObject
     /// Sorts the DataRecords in the Data property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>
-    public async Task SortDataTable() 
+    public void SortDataTable()
     {
-        await Task.Run(async () => {
-            // get the selected Field from the Sorting Field Picker
-            string SortField = DataFields[SelectedSortingFieldIndex];
-            SortField = await ResolveDataRecordPropertyName(SortField);
-            // sort using the Model class
-            Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, SelectedSortingOrderIndex));
-        });
+        // get the selected Field from the Sorting Field Picker
+        string SortField = DataFields[SelectedSortingFieldIndex];
+        SortField = ResolveDataRecordPropertyName(SortField);
+        // sort using the Model class
+        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, SelectedSortingOrderIndex));
     }
 
     /// <summary>
@@ -350,11 +346,11 @@ public partial class DataTableViewModel : ObservableObject
     /// Configures the Data property to only show those match hits.
     /// </summary>
     /// <returns></returns>
-    public async Task SearchDataTable() {
+    public void SearchDataTable() {
         // get the selected Field from the Searching Field Picker
         string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
         if (PropertyName != "All") {
-            PropertyName = await ResolveDataRecordPropertyName(PropertyName);
+            PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
         Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSearch(SearchTerm, PropertyName));

@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
-using LotCoMClient.Models.Services;
 using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;
@@ -39,6 +38,11 @@ public partial class DataTable : ObservableObject
         set {_recordsState = value;}
     }
 
+    /// <summary>
+    /// Flag to use to check if the DataTable has performed a ReadAsync call or not.
+    /// </summary>
+    public bool IsFirstRead = false;
+
     private List<string> _headers = [];
     /// <summary>
     /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.
@@ -76,27 +80,6 @@ public partial class DataTable : ObservableObject
         }
         // return the parsed DataRecord
         return ParsedRecord;
-    }
-
-    /// <summary>
-    /// Confirms that Table.RecordsState.Current is available for reading and comparison.
-    /// </summary>
-    /// <returns></returns>
-    private bool AreRecordsAvailable() 
-    {
-        if (RecordsState.Current == null 
-            || RecordsState.Current.IsNotCompleted 
-            || RecordsState.Current.IsFaulted) 
-        {
-            return false;
-        }
-        if (!RecordsState.Current.IsSuccessfullyCompleted 
-            || RecordsState.Current.Result != null) 
-        {
-            return false;
-        }
-        // RecordsState.Current is complete, not faulted, successful, and result is not null
-        return true;
     }
 
     /// <summary>
@@ -195,7 +178,7 @@ public partial class DataTable : ObservableObject
     /// <returns>A List of DataRecords sorted using the Property and Order.</returns>
     private async Task<List<DataRecord>> SortRecordsAsync(string SortingProperty, int SortOrder) 
     {
-        if (!AreRecordsAvailable()) 
+        if (RecordsState.Current == null) 
         {
             throw new OperationCanceledException();
         }
@@ -203,7 +186,7 @@ public partial class DataTable : ObservableObject
         return await Task.Run(() => 
         {
             // use LINQ dynamic to sort using the property selected in the sorting field picker
-            List<DataRecord> SortedData = RecordsState.Current!.Result!
+            List<DataRecord> SortedData = RecordsState.Current
                 .AsQueryable()
                 .OrderBy(SortingProperty)
                 .ToList();
@@ -224,12 +207,16 @@ public partial class DataTable : ObservableObject
     /// <returns>A List of DataRecords that were match hits for the search.</returns>
     private async Task<List<DataRecord>> SearchAllFieldsAsync(string SearchTerm) 
     {
+        if (RecordsState.LastRead == null) 
+        {
+            throw new OperationCanceledException();
+        }
         // perform the search algorithm on a new CPU thread
         return await Task.Run(() => 
         {
             // convert each DataRecord in RecordsState.LastRead to a CSV Line and check for a hit
             List<DataRecord> SearchHits = [];
-            foreach (DataRecord _record in RecordsState.LastRead!.Result!) 
+            foreach (DataRecord _record in RecordsState.LastRead) 
             {
                 string _recordString = _record.ToCSV();
                 if (_recordString.Contains(SearchTerm)) 
@@ -249,11 +236,15 @@ public partial class DataTable : ObservableObject
     /// <returns>A List of DataRecords that were match hits for the search.</returns>
     private async Task<List<DataRecord>> SearchSingleFieldAsync(string SearchTerm, string PropertyName) 
     {
+        if (RecordsState.LastRead == null) 
+        {
+            throw new OperationCanceledException();
+        }
         return await Task.Run(() => 
         {
             // convert each DataRecord in _records to a CSV Line and check for a hit
             List<DataRecord> SearchHits = [];
-            SearchHits = RecordsState.LastRead!.Result!.Where(x => x.GetType()!
+            SearchHits = RecordsState.LastRead.Where(x => x.GetType()!
                 .GetProperty(PropertyName)!
                 .GetValue(x)!
                 .ToString()!
@@ -314,39 +305,43 @@ public partial class DataTable : ObservableObject
         TableProcess = Path
             .Split("\\")[^1]
             .Replace(".txt", "");
-        // start a records request
-        RecordsState.LastRead = new NotifyTaskCompletion<List<DataRecord>> (ReadAsync());
     }
 
     /// <summary>
-    /// Retrieves a NotifyTaskCompletion object that contains the current (or currently promised) list of DataRecords in the Table.
+    /// Retrieves either the Current or LastRead List of DataRecords in the Table.
     /// </summary>
     /// <exception cref="SystemException"></exception>
     /// <returns>A List of DataRecords.</returns>
-    public NotifyTaskCompletion<List<DataRecord>> RequestRecords() 
+    public async Task<List<DataRecord>> RequestRecords() 
     {
-        // return the DataRecords stored in runtime
-        try 
-        {
-            return RecordsState.Current!;
-        }
-        catch 
-        {
-            return RecordsState.LastRead!;
-        }
+        return await Task.Run(() => {
+            // return the DataRecords stored in runtime
+            if (RecordsState.Current != null)
+            {
+                return RecordsState.Current;
+            }
+            else if (RecordsState.LastRead != null)
+            {
+                return RecordsState.LastRead;
+            }
+            else 
+            {
+                return [];
+            }
+        });
     }
 
     /// <summary>
     /// Refreshes the Database Table in runtime.
     /// </summary>
-    /// <returns>A NotifyTaskCompletion object that promises a list of DataRecords currently in the Database Table.</returns>
+    /// <returns>A list of DataRecords currently in the Database Table.</returns>
     /// <exception cref="SystemException"></exception>
-    public NotifyTaskCompletion<List<DataRecord>> RequestReadRecords() 
+    public async Task<object> ReadRecordsAsync() 
     {
         // read the DataRecord and return the NotifyTaskCompletion object holding the promised list
         try 
         {
-            RecordsState.LastRead = new NotifyTaskCompletion<List<DataRecord>> (ReadAsync());
+            RecordsState.LastRead = await ReadAsync();
             return RecordsState.LastRead;
         } 
         catch (Exception _ex) 
@@ -380,7 +375,7 @@ public partial class DataTable : ObservableObject
             throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
         }
         // update the RecordsState property
-        RecordsState.LastRead = new NotifyTaskCompletion<List<DataRecord>> (ReadAsync());
+        RecordsState.LastRead = await ReadAsync();
         RecordsState.Current = RecordsState.LastRead;
     }
 
@@ -391,9 +386,9 @@ public partial class DataTable : ObservableObject
     /// <param name="SortingProperty">A Property name applicable to the DataRecord class.</param>
     /// <param name="Order">0 (ascending) or 1 (descending).</param>
     /// <returns></returns>
-    public NotifyTaskCompletion<List<DataRecord>> RequestSort(string SortingProperty, int Order) 
+    public async Task<List<DataRecord>> RequestSort(string SortingProperty, int Order) 
     {
-        RecordsState.Current = new NotifyTaskCompletion<List<DataRecord>> (SortRecordsAsync(SortingProperty, Order));
+        RecordsState.Current = await SortRecordsAsync(SortingProperty, Order);
         return RecordsState.Current;
     }
 
@@ -405,10 +400,10 @@ public partial class DataTable : ObservableObject
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
     /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    public NotifyTaskCompletion<List<DataRecord>> RequestSearch(string SearchTerm, string PropertyName) 
+    public async Task<List<DataRecord>> RequestSearch(string SearchTerm, string PropertyName) 
     {
         // perform the search algorithm on a new CPU thread
-        RecordsState.Current = new NotifyTaskCompletion<List<DataRecord>> (SearchAsync(SearchTerm, PropertyName));
+        RecordsState.Current = await SearchAsync(SearchTerm, PropertyName);
         return RecordsState.Current;
     }
 }

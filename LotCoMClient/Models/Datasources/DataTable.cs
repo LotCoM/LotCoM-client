@@ -336,12 +336,13 @@ public partial class DataTable : ObservableObject
     /// </summary>
     /// <returns>A list of DataRecords currently in the Database Table.</returns>
     /// <exception cref="SystemException"></exception>
-    public async Task<object> ReadRecordsAsync() 
+    public async Task<List<DataRecord>> ReadRecordsAsync() 
     {
         // read the DataRecord and return the NotifyTaskCompletion object holding the promised list
         try 
         {
             RecordsState.LastRead = await ReadAsync();
+            RecordsState.Current = RecordsState.LastRead;
             return RecordsState.LastRead;
         } 
         catch (Exception _ex) 

@@ -311,7 +311,7 @@ public partial class DataTableViewModel : ObservableObject
         {
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
-            Data = new NotifyTaskCompletion<List<DataRecord>>(Table.RequestRecords());
+            Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
             // set the left frame panel's header
             LeftFramePanelHeader = Table!.TableProcess;
             BodyTableHeader = "Loading records...";

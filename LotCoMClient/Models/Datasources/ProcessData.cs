@@ -11,7 +11,7 @@ public class ProcessData
     /// <summary>
     /// Allows interaction with the Process Masterlist Data source file.
     /// </summary>
-    private static readonly ProcessMasterlist Masterlist = new ProcessMasterlist();
+    private readonly ProcessMasterlist Masterlist = new ProcessMasterlist();
 
     /// <summary>
     /// Retrieves ProcessFullName's serialization status.
@@ -31,7 +31,7 @@ public class ProcessData
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
     /// <returns>A Process object.</returns>
-    public static Process GetIndividualProcessData(string ProcessFullName) 
+    public Process GetIndividualProcessData(string ProcessFullName) 
     {
         // invoke the Masterlist method to retrieve the Process' data
         return Masterlist.GetIndividualProcess(ProcessFullName);
@@ -42,7 +42,7 @@ public class ProcessData
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
     /// <returns>A Process object.</returns>
-    public static async Task<Process> GetIndividualProcessDataAsync(string ProcessFullName) 
+    public async Task<Process> GetIndividualProcessDataAsync(string ProcessFullName) 
     {
         // invoke the Masterlist method to retrieve the Process' data
         return await Masterlist.GetIndividualProcessAsync(ProcessFullName);
@@ -52,7 +52,7 @@ public class ProcessData
     /// Retrieves the full list of Processes utilizing the Process Masterlist data source.
     /// </summary>
     /// <returns>A JToken object containing the full list of Processes.</returns>
-    public static List<Process> GetProcesses() 
+    public List<Process> GetProcesses() 
     {
         // invoke the Masterlist method to retrieve the Processes
         return Masterlist.GetAllProcesses();
@@ -62,7 +62,7 @@ public class ProcessData
     /// Retrieves a list of Process Names utilizing the Process Masterlist data source.
     /// </summary>
     /// <returns></returns>
-    public static List<string> GetProcessNames() 
+    public List<string> GetProcessNames() 
     {
         // invoke the Masterlist method to retrieve the Process list
         return Masterlist.GetAllProcessNames();
@@ -73,7 +73,7 @@ public class ProcessData
     /// </summary>
     /// <param name="DepartmentTitle">The Department Title to use to find matching Departments.</param>
     /// <returns></returns>
-    public static Department GetIndividualDepartment(string DepartmentTitle) 
+    public Department GetIndividualDepartment(string DepartmentTitle) 
     {
         // invoke the Masterlist method to retrieve a matching Department
         return Masterlist.GetIndividualDepartment(DepartmentTitle);

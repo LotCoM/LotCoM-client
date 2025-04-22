@@ -6,15 +6,22 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Provides controlled access to Process data sources.
 /// </summary>
-public static class ProcessData {
+public class ProcessData 
+{
+    /// <summary>
+    /// Allows interaction with the Process Masterlist Data source file.
+    /// </summary>
+    private static readonly ProcessMasterlist Masterlist = new ProcessMasterlist();
+
     /// <summary>
     /// Retrieves ProcessFullName's serialization status.
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to check.</param>
     /// <returns>"Originator" || "Pass-through".</returns>
-    public static async Task<string> IsOriginator(string ProcessFullName) {
+    public async Task<string> IsOriginator(string ProcessFullName) 
+    {
         // load the Process' data
-        Process Data = await ProcessMasterlist.GetIndividualProcessAsync(ProcessFullName);
+        Process Data = await Masterlist.GetIndividualProcessAsync(ProcessFullName);
         // check whether the process is an originator or not
         return Data.Type;
     }
@@ -24,9 +31,10 @@ public static class ProcessData {
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
     /// <returns>A Process object.</returns>
-    public static Process GetIndividualProcessData(string ProcessFullName) {
+    public static Process GetIndividualProcessData(string ProcessFullName) 
+    {
         // invoke the Masterlist method to retrieve the Process' data
-        return ProcessMasterlist.GetIndividualProcess(ProcessFullName);
+        return Masterlist.GetIndividualProcess(ProcessFullName);
     }
 
     /// <summary>
@@ -34,27 +42,30 @@ public static class ProcessData {
     /// </summary>
     /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to retrieve data for.</param>
     /// <returns>A Process object.</returns>
-    public static async Task<Process> GetIndividualProcessDataAsync(string ProcessFullName) {
+    public static async Task<Process> GetIndividualProcessDataAsync(string ProcessFullName) 
+    {
         // invoke the Masterlist method to retrieve the Process' data
-        return await ProcessMasterlist.GetIndividualProcessAsync(ProcessFullName);
+        return await Masterlist.GetIndividualProcessAsync(ProcessFullName);
     }
 
     /// <summary>
     /// Retrieves the full list of Processes utilizing the Process Masterlist data source.
     /// </summary>
     /// <returns>A JToken object containing the full list of Processes.</returns>
-    public static List<Process> GetProcesses() {
+    public static List<Process> GetProcesses() 
+    {
         // invoke the Masterlist method to retrieve the Processes
-        return ProcessMasterlist.GetAllProcesses();
+        return Masterlist.GetAllProcesses();
     }
 
     /// <summary>
     /// Retrieves a list of Process Names utilizing the Process Masterlist data source.
     /// </summary>
     /// <returns></returns>
-    public static List<string> GetProcessNames() {
+    public static List<string> GetProcessNames() 
+    {
         // invoke the Masterlist method to retrieve the Process list
-        return ProcessMasterlist.GetAllProcessNames();
+        return Masterlist.GetAllProcessNames();
     }
 
     /// <summary>
@@ -62,26 +73,35 @@ public static class ProcessData {
     /// </summary>
     /// <param name="DepartmentTitle">The Department Title to use to find matching Departments.</param>
     /// <returns></returns>
-    public static Department GetIndividualDepartment(string DepartmentTitle) {
+    public static Department GetIndividualDepartment(string DepartmentTitle) 
+    {
         // invoke the Masterlist method to retrieve a matching Department
-        return ProcessMasterlist.GetIndividualDepartment(DepartmentTitle);
+        return Masterlist.GetIndividualDepartment(DepartmentTitle);
     }
 
     /// <summary>
     /// Provides ProcessData controlled access to the Process Masterlist data source.
     /// </summary>
-    private static class ProcessMasterlist {
-        private const string _path = "\\\\144.133.122.1\\Lot Control Management\\Database\\process_control\\_process_masterlist.json";
+    private class ProcessMasterlist 
+    {
+        private const string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\process_control\\_process_masterlist.json";
+        
+        /// <summary>
+        /// Contains the full JObject object produced by the last LoadDataAsync call. 
+        /// </summary>
+        private JObject? LastRead;
 
         /// <summary>
-        /// Asynchronously loads the data from the Process Masterlist data source.
+        /// Asynchronously loads the data from the Process Masterlist data source. Stores this data in the LastRead property.
         /// </summary>
         /// <returns>A JSON dictionary containing the Process Masterlist data.</returns>
         /// <exception cref="JsonException"></exception>
-        private static async Task<JObject> LoadDataAsync() {
+        private async Task<JObject> LoadDataAsync() 
+        {
+            Console.WriteLine("Reading...");
             // read the masterlist file
-            JObject Masterlist = JObject.Parse(await File.ReadAllTextAsync(_path));
-            return Masterlist;
+            LastRead = JObject.Parse(await File.ReadAllTextAsync(Path));
+            return LastRead;
         }
 
         /// <summary>
@@ -89,10 +109,12 @@ public static class ProcessData {
         /// </summary>
         /// <returns>A JSON dictionary containing the Process Masterlist data.</returns>
         /// <exception cref="JsonException"></exception>
-        private static JObject LoadData() {
+        private JObject LoadData() 
+        {
+            Console.WriteLine("Reading...");
             // read the masterlist file
-            JObject Masterlist = JObject.Parse(File.ReadAllText(_path));
-            return Masterlist;
+            LastRead = JObject.Parse(File.ReadAllText(Path));
+            return LastRead;
         }
 
         /// <summary>
@@ -102,25 +124,32 @@ public static class ProcessData {
         /// <param name="ParentProcess">The known Process that the Part should belong to.</param>
         /// <returns>A Part object with data resolved from the JToken.</returns>
         /// <exception cref="FormatException"></exception>
-        private static Part ResolvePartFromToken(JToken Token, string ParentProcess) {
+        private static Part ResolvePartFromToken(JToken Token, string ParentProcess) 
+        {
             // hold variables for each Part object property
             string Number;
             string Name;
             string Model;
             // attempt to pull the needed fields from the passed JToken
-            try {
+            try 
+            {
                 Number = Token["Number"]!.ToString();
                 Name = Token["Name"]!.ToString();
                 Model = Token["Model"]!.ToString();
             // one of the needed fields was not accessible
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Part object.");
             }
             // attempt to construct the Part object from the resolved data
             Part ResolvedPart;
-            try {
+            try 
+            {
                 ResolvedPart = new Part(ParentProcess, Number, Name, Model);
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Part object.");
             }
             // return the resolved Part object
@@ -133,7 +162,8 @@ public static class ProcessData {
         /// <param name="Token">A JToken object containing Part data.</param>
         /// <returns>A Process object with data resolved from the JToken.</returns>
         /// <exception cref="FormatException"></exception>
-        private static Process ResolveProcessFromToken(JToken Token) {
+        private static Process ResolveProcessFromToken(JToken Token) 
+        {
             // hold variables for each Process object property
             string LineCode;
             string Line;
@@ -143,7 +173,8 @@ public static class ProcessData {
             JToken Parts;
             JToken Requirements;
             // attempt to access each field of Data from the Process Token
-            try {
+            try 
+            {
                 LineCode = Token["LineCode"]!.ToString();
                 Line = Token["Line"]!.ToString();
                 Title = Token["Title"]!.ToString();
@@ -152,35 +183,43 @@ public static class ProcessData {
                 Parts = Token["Parts"]!;
                 Requirements = Token["Requirements"]!;
             // one of the needed fields was not accessible
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Process object.");
             }
             // process and add each part to the parts list individually
             List<Part> PartObjects = [];
-            try {
-                // resolve a Part object from each Token
-                foreach (JToken _part in Parts) {
-                    PartObjects.Add(ResolvePartFromToken(_part, $"{LineCode}-{Line}-{Title}"));
-                }
+            string ProcessName = $"{LineCode}-{Line}-{Title}";
+            try 
+            {
+                PartObjects = Parts
+                    .Select(x => 
+                    ResolvePartFromToken(x, ProcessName))
+                    .ToList();
             // one of the Tokens could not be resolved to a Part
-            } catch (Exception _ex) {
+            } 
+            catch (Exception _ex) 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Process object, due to the following Part resolution failure: {_ex.Message}");
             }
             // create requirements list; add first set of universal fields
             List<string> RequiredFields = ["SelectedProcess", "SelectedPart", "Quantity"];
             // add variable (process-dependent) fields
-            foreach (JToken _field in Requirements) {
+            foreach (JToken _field in Requirements) 
+            {
                 RequiredFields.Add(_field.ToString());
             }
             // add the second set of universal fields
-            RequiredFields.Add("ProductionDate");
-            RequiredFields.Add("ProductionShift");
-            RequiredFields.Add("OperatorID");
+            RequiredFields.AddRange(["ProductionDate", "ProductionShift", "OperatorID"]);
             // attempt to construct the Process object from the resolved data
             Process ResolvedProcess;
-            try {
+            try 
+            {
                 ResolvedProcess = new Process(LineCode, Line, Title, Type, Serialization, PartObjects, RequiredFields);
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Process object.");
             }
             // return the resolved Process object
@@ -193,34 +232,45 @@ public static class ProcessData {
         /// <param name="Token">A JToken object containing Department data.</param>
         /// <returns>A Department object with data resolved from the JToken.</returns>
         /// <exception cref="FormatException"></exception>
-        private static Department ResolveDepartmentFromToken(JToken Token) {
+        private static Department ResolveDepartmentFromToken(JToken Token) 
+        {
             // hold variables for each Department object property
             string Title;
             string Code;
             List<string> Lines = [];
             // attempt to access each field of Data from the Department Token
-            try {
+            try 
+            {
                 Title = Token["Title"]!.ToString();
                 Code = Token["Code"]!.ToString();
             // one of the needed fields was not accessible
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Department object.");
             }
             // add each Line to the Lines list individually
-            try {
+            try 
+            {
                 // resolve a Line from each Token
-                foreach (JToken _line in Token["Lines"]!) {
-                    Lines.Add(_line.ToString());
-                }
+                Lines = Token["Lines"]!
+                    .Select(x => x
+                    .ToString())
+                    .ToList();
             // one of the Tokens could not be resolved to a Line
-            } catch (Exception _ex) {
+            } 
+            catch (Exception _ex) 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Department object, due to the following Line resolution failure: {_ex.Message}");
             }
             // attempt to construct the Department object from the resolved data
             Department ResolvedDepartment;
-            try {
+            try 
+            {
                 ResolvedDepartment = new Department(Title, Code, Lines);
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{Token}' to a Department object.");
             }
             // return the resolved Process object
@@ -232,23 +282,29 @@ public static class ProcessData {
         /// </summary>
         /// <returns>A list of Process objects.</returns>
         /// <exception cref="FileLoadException"></exception>
-        public static List<Process> GetAllProcesses() {
-            // load the data from the Masterlist
-            JObject FullData = LoadData();
+        public List<Process> GetAllProcesses() 
+        {
+            if (LastRead is null) 
+            {
+                // load the data from the Masterlist
+                LoadData();
+            }
             // return the list of Processes in the Masterlist
-            if (FullData["Processes"]!.Equals(null)) {
+            if (LastRead!["Processes"] is null) 
+            {
                 throw new FileLoadException("Failed to load the Processes from the Process Masterlist data source.");
             }
             // convert the Process tokens into Process objects
-            List<Process> ProcessObjects = [];
-            foreach (JToken _process in FullData["Processes"]!) {
-                // resolve the Token to a Process object
-                try {
-                    ProcessObjects.Add(ResolveProcessFromToken(_process));
-                // there was a problem resolving the Process
-                } catch (Exception _ex) {
-                    throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
-                }
+            List<Process> ProcessObjects;
+            try
+            {
+                ProcessObjects = LastRead["Processes"]!
+                    .Select(ResolveProcessFromToken)
+                    .ToList();
+            }
+            catch (Exception _ex)
+            {
+                throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
             }
             return ProcessObjects;
         }
@@ -257,14 +313,18 @@ public static class ProcessData {
         /// Synchronously retrieves a list of Process Full Names ("Code-Title").
         /// </summary>
         /// <returns></returns>
-        public static List<string> GetAllProcessNames() {
-            // load the data from the Masterlist
-            JObject FullData = LoadData();
-            // create a List of all Process Names
-            List<string> Processes = [];
-            foreach(JToken _process in FullData["Processes"]!) {
-                Processes.Add($"{_process["LineCode"]}-{_process["Line"]}-{_process["Title"]}"!.ToString());
+        public List<string> GetAllProcessNames() 
+        {
+            if (LastRead is null) 
+            {
+                // load the data from the Masterlist
+                LoadData();
             }
+            // create a List of all Process Names
+            List<string> Processes = LastRead!["Processes"]!
+                .Select(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"!
+                .ToString())
+                .ToList();
             return Processes;
         }
 
@@ -275,23 +335,36 @@ public static class ProcessData {
         /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
         /// <returns>A Process object.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Process GetIndividualProcess(string ProcessFullName) {
-            // load the data from the Masterlist
-            JObject FullData = LoadData();
+        public Process GetIndividualProcess(string ProcessFullName) 
+        {
+            if (LastRead is null) 
+            {
+                // load the data from the Masterlist
+                LoadData();
+            }
             // attempt to access the data for the passed Process
             JToken SelectedData;
-            try {
-                SelectedData = FullData["Processes"]!.Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}".ToString() == ProcessFullName).First();
+            try 
+            {
+                SelectedData = LastRead!["Processes"]!
+                    .Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"
+                    .ToString() == ProcessFullName)
+                    .First();
             // no processes matched the name
-            } catch {
+            } 
+            catch 
+            {
                 throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
             }
             // resolve the Token to a Process
             Process ResolvedProcess;
-            try {
+            try 
+            {
                 ResolvedProcess = ResolveProcessFromToken(SelectedData);
             // the Token could not be resolved to a Process
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{SelectedData}' to a Process object.");
             }
             // return the resolved Process object
@@ -305,23 +378,36 @@ public static class ProcessData {
         /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
         /// <returns>A Process object.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static async Task<Process> GetIndividualProcessAsync(string ProcessFullName) {
-            // load the data from the Masterlist
-            JObject FullData = await LoadDataAsync();
+        public async Task<Process> GetIndividualProcessAsync(string ProcessFullName) 
+        {
+            if (LastRead is null) 
+            {
+                // load the data from the Masterlist
+                await LoadDataAsync();
+            }
             // attempt to access the data for the passed Process
             JToken SelectedData;
-            try {
-                SelectedData = FullData["Processes"]!.Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}".ToString() == ProcessFullName).First();
+            try 
+            {
+                SelectedData = LastRead!["Processes"]!
+                    .Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"
+                    .ToString() == ProcessFullName)
+                    .First();
             // no processes matched the name
-            } catch {
+            } 
+            catch 
+            {
                 throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
             }
             // resolve the Token to a Process
             Process ResolvedProcess;
-            try {
+            try 
+            {
                 ResolvedProcess = ResolveProcessFromToken(SelectedData);
             // the Token could not be resolved to a Process
-            } catch {
+            } 
+            catch 
+            {
                 throw new FormatException($"Could not resolve '{SelectedData}' to a Process object.");
             }
             // return the resolved Process object
@@ -332,14 +418,17 @@ public static class ProcessData {
         /// Retrieves a List of all Departments from the Process Masterlist.
         /// </summary>
         /// <returns></returns>
-        public static List<Department> GetDepartments() {
-            // load the data from the Masterlist
-            JObject FullData = LoadData();
-            // create a List of all Departments
-            List<Department> Departments = [];
-            foreach(JToken _department in FullData["Departments"]!) {
-                Departments.Add(ResolveDepartmentFromToken(_department));
+        public List<Department> GetDepartments() 
+        {
+            if (LastRead is null) 
+            {
+                // load the data from the Masterlist
+                LoadData();
             }
+            // create a List of all Departments
+            List<Department> Departments = LastRead!["Departments"]!
+                .Select(ResolveDepartmentFromToken)
+                .ToList();
             return Departments;
         }
 
@@ -349,12 +438,17 @@ public static class ProcessData {
         /// <param name="DepartmentTitle"></param>
         /// <returns>A Department object.</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static Department GetIndividualDepartment(string DepartmentTitle) {
+        public Department GetIndividualDepartment(string DepartmentTitle) 
+        {
             // retrieve all of the Departments
             List<Department> Departments = GetDepartments();
             // try to find a match for the passed Title
-            List<Department> Matches = Departments.Where(x => x.Title.Equals(DepartmentTitle)).ToList();
-            if (Matches.Count <= 0) {
+            List<Department> Matches = Departments
+                .Where(x => x.Title
+                .Equals(DepartmentTitle))
+                .ToList();
+            if (Matches.Count <= 0) 
+            {
                 // there was no match, throw an exception
                 throw new ArgumentException($"Could not match '{DepartmentTitle}' to a defined Department.");
             }

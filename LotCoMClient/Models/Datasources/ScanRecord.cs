@@ -1,5 +1,3 @@
-using LotCoMClient.Models.Exceptions;
-
 namespace LotCoMClient.Models.Datasources;
 
 /// <summary>
@@ -19,50 +17,20 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
 /// <param name="ScanAddress">The IP Address of the Scanner producing this record.</param>
-public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string ScanAddress): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress) {
+public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string ScanAddress): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress) 
+{
     /// <summary>
     /// Converts a DataRecord base class type object into a ScanRecord object (explicit cast).
     /// </summary>
     /// <param name="BaseRecord"></param>
     /// <returns></returns>
-    private static ScanRecord ConvertFromBase(DataRecord BaseRecord) {
+    public static ScanRecord ConvertFromBase(DataRecord BaseRecord) 
+    {
         // confirm there is an IP Address in the base Record object
-        if (BaseRecord.ScanAddress == null) {
+        if (BaseRecord.ScanAddress is null) 
+        {
             throw new ArgumentException($"Cannot convert base DataRecord into a ScanRecord without a non-null 'ScanAddress' property value.");
         }
         return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.ModelNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID, BaseRecord.ScanAddress);
-    }
-    
-    /// <summary>
-    /// Attempts to parse a DataRecord object from a CSV Line using the RecordParser. 
-    /// Casts that DataRecord to a ScanRecord object.
-    /// </summary>
-    /// <remarks>
-    /// Throws RecordParseException if the line contains too few fields, 
-    /// if the Parser fails to construct a DataRecord object from the parsed fields, 
-    /// of if the parsed DataRecord cannot be cast to a ScanRecord.
-    /// </remarks>
-    /// <param name="CSVLine"></param>
-    /// <returns>A ScanRecord object.</returns>
-    /// <exception cref="RecordParseException"></exception>
-    public static async Task<ScanRecord> ParseFromCSVAsync(string CSVLine) {
-        // attempt to parse a DataRecord object using the base Parser
-        DataRecord BaseRecord;
-        try {
-            BaseRecord = await RecordParser.ParseFromCSVAsync(CSVLine);
-        // the CSV Line could not be parsed
-        } catch (RecordParseException _ex) {
-            throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");
-        }
-        // cast and return the Parsed DataRecord as a ScanRecord
-        try {
-            return ConvertFromBase(BaseRecord);
-        // the parsed DataRecord object could not be cast to ScanRecord
-        } catch (RecordParseException _ex) {
-            throw new RecordParseException($"Failed to parse {CSVLine} due to the following exception:\n{_ex}");
-        // the parsed DataRecord object did not contain an IP Address
-        } catch (ArgumentException) {
-            throw new RecordParseException($"The line {CSVLine} did not contain a Scanner Address.");
-        }
     }
 }

@@ -9,6 +9,11 @@ namespace LotCoMClient.Models.Datasources;
 /// </summary>
 public partial class DataTable : ObservableObject 
 {
+    /// <summary>
+    /// Allows parsing of CSV Lines into DataRecord objects.
+    /// </summary>
+    private readonly RecordParser Parser = new RecordParser();
+
     private string _path = "";
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
@@ -69,39 +74,26 @@ public partial class DataTable : ObservableObject
     {
         // attempt to parse the proper type of DataRecord from the CSV Line
         DataRecord ParsedRecord;
-        if (RecordType.Equals(typeof(PrintRecord))) 
+        if (RecordType == typeof(PrintRecord)) 
         {
-            ParsedRecord = await PrintRecord.ParseFromCSVAsync(CSVLine);
+            ParsedRecord = await Parser.ParsePrintRecordFromCSVAsync(CSVLine);
         // parse a ScanRecord
         } 
         else 
         {
-            ParsedRecord = await ScanRecord.ParseFromCSVAsync(CSVLine);
+            ParsedRecord = await Parser.ParseScanRecordFromCSVAsync(CSVLine);
         }
         // return the parsed DataRecord
         return ParsedRecord;
     }
 
     /// <summary>
-    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
+    /// Parses a bulk string into Lines that can be parsed.
     /// </summary>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <exception cref="RecordParseException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task<List<DataRecord>> ReadAsync() 
-    {
-        return await Task.Run(async () => 
-        {
-            // read the Database Table at the Path property
-            string Text;
-            try 
-            {
-                Text = await File.ReadAllTextAsync(Path);
-            } 
-            catch (Exception _ex) 
-            {
-                throw new OperationCanceledException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
-            }
+    /// <param name="Text"></param>
+    /// <returns>A List of strings.</returns>
+    private async Task<List<string>> ParseLinesAsync(string Text) {
+        return await Task.Run(() => {
             // separate the read text into record lines (split by newline character)
             List<string> RecordLines = Text
                 .Split("\n")
@@ -115,27 +107,40 @@ public partial class DataTable : ObservableObject
             RecordLines = RecordLines
                 .Where(x => !x.Equals(""))
                 .ToList();
-            // parse each line into a DataRecord
-            List<DataRecord> ParsedRecords = [];
-            foreach (string _line in RecordLines) 
-            {
-                // use the ParseRecord method to parse the correct Record type
-                DataRecord _parsedRecord;
-                try 
-                {
-                    _parsedRecord = await ParseRecordAsync(_line);
-                // one line could not be parsed; throw an exception
-                } 
-                catch (Exception _ex) 
-                {
-                    throw new RecordParseException($"Failed to parse {_line} due to the following exception:\n{_ex}");
-                }
-                // add the parsed DataRecord object to the Record List
-                ParsedRecords.Add(_parsedRecord);
-            }
-            // return the list of parsed DataRecords
-            return ParsedRecords;
+            return RecordLines;
         });
+    }
+
+    /// <summary>
+    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
+    /// </summary>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <exception cref="RecordParseException"></exception>
+    /// <returns>A List of DataRecords.</returns>
+    private async Task<List<DataRecord>> ReadAsync() 
+    {
+        // read the Database Table at the Path property
+        string Text;
+        try 
+        {
+            Text = await File.ReadAllTextAsync(Path);
+        } 
+        catch (Exception _ex) 
+        {
+            throw new OperationCanceledException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
+        }
+        // parse the text into individual DataRecord objects as a batch of async Tasks
+        List<string> RecordLines = await ParseLinesAsync(Text);
+        IEnumerable<Task<DataRecord>>? Tasks = RecordLines.Select(ParseRecordAsync);
+        DataRecord[]? ParseResult = await Task.WhenAll(Tasks);
+        if (ParseResult == null) 
+        {
+            return [];
+        }
+        else 
+        {
+            return ParseResult.ToList();
+        }
     }
 
     /// <summary>

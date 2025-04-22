@@ -381,19 +381,6 @@ public class ProcessData()
     }
 
     /// <summary>
-    /// Retrieves ProcessFullName's serialization status.
-    /// </summary>
-    /// <param name="ProcessFullName">Process FULL Name ("Code-Title") to check.</param>
-    /// <returns>"Originator" || "Pass-through".</returns>
-    public async Task<string> IsOriginator(string ProcessFullName) 
-    {
-        // load the Process' data
-        Process Data = await GetIndividualProcessAsync(ProcessFullName);
-        // check whether the process is an originator or not
-        return Data.Type;
-    }
-
-    /// <summary>
     /// Retrieves the Process Part list for the specified Process.
     /// </summary>
     /// <param name="ProcessFullName"></param>

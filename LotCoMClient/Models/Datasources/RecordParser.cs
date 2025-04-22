@@ -9,17 +9,12 @@ namespace LotCoMClient.Models.Datasources;
 /// <remarks>
 /// Supports parsing from CSV.
 /// </remarks>
-public partial class RecordParser 
+public partial class RecordParser() 
 {
     /// <summary>
     /// Allows access to the Process Data source file.
     /// </summary>
-    private ProcessData ProcessData = new ProcessData();
-
-    /// <summary>
-    /// Allows access to the Part Data methods on Process Data.
-    /// </summary>
-    private PartData PartData = new PartData();
+    private readonly ProcessData ProcessData = new ProcessData();
 
     /// <summary>
     /// Call IPAddressRegex.IsMatch on a string to confirm it is a valid IP Address.
@@ -69,7 +64,7 @@ public partial class RecordParser
         // confirm that the Process is a valid process
         try 
         {
-            return await ProcessData.GetIndividualProcessDataAsync(SplitCSVLine[0]);
+            return await ProcessData.GetIndividualProcessAsync(SplitCSVLine[0]);
         } 
         catch 
         {
@@ -93,7 +88,7 @@ public partial class RecordParser
         // confirm that the Part Number and Part Name belong to a valid part
         try 
         {
-            return await PartData.GetPartDataAsync(ParsedProcess.FullName, SplitCSVLine[1]);
+            return await ProcessData.GetProcessPartDataAsync(ParsedProcess.FullName, SplitCSVLine[1]);
         } 
         catch 
         {

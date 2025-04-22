@@ -170,53 +170,38 @@ public partial class RecordParser
     }
 
     /// <summary>
-    /// Attempts to parse a DataRecord object from a CSV Line.
+    /// Parses a DataRecord object from a CSV Line that has been split by Comma ','.
     /// </summary>
-    /// <remarks>
-    /// Throws RecordParseException if the line contains too few fields
-    /// or if the Parser fails to construct a DataRecord object from the parsed fields.
-    /// </remarks>
-    /// <param name="CSVLine"></param>
-    /// <returns>A DataRecord object.</returns>
+    /// <param name="SplitCSVLine"></param>
+    /// <returns>A DataRecord object that can be further parsed into a ScanRecord or PrintRecord object.</returns>
     /// <exception cref="RecordParseException"></exception>
-    public async Task<DataRecord> ParseFromCSVAsync(string CSVLine) 
-    {
-        // split the CSV Line by commas
-        List<string> SplitLine = CSVLine
-            .Split(",")
-            .ToList();
-        // composite asynchronous tasks to parse universal data fields quickly
-        string? ScanAddress;
-        ScanAddress = await ParseIPAddressAsync(SplitLine);
-        // remove the IP address from the SplitLine list (if parsed)
-        if (ScanAddress != null) 
-        {
-            SplitLine.RemoveAt(0);
-        }
+    private async Task<DataRecord> ParseBaseDataRecord(List<string> SplitCSVLine) {
+        // parse out Process and Part objects
         Process RecordProcess;
         Part RecordPart;
         try 
         {
-            RecordProcess = await ParseRecordProcessAsync(SplitLine);
-            RecordPart = await ParseRecordPartAsync(SplitLine, RecordProcess);
+            RecordProcess = await ParseRecordProcessAsync(SplitCSVLine);
+            RecordPart = await ParseRecordPartAsync(SplitCSVLine, RecordProcess);
         } 
         catch 
         {
             throw new RecordParseException();
         }
-        string Quantity = SplitLine[3];
-        List<string> Timestamp = SplitLine[^3]
+        // parse out universally required data fields
+        string Quantity = SplitCSVLine[3];
+        List<string> Timestamp = SplitCSVLine[^3]
             .Split("-")
             .ToList();
         string RecordDate = Timestamp[0];
         string RecordTime = Timestamp[1];
-        string RecordShift = SplitLine[^2];
-        string OperatorID = SplitLine[^1];
-        // attempt to parse any variably-required fields
+        string RecordShift = SplitCSVLine[^2];
+        string OperatorID = SplitCSVLine[^1];
+        // attempt to parse out any variably-required fields
         VariableFieldSet VariableFields;
         try
         {
-            VariableFields = await ParseVariableFieldSetAsync(SplitLine, RecordProcess);
+            VariableFields = await ParseVariableFieldSetAsync(SplitCSVLine, RecordProcess);
         } 
         catch
         {
@@ -225,12 +210,77 @@ public partial class RecordParser
         // attempt to create a DataRecord from the parsed data
         try 
         {
-            return new DataRecord(RecordProcess, RecordPart, Quantity, VariableFields.JBKNumber, VariableFields.LotNumber, VariableFields.DeburrJBKNumber, VariableFields.DieNumber, VariableFields.ModelNumber, VariableFields.HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress);
+            return new DataRecord(RecordProcess, RecordPart, Quantity, VariableFields.JBKNumber, VariableFields.LotNumber, VariableFields.DeburrJBKNumber, VariableFields.DieNumber, VariableFields.ModelNumber, VariableFields.HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID);
         // there was a problem constructing a DataRecord from the parsed data
         } 
         catch 
         {
             throw new RecordParseException();
         }
+    }
+
+    /// <summary>
+    /// Constructs a complete ScanRecord object from CSVLine.
+    /// </summary>
+    /// <param name="CSVLine"></param>
+    /// <returns>A ScanRecord object.</returns>
+    /// <exception cref="RecordParseException"></exception>
+    public async Task<ScanRecord> ParseScanRecordFromCSVAsync(string CSVLine) 
+    {
+        // split the CSV Line by commas
+        List<string> SplitLine = CSVLine
+            .Split(",")
+            .ToList();
+        // test for an IP Address
+        string? ScanAddress;
+        ScanAddress = await ParseIPAddressAsync(SplitLine);
+        // remove the IP address from the SplitLine list (if parsed)
+        if (ScanAddress is null) 
+        {
+            throw new RecordParseException();
+        }
+        else 
+        {
+            SplitLine.RemoveAt(0);
+        }
+        // parse a base DataRecord, apply the IP address value, and convert to ScanRecord object
+        ScanRecord ParsedRecord;
+        try
+        {
+            DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
+            BaseRecord.ScanAddress = ScanAddress;
+            ParsedRecord = ScanRecord.ConvertFromBase(BaseRecord);
+        }
+        catch
+        {
+            throw new RecordParseException();
+        }
+        return ParsedRecord;
+    }
+
+    /// <summary>
+    /// Constructs a complete PrintRecord object from CSVLine.
+    /// </summary>
+    /// <param name="CSVLine"></param>
+    /// <returns>A PrintRecord object.</returns>
+    /// <exception cref="RecordParseException"></exception>
+    public async Task<PrintRecord> ParsePrintRecordFromCSVAsync(string CSVLine) 
+    {
+        // split the CSV Line by commas
+        List<string> SplitLine = CSVLine
+            .Split(",")
+            .ToList();
+        // parse a base DataRecord and convert to PrintRecord object
+        PrintRecord ParsedRecord;
+        try
+        {
+            DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
+            ParsedRecord = PrintRecord.ConvertFromBase(BaseRecord);
+        }
+        catch
+        {
+            throw new RecordParseException();
+        }
+        return ParsedRecord;
     }
 }

@@ -11,29 +11,37 @@ public class ProcessData()
     private const string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\process_control\\_process_masterlist.json";
         
     /// <summary>
-    /// Contains the full JObject object produced by the last LoadDataAsync call. 
+    /// Contains the List of Processes produced by the last LoadData/LoadDataAsync call. 
     /// </summary>
-    private JObject? LastRead = null;
+    private List<Process>? CachedProcesses;
+
+    /// <summary>
+    /// Contains the List of Departments produced by the last LoadData/LoadDataAsync call. 
+    /// </summary>
+    private List<Department>? CachedDepartments;
+
+    private bool AreProcessesLoaded => (CachedProcesses is not null) && (CachedProcesses.Count > 0);
+    private bool AreDepartmentsLoaded => (CachedDepartments is not null) && (CachedDepartments.Count > 0);
 
     /// <summary>
     /// Synchronously loads the data from the Process Masterlist data source. Stores this data in the LastRead property.
     /// </summary>
     /// <returns>A JSON dictionary containing the Process Masterlist data.</returns>
     /// <exception cref="JsonException"></exception>
-    private void LoadData() 
+    private static JObject LoadData() 
     {
         // read the masterlist file
-        LastRead = JObject.Parse(File.ReadAllText(Path));
+        return JObject.Parse(File.ReadAllText(Path));
     }
 
     /// <summary>
     /// Asynchronously loads the data from the Process Masterlist data source. Stores this data in the LastRead property.
     /// </summary>
     /// <exception cref="JsonException"></exception>
-    private async Task LoadDataAsync() 
+    private static async Task<JObject> LoadDataAsync() 
     {
         // read the masterlist file
-        LastRead = JObject.Parse(await File.ReadAllTextAsync(Path));
+        return JObject.Parse(await File.ReadAllTextAsync(Path));
     }
 
     /// <summary>
@@ -198,79 +206,189 @@ public class ProcessData()
 
     /// <summary>
     /// Retrieves the list of Processes, as Process objects, from the Process Masterlist.
+    /// Stores this list in the CachedProcesses property.
     /// </summary>
     /// <returns>A list of Process objects.</returns>
     /// <exception cref="FileLoadException"></exception>
     public List<Process> GetAllProcesses() 
     {
-        if (LastRead is null) 
+        if (!AreProcessesLoaded) 
         {
-            Console.WriteLine($"LastRead null: {LastRead is null}. Reading from GetIndividualProcessAsync()...");
+            Console.WriteLine("Reading from GetAllProcesses()...");
             // load the data from the Masterlist
-            LoadData();
+            JObject NewRead = LoadData();
+            // get the list of Processes in the Masterlist
+            if (NewRead!["Processes"] is null) 
+            {
+                throw new FileLoadException("Failed to load the Processes from the Process Masterlist data source.");
+            }
+            // convert the Process tokens into Process objects
+            List<Process> ProcessObjects;
+            try
+            {
+                ProcessObjects = NewRead["Processes"]!
+                    .Select(ResolveProcessFromToken)
+                    .ToList();
+            }
+            catch (Exception _ex)
+            {
+                throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
+            }
+            CachedProcesses = ProcessObjects;
         }
-        // return the list of Processes in the Masterlist
-        if (LastRead!["Processes"] is null) 
-        {
-            throw new FileLoadException("Failed to load the Processes from the Process Masterlist data source.");
-        }
-        // convert the Process tokens into Process objects
-        List<Process> ProcessObjects;
-        try
-        {
-            ProcessObjects = LastRead["Processes"]!
-                .Select(ResolveProcessFromToken)
-                .ToList();
-        }
-        catch (Exception _ex)
-        {
-            throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
-        }
-        return ProcessObjects;
+        return CachedProcesses!;
     }
 
     /// <summary>
-    /// Synchronously retrieves a list of Process Full Names ("Code-Title").
+    /// Asynchronously retrieves the list of Processes, as Process objects, from the Process Masterlist.
+    /// Stores this list in the CachedProcesses property.
+    /// </summary>
+    /// <returns>A list of Process objects.</returns>
+    /// <exception cref="FileLoadException"></exception>
+    public async Task<List<Process>> GetAllProcessesAsync() 
+    {
+        if (!AreProcessesLoaded) 
+        {
+            CachedProcesses = await Task.Run(async () => 
+            {
+                Console.WriteLine("Reading from GetAllProcessesAsync()...");
+                // load the data from the Masterlist
+                JObject NewRead = await LoadDataAsync();
+                // return the list of Processes in the Masterlist
+                if (NewRead!["Processes"] is null) 
+                {
+                    throw new FileLoadException("Failed to load the Processes from the Process Masterlist data source.");
+                }
+                // convert the Process tokens into Process objects
+                List<Process> ProcessObjects;
+                try
+                {
+                    ProcessObjects = NewRead["Processes"]!
+                        .Select(ResolveProcessFromToken)
+                        .ToList();
+                }
+                catch (Exception _ex)
+                {
+                    throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
+                }
+                return ProcessObjects;
+            });
+        }
+        return CachedProcesses!;
+    }
+
+    /// <summary>
+    /// Retrieves a List of all Departments from the Process Masterlist.
+    /// Stores this List in the CachedDepartments property.
+    /// </summary>
+    /// <returns></returns>
+    public List<Department> GetAllDepartments() 
+    {
+        if (!AreDepartmentsLoaded) 
+        {
+            Console.WriteLine("Reading from GetAllDepartments()...");
+            // load the data from the Masterlist
+            JObject NewRead = LoadData();
+            // get the list of Departments in the Masterlist
+            if (NewRead!["Departments"] is null) 
+            {
+                throw new FileLoadException("Failed to load the Departments from the Process Masterlist data source.");
+            }
+            // convert the Department tokens into Department objects
+            List<Department> DepartmentObjects;
+            try
+            {
+                DepartmentObjects = NewRead["Departments"]!
+                    .Select(ResolveDepartmentFromToken)
+                    .ToList();
+            }
+            catch (Exception _ex)
+            {
+                throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
+            }
+            CachedDepartments = DepartmentObjects;
+        }
+        return CachedDepartments!;
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves a List of all Departments from the Process Masterlist.
+    /// Stores this List in the CachedDepartments property.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Department>> GetAllDepartmentsAsync() 
+    {
+        if (!AreDepartmentsLoaded) 
+        {
+            CachedDepartments = await Task.Run(async () => 
+            {
+                Console.WriteLine("Reading from GetAllDepartmentsAsync()...");
+                // load the data from the Masterlist
+                JObject NewRead = await LoadDataAsync();
+                // get the list of Departments in the Masterlist
+                if (NewRead!["Departments"] is null) 
+                {
+                    throw new FileLoadException("Failed to load the Departments from the Process Masterlist data source.");
+                }
+                // convert the Department tokens into Department objects
+                List<Department> DepartmentObjects;
+                try
+                {
+                    DepartmentObjects = NewRead["Departments"]!
+                        .Select(ResolveDepartmentFromToken)
+                        .ToList();
+                }
+                catch (Exception _ex)
+                {
+                    throw new FormatException($"Failed to load Processes due to the following exception: {_ex.Message}.");
+                }
+                return DepartmentObjects;
+            });
+        }
+        return CachedDepartments!;
+    }
+
+    /// <summary>
+    /// Synchronously retrieves a list of Process Full Names.
     /// </summary>
     /// <returns></returns>
     public List<string> GetAllProcessNames() 
     {
-        if (LastRead is null) 
-        {
-            Console.WriteLine($"LastRead null: {LastRead is null}. Reading from GetIndividualProcessAsync()...");
-            // load the data from the Masterlist
-            LoadData();
-        }
+        GetAllProcesses();
         // create a List of all Process Names
-        List<string> Processes = LastRead!["Processes"]!
-            .Select(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"!
-            .ToString())
+        return CachedProcesses!
+            .Select(x => x.FullName)
             .ToList();
-        return Processes;
+    }
+
+    /// <summary>
+    /// Asynchronously retrieves a list of Process Full Names.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<string>> GetAllProcessNamesAsync() 
+    {
+        await GetAllProcessesAsync();
+        // create a List of all Process Names
+        return CachedProcesses!
+            .Select(x => x.FullName)
+            .ToList();
     }
 
     /// <summary>
     /// Loads and queries the Process Masterlist data for data connected to ProcessFullName. 
     /// Returns a Process object constructed from the first found match.
     /// </summary>
-    /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
+    /// <param name="ProcessFullName">The FULL name of a Process to query for.</param>
     /// <returns>A Process object.</returns>
     /// <exception cref="ArgumentException"></exception>
     public Process GetIndividualProcess(string ProcessFullName) 
     {
-        if (LastRead is null) 
-        {
-            Console.WriteLine($"LastRead null: {LastRead is null}. Reading from GetIndividualProcessAsync()...");
-            // load the data from the Masterlist
-            LoadData();
-        }
+        GetAllProcesses();
         // attempt to access the data for the passed Process
-        JToken SelectedData;
         try 
         {
-            SelectedData = LastRead!["Processes"]!
-                .Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"
-                .ToString() == ProcessFullName)
+            return CachedProcesses!
+                .Where(x => x.FullName == ProcessFullName)
                 .First();
         // no processes matched the name
         } 
@@ -278,43 +396,23 @@ public class ProcessData()
         {
             throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
         }
-        // resolve the Token to a Process
-        Process ResolvedProcess;
-        try 
-        {
-            ResolvedProcess = ResolveProcessFromToken(SelectedData);
-        // the Token could not be resolved to a Process
-        } 
-        catch 
-        {
-            throw new FormatException($"Could not resolve '{SelectedData}' to a Process object.");
-        }
-        // return the resolved Process object
-        return ResolvedProcess;
     }
 
     /// <summary>
     /// Asynchronously loads and queries the Process Masterlist data for data connected to ProcessFullName. 
     /// Returns a Process object constructed from the first found match.
     /// </summary>
-    /// <param name="ProcessFullName">The FULL name of a Process ("Code-Title") to query for.</param>
+    /// <param name="ProcessFullName">The FULL name of a Process to query for.</param>
     /// <returns>A Process object.</returns>
     /// <exception cref="ArgumentException"></exception>
     public async Task<Process> GetIndividualProcessAsync(string ProcessFullName) 
     {
-        if (LastRead == null) 
-        {
-            Console.WriteLine($"LastRead null: {LastRead == null}. Reading from GetIndividualProcessAsync()...");
-            // load the data from the Masterlist
-            await LoadDataAsync();
-        }
+        await GetAllProcessesAsync();
         // attempt to access the data for the passed Process
-        JToken SelectedData;
         try 
         {
-            SelectedData = LastRead!["Processes"]!
-                .Where(x => $"{x["LineCode"]}-{x["Line"]}-{x["Title"]}"
-                .ToString() == ProcessFullName)
+            return CachedProcesses!
+                .Where(x => x.FullName == ProcessFullName)
                 .First();
         // no processes matched the name
         } 
@@ -322,38 +420,6 @@ public class ProcessData()
         {
             throw new ArgumentException($"Could not resolve process '{ProcessFullName}'.");
         }
-        // resolve the Token to a Process
-        Process ResolvedProcess;
-        try 
-        {
-            ResolvedProcess = ResolveProcessFromToken(SelectedData);
-        // the Token could not be resolved to a Process
-        } 
-        catch 
-        {
-            throw new FormatException($"Could not resolve '{SelectedData}' to a Process object.");
-        }
-        // return the resolved Process object
-        return ResolvedProcess;
-    }
-
-    /// <summary>
-    /// Retrieves a List of all Departments from the Process Masterlist.
-    /// </summary>
-    /// <returns></returns>
-    public List<Department> GetDepartments() 
-    {
-        if (LastRead is null) 
-        {
-            Console.WriteLine($"LastRead null: {LastRead is null}. Reading from GetIndividualProcessAsync()...");
-            // load the data from the Masterlist
-            LoadData();
-        }
-        // create a List of all Departments
-        List<Department> Departments = LastRead!["Departments"]!
-            .Select(ResolveDepartmentFromToken)
-            .ToList();
-        return Departments;
     }
 
     /// <summary>
@@ -364,10 +430,9 @@ public class ProcessData()
     /// <exception cref="ArgumentException"></exception>
     public Department GetIndividualDepartment(string DepartmentTitle) 
     {
-        // retrieve all of the Departments
-        List<Department> Departments = GetDepartments();
+        GetAllDepartments();
         // try to find a match for the passed Title
-        List<Department> Matches = Departments
+        List<Department> Matches = CachedDepartments!
             .Where(x => x.Title
             .Equals(DepartmentTitle))
             .ToList();
@@ -378,6 +443,32 @@ public class ProcessData()
         }
         // return the first of the Matches
         return Matches[0];
+    }
+
+    /// <summary>
+    /// Asynchronously searches for a Department that has a Title the matches DepartmentTitle.
+    /// </summary>
+    /// <param name="DepartmentTitle"></param>
+    /// <returns>A Department object.</returns>
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<Department> GetIndividualDepartmentAsync(string DepartmentTitle) 
+    {
+        await GetAllDepartmentsAsync();
+        return await Task.Run(() => 
+        {
+            // try to find a match for the passed Title
+            List<Department> Matches = CachedDepartments!
+                .Where(x => x.Title
+                .Equals(DepartmentTitle))
+                .ToList();
+            if (Matches.Count < 1) 
+            {
+                // there was no match, throw an exception
+                throw new ArgumentException($"Could not match '{DepartmentTitle}' to a defined Department.");
+            }
+            // return the first of the Matches
+            return Matches[0];
+        });
     }
 
     /// <summary>

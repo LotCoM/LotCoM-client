@@ -44,11 +44,6 @@ public partial class DataTable : ObservableObject
         set {_recordsState = value;}
     }
 
-    /// <summary>
-    /// Flag to use to check if the DataTable has performed a ReadAsync call or not.
-    /// </summary>
-    public bool IsFirstRead = false;
-
     private List<string> _headers = [];
     /// <summary>
     /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.

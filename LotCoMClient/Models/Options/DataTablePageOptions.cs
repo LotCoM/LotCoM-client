@@ -11,7 +11,8 @@ public partial class DataTablePageOptions() : ObservableObject()
     /// <summary>
     /// Provides default Left Panel widths for Open and Closed states.
     /// </summary>
-    public enum LeftPanelWidths {
+    public enum LeftPanelWidths 
+    {
         Closed = 30,
         Open = 250
     }
@@ -24,9 +25,39 @@ public partial class DataTablePageOptions() : ObservableObject()
 
     [ObservableProperty]
     /// <summary>
+    /// Controls the visibility of the Page's Body Header which is between the Page's Title and Body (ListView).
+    /// </summary>
+    public partial bool IsBodyHeaderLabelShown {get; set;} = false;
+
+    [ObservableProperty]
+    /// <summary>
     /// Controls the text of the Page's Body Table Header.
     /// </summary>
     public partial string BodyTableHeaderText {get; set;} = "";
+
+    [ObservableProperty]
+    /// <summary>
+    /// Controls the visibility of the Page's Navigation Panel which is between the Page's Title and Body (ListView).
+    /// </summary>
+    public partial bool IsBodyNavigationPanelShown {get; set;} = false;
+
+    [ObservableProperty]
+    /// <summary>
+    /// Controls the number of DataRecords loaded by the Page's DataTable.
+    /// </summary>
+    public partial int TotalRecordCount {get; set;} = 0;
+
+    [ObservableProperty]
+    /// <summary>
+    /// Controls the Number of the currently displayed Page of DataRecords, controlled by the Page's Navigation Panel.
+    /// </summary>
+    public partial int PageNumber {get; set;} = 0;
+
+    [ObservableProperty]
+    /// <summary>
+    /// Controls the number of DataRecords displayed by the Page's ListView, controlled by the Page's Navigation Panel.
+    /// </summary>
+    public partial int DisplayedRecordCount {get; set;} = 0;
 
     [ObservableProperty]
     /// <summary>

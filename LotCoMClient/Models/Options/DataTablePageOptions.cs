@@ -6,7 +6,7 @@ namespace LotCoMClient.Models.Options;
 /// <summary>
 /// Encapsulates several options and controls that change the way a DataTablePage looks and functions.
 /// </summary>
-public class DataTablePageOptions() : ObservableObject() 
+public partial class DataTablePageOptions() : ObservableObject() 
 {
     /// <summary>
     /// Provides default Left Panel widths for Open and Closed states.
@@ -16,274 +16,132 @@ public class DataTablePageOptions() : ObservableObject()
         Open = 250
     }
 
-    private string _title = "";
+    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Title which appears in the top-left corner.
     /// </summary>
-    public string Title 
-    {
-        get {return _title;}
-        set 
-        {
-            _title = value;
-            OnPropertyChanged(nameof(_title));
-            OnPropertyChanged(nameof(Title));
-        }
-    }
+    public partial string Title {get; set;} = "";
 
-    private string _bodyTableHeaderText = "";
+    [ObservableProperty]
     /// <summary>
     /// Controls the text of the Page's Body Table Header.
     /// </summary>
-    public string BodyTableHeaderText {
-        get {return _bodyTableHeaderText;} 
-        set 
-        {
-            _bodyTableHeaderText = value;
-            OnPropertyChanged(nameof(_bodyTableHeaderText));
-            OnPropertyChanged(nameof(BodyTableHeaderText));
-        }
-    }
+    public partial string BodyTableHeaderText {get; set;} = "";
 
-    private string _leftPanelHeaderText = "";
+    [ObservableProperty]
     /// <summary>
     /// Controls the text shown in the Page's Left Panel Header which appears at the top of the collapsable Left Panel.
     /// </summary>
-    public string LeftPanelHeaderText 
-    {
-        get {return _leftPanelHeaderText;}
-        set 
-        {
-            _leftPanelHeaderText = value;
-            OnPropertyChanged(nameof(_leftPanelHeaderText));
-            OnPropertyChanged(nameof(LeftPanelHeaderText));
-        }
-    }
+    public partial string LeftPanelHeaderText {get; set;} = "";
 
-    private string _leftPanelFooterText = "Click to Collapse";
+    [ObservableProperty]
     /// <summary>
     /// Controls the text shown in the Page's Left Panel Footer which appears at the bottom of the collapsable Left Panel.
     /// </summary>
-    public string LeftPanelFooterText 
-    {
-        get {return _leftPanelFooterText;}
-        set 
-        {
-            _leftPanelFooterText = value;
-            OnPropertyChanged(nameof(_leftPanelFooterText));
-            OnPropertyChanged(nameof(LeftPanelFooterText));
-        }
-    }
+    public partial string LeftPanelFooterText {get; set;} = "Click to Collapse";
 
-    private bool _isLeftPanelShown = true;
+    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Left Panel Shown state (boolean).
     /// </summary>
-    public bool IsLeftPanelShown 
-    {
-        get {return _isLeftPanelShown;} 
-        set 
-        {
-            _isLeftPanelShown = value;
-            OnPropertyChanged(nameof(_isLeftPanelShown));
-            OnPropertyChanged(nameof(IsLeftPanelShown));
-        }
-    }
+    public partial bool IsLeftPanelShown {get; set;} = true;
 
-    private bool _isLeftPanelHidden = false;
+    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Left Panel Hidden state (boolean).
     /// </summary>
-    public bool IsLeftPanelHidden 
-    {
-        get {return _isLeftPanelHidden;} 
-        set 
-        {
-            _isLeftPanelHidden = value;
-            OnPropertyChanged(nameof(_isLeftPanelHidden));
-            OnPropertyChanged(nameof(IsLeftPanelHidden));
-        }
-    }
+    public partial bool IsLeftPanelHidden {get; set;} = false;
 
-    private int _leftPanelWidth = (int)LeftPanelWidths.Open;
+    [ObservableProperty]
     /// <summary>
     /// Controls the width of the Page's Left Panel.
     /// </summary>
-    public int LeftPanelWidth 
-    {
-        get {return _leftPanelWidth;} 
-        set 
-        {
-            _leftPanelWidth = value;
-            OnPropertyChanged(nameof(_leftPanelWidth));
-            OnPropertyChanged(nameof(LeftPanelWidth));
-        }
-    }
+    public partial int LeftPanelWidth {get; set;} = (int)LeftPanelWidths.Open;
     
-    private List<string> _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
+    [ObservableProperty]
     /// <summary>
     /// Controls the data fields that are included in DataRecords for the Page's ListView.
     /// </summary>
-    public List<string> DataFields 
-    {
-        get {return _dataFields;} 
-        set 
-        {
-            _dataFields = value;
-            OnPropertyChanged(nameof(_dataFields));
-            OnPropertyChanged(nameof(DataFields));
-        }
-    }
+    public partial List<string> DataFields {get; set;} = 
+    [
+        "Part Number", 
+        "Part Name", 
+        "Quantity", 
+        "Production Date", 
+        "Production Time", 
+        "Production Shift", 
+        "Operator ID"
+    ];
 
-    private List<string> _searchableFields = ["All", "Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
+    [ObservableProperty]
     /// <summary>
     /// Controls the fields that can be used to search the Page's ListView.
     /// </summary>
-    public List<string> SearchableFields 
-    {
-        get {return _searchableFields;}
-        set 
-        {
-            _searchableFields = value;
-            OnPropertyChanged(nameof(_searchableFields));
-            OnPropertyChanged(nameof(SearchableFields));
-        }
-    }
+    public partial List<string> SearchableFields {get; set;} = 
+    [
+        "All", 
+        "Part Number", 
+        "Part Name", 
+        "Quantity", 
+        "Production Date", 
+        "Production Time", 
+        "Production Shift", 
+        "Operator ID"
+    ];
 
-    private int _selectedSortingFieldIndex;
+    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SortingField Picker.
     /// </summary>
-    public int SelectedSortingFieldIndex 
-    {
-        get {return _selectedSortingFieldIndex;}
-        set 
-        {
-            _selectedSortingFieldIndex = value;
-            OnPropertyChanged(nameof(_selectedSortingFieldIndex));
-            OnPropertyChanged(nameof(SelectedSortingFieldIndex));
-        }
-    }
+    public partial int SelectedSortingFieldIndex {get; set;} = -1;
 
-    private int _selectedSortingOrderIndex;
+    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SortingOrder Picker.
     /// </summary>
-    public int SelectedSortingOrderIndex 
-    {
-        get {return _selectedSortingOrderIndex;}
-        set 
-        {
-            _selectedSortingOrderIndex = value;
-            OnPropertyChanged(nameof(_selectedSortingOrderIndex));
-            OnPropertyChanged(nameof(SelectedSortingOrderIndex));
-        }
-    }
+    public partial int SelectedSortingOrderIndex {get; set;} = -1;
 
-    private int _selectedSearchingFieldIndex;
+    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SearchingField Picker.
     /// </summary>
-    public int SelectedSearchingFieldIndex 
-    {
-        get {return _selectedSearchingFieldIndex;}
-        set 
-        {
-            _selectedSearchingFieldIndex = value;
-            OnPropertyChanged(nameof(_selectedSearchingFieldIndex));
-            OnPropertyChanged(nameof(SelectedSearchingFieldIndex));
-        }
-    }
+    public partial int SelectedSearchingFieldIndex {get; set;} = -1;
 
-    private string _searchTerm = "";
+    [ObservableProperty]
     /// <summary>
     /// Controls the currently entered Text value of the Page's ListViewSearchBar.
     /// </summary>
-    public string SearchTerm 
-    {
-        get {return _searchTerm;}
-        set 
-        {
-            _searchTerm = value;
-            OnPropertyChanged(nameof(_searchTerm));
-            OnPropertyChanged(nameof(SearchTerm));
-        }
-    }
+    public partial string SearchTerm {get; set;} = "";
 
-    public Department? _department = null;
+    [ObservableProperty]
     /// <summary>
     /// Controls the Department that defines the Process currently shown on the Page.
     /// </summary>
-    public Department? Department 
-    {
-        get {return _department;}
-        set 
-        {
-            _department = value;
-            OnPropertyChanged(nameof(_department));
-            OnPropertyChanged(nameof(Department));
-        }
-    }
+    public partial Department? Department {get; set;} = null;
 
-    private List<Process> _departmentProcesses = [];
+    [ObservableProperty]
     /// <summary>
     /// For Selector Pages;
     /// Controls the Processes that are selectable in the Page's PageProcess Picker.
     /// </summary>
-    public List<Process> DepartmentProcesses 
-    {
-        get {return _departmentProcesses;}
-        private set 
-        {
-            _departmentProcesses = value;
-            OnPropertyChanged(nameof(_departmentProcesses));
-            OnPropertyChanged(nameof(DepartmentProcesses));
-        }
-    }
+    public partial List<Process> DepartmentProcesses {get; set;} = [];
 
-    private int _selectedProcessIndex = -1;
+    [ObservableProperty]
     /// <summary>
     /// For Selector Pages;
     /// Controls the currently selected index of the Page's PageProcess Picker.
     /// </summary>
-    public int SelectedProcessIndex 
-    {
-        get {return _selectedProcessIndex;}
-        set 
-        {
-            _selectedProcessIndex = value;
-            OnPropertyChanged(nameof(_selectedProcessIndex));
-            OnPropertyChanged(nameof(SelectedProcessIndex));
-        }
-    }
+    public partial int SelectedProcessIndex {get; set;} = -1;
 
-    private Type _recordType = typeof(DataRecord);
+    [ObservableProperty]
     /// <summary>
     /// Controls the subclass of DataRecord displayed by the Page's ListView.
     /// </summary>
-    public Type RecordType 
-    {
-        get {return _recordType;}
-        set 
-        {
-            _recordType = value;
-            OnPropertyChanged(nameof(_recordType));
-            OnPropertyChanged(nameof(RecordType));
-        }
-    }
+    public partial Type RecordType {get; set;} = typeof(DataRecord);
 
-    private bool _isProcessAssigned;
+    [ObservableProperty]
     /// <summary>
     /// Controls the boolean condition of whether a Process has been assigned to the Page.
     /// </summary>
-    public bool IsProcessAssigned 
-    {
-        get {return _isProcessAssigned;}
-        set 
-        {
-            _isProcessAssigned = value;
-            OnPropertyChanged(nameof(_isProcessAssigned));
-            OnPropertyChanged(nameof(IsProcessAssigned));
-        }
-    }
+    public partial bool IsProcessAssigned {get; set;} = false;
 }

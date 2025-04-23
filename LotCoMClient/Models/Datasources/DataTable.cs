@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
+using LotCoMClient.Models.Options;
 using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;

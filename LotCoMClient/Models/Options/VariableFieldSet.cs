@@ -1,4 +1,4 @@
-namespace LotCoMClient.Models.Datasources;
+namespace LotCoMClient.Models.Options;
 
 public class VariableFieldSet(string JBKNumber = "", string LotNumber = "", string DeburrJBKNumber = "", string DieNumber = "", string ModelNumber = "", string HeatNumber = "") {
     public string JBKNumber = JBKNumber;

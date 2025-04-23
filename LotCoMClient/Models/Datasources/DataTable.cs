@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
+using LotCoMClient.Models.Options;
 using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;
@@ -42,11 +43,6 @@ public partial class DataTable : ObservableObject
         get {return _recordsState;}
         set {_recordsState = value;}
     }
-
-    /// <summary>
-    /// Flag to use to check if the DataTable has performed a ReadAsync call or not.
-    /// </summary>
-    public bool IsFirstRead = false;
 
     private List<string> _headers = [];
     /// <summary>

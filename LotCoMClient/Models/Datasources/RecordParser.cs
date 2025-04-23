@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using LotCoMClient.Models.Exceptions;
+using LotCoMClient.Models.Options;
 
 namespace LotCoMClient.Models.Datasources;
 

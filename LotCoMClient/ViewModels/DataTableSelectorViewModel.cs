@@ -16,51 +16,6 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
     /// </summary>
     private readonly ProcessData ProcessData = new ProcessData();
 
-    private List<Process> _processes = [];
-    /// <summary>
-    /// Serves the selectable Processes for this Page.
-    /// </summary>
-    public List<Process> Processes 
-    {
-        get {return _processes;}
-        private set 
-        {
-            _processes = value;
-            OnPropertyChanged(nameof(_processes));
-            OnPropertyChanged(nameof(Processes));
-        }
-    }
-
-    private int _selectedProcessIndex = -1;
-    /// <summary>
-    /// Serves the currently selected index of the ProcessPicker Control.
-    /// </summary>
-    public int SelectedProcessIndex 
-    {
-        get {return _selectedProcessIndex;}
-        set 
-        {
-            _selectedProcessIndex = value;
-            OnPropertyChanged(nameof(_selectedProcessIndex));
-            OnPropertyChanged(nameof(SelectedProcessIndex));
-        }
-    }
-
-    private bool _isProcessAssigned;
-    /// <summary>
-    /// Serves the boolean condition of Process assignment for this Data Table Page.
-    /// </summary>
-    public bool IsProcessAssigned 
-    {
-        get {return _isProcessAssigned;}
-        set 
-        {
-            _isProcessAssigned = value;
-            OnPropertyChanged(nameof(_isProcessAssigned));
-            OnPropertyChanged(nameof(IsProcessAssigned));
-        }
-    }
-
     /// <summary>
     /// Creates a ViewModel for the DataTableSelectorPage.
     /// </summary>
@@ -75,7 +30,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
         // try to match the Department passed with a defined Department Title
         try 
         {
-            PageDepartment = ProcessData.GetIndividualDepartment(Department);
+            Options.Department = ProcessData.GetIndividualDepartment(Department);
         // there was no match found for the passed Department Title
         } 
         catch (Exception _ex) 
@@ -83,13 +38,13 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
             throw new ArgumentException(_ex.Message);
         }
         // configure Processes list to only contain the necessary Lines
-        Processes = ProcessData
+        Options.DepartmentProcesses = ProcessData
             .GetAllProcesses()
-            .Where(x => PageDepartment.Lines
+            .Where(x => Options.Department.Lines
             .Contains(x.Line))
             .ToList();
         // configure the IsProcessAssigned property
-        this.IsProcessAssigned = IsProcessAssigned;
+        Options.IsProcessAssigned = IsProcessAssigned;
     }
 
     /// <summary>
@@ -101,7 +56,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
     {
         // use the record type of this page to set the path accordingly
         string FullPath;
-        if (RecordType.Equals(typeof(PrintRecord))) 
+        if (Options.RecordType.Equals(typeof(PrintRecord))) 
         {
             // page is displaying printing data
             FullPath = $"{DataTablesPathBase}\\prints";
@@ -112,12 +67,12 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
             FullPath = $"{DataTablesPathBase}\\scans";
         }
         // get the Process currently selected in the ProcessPicker control
-        SelectedProcessIndex = PageProcessPicker.SelectedIndex;
-        Process SelectedProcess = (Process)PageProcessPicker.ItemsSource[SelectedProcessIndex]!;
+        Options.SelectedProcessIndex = PageProcessPicker.SelectedIndex;
+        Process SelectedProcess = (Process)PageProcessPicker.ItemsSource[Options.SelectedProcessIndex]!;
         // update the Page's DataTable to consume data from the newly selected Process Database Table
         Table = new DataTable($"{FullPath}\\{SelectedProcess.FullName}.txt");
         // update the Page's Data
         Data = new NotifyTaskCompletion<List<DataRecord>>(Table.RequestRecords());
-        IsProcessAssigned = true;
+        Options.IsProcessAssigned = true;
     }
 }

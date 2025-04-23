@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
+using LotCoMClient.Models.Options;
 using LotCoMClient.Models.Services;
 
 namespace LotCoMClient.ViewModels;
@@ -10,165 +11,6 @@ namespace LotCoMClient.ViewModels;
 /// </summary>
 public partial class DataTableViewModel : ObservableObject 
 {
-    private string _pageTitle = "";
-    /// <summary>
-    /// Serves the Page's Title.
-    /// </summary>
-    public string PageTitle 
-    {
-        get {return _pageTitle;}
-        private set {_pageTitle = value;}
-    }
-
-    private Department? _pageDepartment = null;
-    /// <summary>
-    /// Serves the Department assigned to this Page.
-    /// </summary>
-    public Department? PageDepartment 
-    {
-        get {return _pageDepartment;}
-        set 
-        {
-            _pageDepartment = value;
-            OnPropertyChanged(nameof(_pageDepartment));
-            OnPropertyChanged(nameof(PageDepartment));
-        }
-    }
-
-    private Type _recordType = typeof(DataRecord);
-    /// <summary>
-    /// Serves the DataRecord subclass this Page is meant to Display.
-    /// </summary>
-    public Type RecordType 
-    {
-        get {return _recordType;}
-        set 
-        {
-            _recordType = value;
-            OnPropertyChanged(nameof(_recordType));
-            OnPropertyChanged(nameof(RecordType));
-        }
-    }
-
-    private string _leftFramePanelHeader = "";
-    /// <summary>
-    /// Serves the Page's Left Frame Panel Header.
-    /// </summary>
-    public string LeftFramePanelHeader 
-    {
-        get {return _leftFramePanelHeader;}
-        set 
-        {
-            _leftFramePanelHeader = value;
-            OnPropertyChanged(nameof(_leftFramePanelHeader));
-            OnPropertyChanged(nameof(LeftFramePanelHeader));
-        }
-    }
-
-    private string _leftFramePanelFooter = "Click to Collapse";
-    /// <summary>
-    /// Serves the Page's Left Frame Panel Footer.
-    /// </summary>
-    public string LeftFramePanelFooter 
-    {
-        get {return _leftFramePanelFooter;}
-        set 
-        {
-            _leftFramePanelFooter = value;
-            OnPropertyChanged(nameof(_leftFramePanelFooter));
-            OnPropertyChanged(nameof(LeftFramePanelFooter));
-        }
-    }
-
-    private bool _leftFrameShown = true;
-    /// <summary>
-    /// Serves the Left Frame Panel's Shown state (boolean).
-    /// </summary>
-    public bool LeftFrameShown 
-    {
-        get {return _leftFrameShown;} 
-        set 
-        {
-            _leftFrameShown = value;
-            OnPropertyChanged(nameof(_leftFrameShown));
-            OnPropertyChanged(nameof(LeftFrameShown));
-        }
-    }
-
-    private bool _leftFrameHidden = false;
-    /// <summary>
-    /// Serves the inverse of the Left Frame Panel's Shown state (boolean).
-    /// </summary>
-    public bool LeftFrameHidden 
-    {
-        get {return _leftFrameHidden;} 
-        set 
-        {
-            _leftFrameHidden = value;
-            OnPropertyChanged(nameof(_leftFrameHidden));
-            OnPropertyChanged(nameof(LeftFrameHidden));
-        }
-    }
-
-    private int _leftFrameWidth = 250;
-    /// <summary>
-    /// Serves the assigned width of the Left Frame Panel (30 when collapsed, 250 when raised).
-    /// </summary>
-    public int LeftFrameWidth 
-    {
-        get {return _leftFrameWidth;} 
-        set 
-        {
-            _leftFrameWidth = value;
-            OnPropertyChanged(nameof(_leftFrameWidth));
-            OnPropertyChanged(nameof(LeftFrameWidth));
-        }
-    }
-
-    private string _bodyTableHeader = "";
-    /// <summary>
-    /// Serves the Header for the Page's Table.
-    /// </summary>
-    public string BodyTableHeader {
-        get {return _bodyTableHeader;} 
-        set 
-        {
-            _bodyTableHeader = value;
-            OnPropertyChanged(nameof(_bodyTableHeader));
-            OnPropertyChanged(nameof(BodyTableHeader));
-        }
-    }
-    
-    private List<string> _dataFields = ["Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
-    /// <summary>
-    /// Serves the data fields that are included in DataRecords for this Page's ListView.
-    /// </summary>
-    public List<string> DataFields 
-    {
-        get {return _dataFields;} 
-        set 
-        {
-            _dataFields = value;
-            OnPropertyChanged(nameof(_dataFields));
-            OnPropertyChanged(nameof(DataFields));
-        }
-    }
-
-    private List<string> _searchableFields = ["All", "Part Number", "Part Name", "Quantity", "Production Date", "Production Time", "Production Shift", "Operator ID"];
-    /// <summary>
-    /// Serves the fields that can be used to search the Page's ListView.
-    /// </summary>
-    public List<string> SearchableFields 
-    {
-        get {return _searchableFields;}
-        set 
-        {
-            _searchableFields = value;
-            OnPropertyChanged(nameof(_searchableFields));
-            OnPropertyChanged(nameof(SearchableFields));
-        }
-    }
-
     private DataTable? _table;
     /// <summary>
     /// Serves the DataTable object for this Page's Database Table. 
@@ -199,63 +41,18 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
-    private int _selectedSortingFieldIndex;
+    private DataTablePageOptions _options = new DataTablePageOptions();
     /// <summary>
-    /// Serves the currently selected index of the SortingField Picker.
+    /// Provides an Options structure to control the various settings of the DataTablePage.
     /// </summary>
-    public int SelectedSortingFieldIndex 
+    public DataTablePageOptions Options 
     {
-        get {return _selectedSortingFieldIndex;}
-        set 
+        get {return _options;}
+        private set
         {
-            _selectedSortingFieldIndex = value;
-            OnPropertyChanged(nameof(_selectedSortingFieldIndex));
-            OnPropertyChanged(nameof(SelectedSortingFieldIndex));
-        }
-    }
-
-    private int _selectedSortingOrderIndex;
-    /// <summary>
-    /// Serves the currently selected index of the SortingOrder Picker.
-    /// </summary>
-    public int SelectedSortingOrderIndex 
-    {
-        get {return _selectedSortingOrderIndex;}
-        set 
-        {
-            _selectedSortingOrderIndex = value;
-            OnPropertyChanged(nameof(_selectedSortingOrderIndex));
-            OnPropertyChanged(nameof(SelectedSortingOrderIndex));
-        }
-    }
-
-    private int _selectedSearchingFieldIndex;
-    /// <summary>
-    /// Serves the currently selected index of the SearchingField Picker.
-    /// </summary>
-    public int SelectedSearchingFieldIndex 
-    {
-        get {return _selectedSearchingFieldIndex;}
-        set 
-        {
-            _selectedSearchingFieldIndex = value;
-            OnPropertyChanged(nameof(_selectedSearchingFieldIndex));
-            OnPropertyChanged(nameof(SelectedSearchingFieldIndex));
-        }
-    }
-
-    private string _searchTerm = "";
-    /// <summary>
-    /// Serves the currently entered Text value of the ListViewSearchBar.
-    /// </summary>
-    public string SearchTerm 
-    {
-        get {return _searchTerm;}
-        set 
-        {
-            _searchTerm = value;
-            OnPropertyChanged(nameof(_searchTerm));
-            OnPropertyChanged(nameof(SearchTerm));
+            _options = value;
+            OnPropertyChanged(nameof(_options));
+            OnPropertyChanged(nameof(Options));
         }
     }
 
@@ -304,8 +101,8 @@ public partial class DataTableViewModel : ObservableObject
     public DataTableViewModel(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) 
     {
         // assign properties
-        this.PageTitle = PageTitle;
-        this.RecordType = RecordType;
+        Options.Title = PageTitle;
+        Options.RecordType = RecordType;
         // configure the Page based on whether an initial Process is assigned
         if (IsProcessAssigned) 
         {
@@ -313,8 +110,8 @@ public partial class DataTableViewModel : ObservableObject
             Table = new DataTable(DataTablePath);
             Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
             // set the left frame panel's header
-            LeftFramePanelHeader = Table!.TableProcess;
-            BodyTableHeader = "Loading records...";
+            Options.LeftPanelHeaderText = Table!.TableProcess;
+            Options.BodyTableHeaderText = "Loading records...";
         // no Process is assigned at instantiation
         } 
         else 
@@ -323,8 +120,8 @@ public partial class DataTableViewModel : ObservableObject
             Table = null;
             Data = null;
             // set the left frame panel's header to a default no process string
-            LeftFramePanelHeader = "Select Process...";
-            BodyTableHeader = "";
+            Options.LeftPanelHeaderText = "Select Process...";
+            Options.BodyTableHeaderText = "";
         }
     }
 
@@ -335,10 +132,10 @@ public partial class DataTableViewModel : ObservableObject
     public void SortDataTable()
     {
         // get the selected Field from the Sorting Field Picker
-        string SortField = DataFields[SelectedSortingFieldIndex];
+        string SortField = Options.DataFields[Options.SelectedSortingFieldIndex];
         SortField = ResolveDataRecordPropertyName(SortField);
         // sort using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, SelectedSortingOrderIndex));
+        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, Options.SelectedSortingOrderIndex));
     }
 
     /// <summary>
@@ -348,11 +145,11 @@ public partial class DataTableViewModel : ObservableObject
     /// <returns></returns>
     public void SearchDataTable() {
         // get the selected Field from the Searching Field Picker
-        string PropertyName = SearchableFields[SelectedSearchingFieldIndex];
+        string PropertyName = Options.SearchableFields[Options.SelectedSearchingFieldIndex];
         if (PropertyName != "All") {
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSearch(SearchTerm, PropertyName));
+        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSearch(Options.SearchTerm, PropertyName));
     }
 }

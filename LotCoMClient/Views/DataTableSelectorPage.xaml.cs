@@ -168,11 +168,13 @@ public partial class DataTableSelectorPage : ContentPage {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) {
-        // update ViewModel sorting indexes
-        _viewModel.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-        _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
-        // invoke the ViewModel sort method
-        await _viewModel.SortDataTable();
+        await Task.Run(() => {
+            // update ViewModel sorting indexes
+            _viewModel.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+            _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+            // invoke the ViewModel sort method
+            _viewModel.SortDataTable();
+        });
     }
 
     /// <summary>
@@ -181,9 +183,11 @@ public partial class DataTableSelectorPage : ContentPage {
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public async void OnListViewSearchButtonPressed(object sender, EventArgs e) {
-        // invoke the ViewModel local sort method using the current search term
-        _viewModel.SearchTerm = ListViewSearchingSearchBar.Text;
-        _viewModel.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
-        await _viewModel.SearchDataTable();
+        await Task.Run(() => {
+            // invoke the ViewModel local sort method using the current search term
+            _viewModel.SearchTerm = ListViewSearchingSearchBar.Text;
+            _viewModel.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+            _viewModel.SearchDataTable();
+        });
     }
 }

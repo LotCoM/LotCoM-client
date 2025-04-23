@@ -5,7 +5,8 @@ namespace LotCoMClient.Models.Datasources;
 /// <summary>
 /// Base class for all table entry records in LotCoM database tables.
 /// </summary>
-public partial class DataRecord : ObservableObject {
+public partial class DataRecord : ObservableObject 
+{
     [ObservableProperty]
     public partial string? ScanAddress {get; set;}
     [ObservableProperty]
@@ -66,7 +67,8 @@ public partial class DataRecord : ObservableObject {
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>
     /// <param name="OperatorID">The Operator ID assigned to this record.</param>
     /// <param name="ScanAddress">(Optional) the IP Address of the Scanner producing this record. Only applicable to ScanRecords.</param>
-    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null) {
+    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null) 
+    {
         // set the Record's properties
         this.RecordProcess = RecordProcess;
         this.RecordPart = RecordPart;
@@ -84,58 +86,45 @@ public partial class DataRecord : ObservableObject {
         this.ScanAddress = ScanAddress;
         // configure the Includes flags using the RecordProcess' requirements
         List<string> Requirements = RecordProcess.RequiredFields;
-        // configure the JBK flag
-        if (Requirements.Contains("JBKNumber")) {
-            IncludesJBKNumber = true;
-        }
-        // configure the Lot flag
-        if (Requirements.Contains("LotNumber")) {
-            IncludesLotNumber = true;
-        }
-        // configure the Deburr JBK flag
-        if (Requirements.Contains("DeburrJBKNumber")) {
-            IncludesDeburrJBKNumber = true;
-        }
-        // configure the Die flag
-        if (Requirements.Contains("DieNumber")) {
-            IncludesDieNumber = true;
-        }
-        // configure the Model flag
-        if (Requirements.Contains("ModelNumber")) {
-            IncludesDieNumber = true;
-        }
-        // configure the Heat flag
-        if (Requirements.Contains("HeatNumber")) {
-            IncludesHeatNumber = true;
-        }
+        IncludesJBKNumber = Requirements.Contains("JBKNumber");
+        IncludesLotNumber = Requirements.Contains("LotNumber");
+        IncludesDeburrJBKNumber = Requirements.Contains("DeburrJBKNumber");
+        IncludesDieNumber = Requirements.Contains("DieNumber");
+        IncludesDieNumber = Requirements.Contains("ModelNumber");
+        IncludesHeatNumber = Requirements.Contains("HeatNumber");
     }
 
     /// <summary>
     /// Formats the DataRecord as a CSV-formatted line (no newline character).
     /// </summary>
     /// <returns></returns>
-    public string ToCSV() {
+    public string ToCSV() 
+    {
         // add the front set of universal data
         string CSVLine = $",{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
-        // retrieve the RecordProcess' required fields
-        List<string> Requirements = RecordProcess.RequiredFields;
         // add the variably-required data fields to the Line
-        if (IncludesJBKNumber) {
+        if (IncludesJBKNumber) 
+        {
             CSVLine = $"{CSVLine},{JBKNumber}";
         }
-        if (IncludesLotNumber) {
+        if (IncludesLotNumber) 
+        {
             CSVLine = $"{CSVLine},{LotNumber}";
         }
-        if (IncludesDeburrJBKNumber) {
+        if (IncludesDeburrJBKNumber) 
+        {
             CSVLine = $"{CSVLine},{DeburrJBKNumber}";
         }
-        if (IncludesDieNumber) {
+        if (IncludesDieNumber) 
+        {
             CSVLine = $"{CSVLine},{DieNumber}";
         }
-        if (IncludesModelNumber) {
+        if (IncludesModelNumber) 
+        {
             CSVLine = $"{CSVLine},{ModelNumber}";
         }
-        if (IncludesHeatNumber) {
+        if (IncludesHeatNumber) 
+        {
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data

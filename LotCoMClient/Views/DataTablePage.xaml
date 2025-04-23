@@ -26,7 +26,7 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <!-- Left-Side Frame Column -->
-            <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+            <ColumnDefinition Width="{Binding Options.LeftPanelWidth}"/>
             <!-- Page Body Column -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -37,7 +37,7 @@
             x:Name="PageTopLeftCornerFrameFill"
             Grid.Row="0"
             Grid.Column="0"
-            WidthRequest="{Binding LeftFrameWidth}"
+            WidthRequest="{Binding Options.LeftPanelWidth}"
             BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
         <!-- Title Frame -->
         <VerticalStackLayout
@@ -49,7 +49,7 @@
             <!-- Title Label -->
             <Label
                 x:Name="PageTitleFrameLabel"
-                Text="{Binding PageTitle}"
+                Text="{Binding Options.Title}"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                 FontAttributes="None"
                 FontSize="20"
@@ -85,14 +85,14 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <!-- Left Frame Main Column -->
-                    <ColumnDefinition Width="{Binding LeftFrameWidth}"/>
+                    <ColumnDefinition Width="{Binding Options.LeftPanelWidth}"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- Left Frame Body ScrollView -->
                 <ScrollView
                     Grid.Row="1"
                     Grid.Column="0"
-                    IsVisible="{Binding LeftFrameShown}">
+                    IsVisible="{Binding Options.IsLeftPanelShown}">
                     <!-- Body ScrollView Sub-Grid (allows layout customization) -->
                     <Grid>
                         <Grid.RowDefinitions>
@@ -145,7 +145,7 @@
                             Grid.Column="0"
                             Margin="10"
                             Title="Sorting field"
-                            ItemsSource="{Binding DataFields}"
+                            ItemsSource="{Binding Options.DataFields}"
                             FontSize="10"
                             WidthRequest="200"
                             HeightRequest="65"
@@ -204,7 +204,7 @@
                         <SearchBar
                             x:Name="ListViewSearchingSearchBar"
                             SearchButtonPressed="OnListViewSearchButtonPressed"
-                            Text="{Binding SearchTerm}"
+                            Text="{Binding Options.SearchTerm}"
                             Grid.Row="4"
                             Grid.Column="0"
                             Margin="10"
@@ -215,12 +215,12 @@
                         <!-- ListView Searching Field Picker -->
                         <Picker
                             x:Name="ListViewSearchingFieldPicker"
-                            SelectedIndex="{Binding SelectedSearchingFieldIndex}"
+                            SelectedIndex="{Binding Options.SelectedSearchingFieldIndex}"
                             Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"
                             Title="Search field"
-                            ItemsSource="{Binding SearchableFields}"
+                            ItemsSource="{Binding Options.SearchableFields}"
                             FontSize="10"
                             WidthRequest="200"
                             HeightRequest="65"
@@ -241,11 +241,11 @@
                 <!-- Left Frame Footer Label -->
                 <Label 
                     x:Name="PageLeftFrameFooterLabel"
-                    IsVisible="{Binding LeftFrameShown}"
+                    IsVisible="{Binding Options.IsLeftPanelShown}"
                     Margin="10,0,0,15"
                     Grid.Row="2"
                     Grid.Column="0"
-                    Text="{Binding LeftFramePanelFooter}"
+                    Text="{Binding Options.LeftPanelFooterText}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontSize="10"
                     VerticalOptions="End"
@@ -283,11 +283,11 @@
         <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
         <Label 
             x:Name="PageLeftFrameHeaderLabel"
-            IsVisible="{Binding LeftFrameShown}"
+            IsVisible="{Binding Options.IsLeftPanelShown}"
             Margin="0"
             Grid.Row="0"
             Grid.Column="0"
-            Text="{Binding LeftFramePanelHeader}"
+            Text="{Binding Options.LeftPanelHeaderText}"
             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
             FontSize="12"
             FontAttributes="None"
@@ -312,7 +312,7 @@
             <!-- Page Body Table Header Label -->
             <Label 
                 x:Name="PageBodyTableHeaderLabel"
-                Text="{Binding BodyTableHeader}"
+                Text="{Binding Options.BodyTableHeaderText}"
                 Grid.Row="0"
                 Grid.Column="0"
                 TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"

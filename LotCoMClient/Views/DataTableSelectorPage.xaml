@@ -343,6 +343,145 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
+            <!-- Horizontal Layout For Body Table Header and Page Navigation Controls -->
+            <HorizontalStackLayout
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="1">
+                <!-- Page Body Table Header Label -->
+                <!-- <Label 
+                    x:Name="PageBodyTableHeaderLabel"
+                    Text="{Binding Options.BodyTableHeaderText}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontAttributes="None"
+                    FontSize="16"
+                    Margin="22,20,20,20"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/> -->
+                <!-- Page Navigation Control Grid -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <!-- Padding Row -->
+                        <RowDefinition Height="10"/>
+                        <!-- Showing Records Number Row -->
+                        <RowDefinition Height="50"/>
+                        <!-- Page Number Control Row -->
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <!-- Padding Column -->
+                        <ColumnDefinition Width="20"/>
+                        <!-- Newer Records (Back) Page Navigation Controls Columns -->
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <!-- Page Number Label Columns -->
+                        <ColumnDefinition Width="75"/>
+                        <!-- Older Records (Forward) Page Navigation Controls Columns -->
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <!-- "of [Record Number] records" Label Extension Column -->
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- "Showing" Label -->
+                    <Label 
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Margin="5,0,5,0"
+                        Text="Showing"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Shown Record Count Picker -->
+                    <Picker
+                        x:Name="ShownRecordCountPicker"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="3"
+                        Margin="0,0,0,2"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:Int16}">
+                                <x:Int16>15</x:Int16>
+                                <x:Int16>25</x:Int16>
+                                <x:Int16>35</x:Int16>
+                                <x:Int16>50</x:Int16>
+                                <x:Int16>75</x:Int16>
+                                <x:Int16>100</x:Int16>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    <!-- "Of <Record Count>" Label -->
+                    <Label 
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        Grid.ColumnSpan="3"
+                        Margin="5,0,5,0"
+                        Text="of [Record #] records"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        FontSize="16"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"/>
+                    <!-- Newest Button (back to start) -->
+                    <Button 
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Newer Button (back to previous) -->
+                    <Button 
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Page Number Label -->
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Text="Page #"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Older Button (forward to next) -->
+                    <Button 
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=right_arrow_black.png, Dark=right_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Oldest Button (forward to end) -->
+                    <Button 
+                        Grid.Row="2"
+                        Grid.Column="5"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=right_arrow_black.png, Dark=right_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                </Grid>
+            </HorizontalStackLayout>
+
             <!-- Page Body Table Header Label -->
             <Label 
                 x:Name="PageBodyTableHeaderLabel"

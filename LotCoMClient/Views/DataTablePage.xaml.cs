@@ -1,4 +1,5 @@
 using LotCoMClient.Models.Datasources;
+using LotCoMClient.Models.Options;
 
 namespace LotCoMClient.Views;
 
@@ -11,6 +12,11 @@ public partial class DataTablePage : ContentPage
     /// ViewModel object controlling the logic of this Page.
     /// </summary>
 	private readonly ViewModels.DataTableViewModel _viewModel;
+    
+    /// <summary>
+    /// The ViewModel's Options property, exposed for easier access.
+    /// </summary>
+    private readonly DataTablePageOptions _options;
 
     /// <summary>
     /// Asynchronously evaluates the state of the Data property and sets the BodyTableHeader property accordingly.
@@ -34,17 +40,17 @@ public partial class DataTablePage : ContentPage
                 // update the BodyTableHeader to show the item count
                 if (DataCount > 1) 
                 {
-                    _viewModel.BodyTableHeader = $"Showing {DataCount} records";
+                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
                 } 
                 else 
                 {
-                    _viewModel.BodyTableHeader = $"Showing {DataCount} records";
+                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
                 }
             // the data is not loaded yet; default BodyTableHeader property
             } 
             else 
             {
-                _viewModel.BodyTableHeader = "Loading records...";
+                _options.BodyTableHeaderText = "Loading records...";
             }
         });
     }
@@ -96,8 +102,10 @@ public partial class DataTablePage : ContentPage
             }
             Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
             // update the ViewModel DataFields and SearchableFields property
-            _viewModel.DataFields = Sortables;
-            _viewModel.SearchableFields = Sortables.Prepend("All").ToList();
+            _options.DataFields = Sortables;
+            _options.SearchableFields = Sortables
+                .Prepend("All")
+                .ToList();
         });
     }
 
@@ -112,6 +120,7 @@ public partial class DataTablePage : ContentPage
     {
 		// instantiate the ViewModel
         _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle, RecordType, IsProcessAssigned);
+        _options = _viewModel.Options;
         BindingContext = _viewModel;
 
         // create the page from XAML
@@ -127,13 +136,13 @@ public partial class DataTablePage : ContentPage
     {
         await Task.Delay(0);
         // the Panel needs to collapse
-        if (_viewModel.LeftFrameShown) 
+        if (_options.IsLeftPanelShown) 
         {
             // set the Left Panel properties in the ViewModel
-            _viewModel.LeftFrameShown = false;
-            _viewModel.LeftFrameHidden = true;
+            _options.IsLeftPanelShown = false;
+            _options.IsLeftPanelHidden = true;
             // non-animated collapse
-            _viewModel.LeftFrameWidth = 30;
+            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
             PageLeftFrameCollapseButton.Rotation += 180;
             // // 12 frame animation (250 -> 30 by increments of 10)
             // while (_viewModel.LeftFrameWidth > 30) {
@@ -148,10 +157,10 @@ public partial class DataTablePage : ContentPage
         else 
         {
             // set the Left Panel properties in the ViewModel
-            _viewModel.LeftFrameShown = true;
-            _viewModel.LeftFrameHidden = false;
+            _options.IsLeftPanelShown = true;
+            _options.IsLeftPanelHidden = false;
             // non-animated raise
-            _viewModel.LeftFrameWidth = 250;
+            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
             PageLeftFrameCollapseButton.Rotation += 180;
             // // 12 frame animation (30 -> 250 by increments of 10)
             // while (_viewModel.LeftFrameWidth < 250) {
@@ -186,8 +195,8 @@ public partial class DataTablePage : ContentPage
         await Task.Run(() => 
         {
             // update ViewModel sorting indexes
-            _viewModel.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-            _viewModel.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+            _options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+            _options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
             // invoke the ViewModel sort method
             _viewModel.SortDataTable();
         });
@@ -203,8 +212,8 @@ public partial class DataTablePage : ContentPage
         await Task.Run(() => 
         {
             // invoke the ViewModel local sort method using the current search term
-            _viewModel.SearchTerm = ListViewSearchingSearchBar.Text;
-            _viewModel.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+            _options.SearchTerm = ListViewSearchingSearchBar.Text;
+            _options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
     }

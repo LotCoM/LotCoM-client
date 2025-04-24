@@ -46,57 +46,17 @@ public partial class DataTablePage : ContentPage
     }
 
     /// <summary>
-    /// Checks that the Table has DataRecords available. Updates the Data fields based on that Data.
+    /// Checks that the Table has DataRecords available. Updates the Data and Search fields based on that Data.
     /// </summary>
     /// <returns></returns>
-    private async Task ConfigureDataFields() 
+    private async Task ConfigurePageFields() 
     {
-        // perform the config logic on a new CPU thread
-        await Task.Run(() => 
+        // confirm that the Data property has completed its async task
+        if (_viewModel.Data == null || _viewModel.Data.IsNotCompleted) 
         {
-            // confirm that the Data property has completed its async task
-            if (_viewModel.Data == null || _viewModel.Data.IsNotCompleted) 
-            {
-                return;
-            }
-            List<string> Sortables = ["Part Number", "Part Name", "Quantity"];
-            // add the variably-required DataRecord fields (only if Data is loaded)
-            DataRecord SampleRecord;
-            if (_viewModel.Data.Result != null && _viewModel.Data.Result.Count > 0) 
-            {
-                SampleRecord = _viewModel.Data.Result[0];
-                if (SampleRecord.IncludesJBKNumber) 
-                {
-                    Sortables.Add("JBK Number");
-                }
-                if (SampleRecord.IncludesLotNumber) 
-                {
-                    Sortables.Add("Lot Number");
-                }
-                if (SampleRecord.IncludesDeburrJBKNumber) 
-                {
-                    Sortables.Add("Deburr JBK Number");
-                }
-                if (SampleRecord.IncludesDieNumber) 
-                {
-                    Sortables.Add("Die Number");
-                }
-                if (SampleRecord.IncludesModelNumber) 
-                {
-                    Sortables.Add("Model Number");
-                }
-                if (SampleRecord.IncludesHeatNumber) 
-                {
-                    Sortables.Add("Heat Number");
-                }
-            }
-            Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
-            // update the ViewModel DataFields and SearchableFields property
-            _options.DataFields = Sortables;
-            _options.SearchableFields = Sortables
-                .Prepend("All")
-                .ToList();
-        });
+            return;
+        }
+        await _options.ConfigurePageFields();
     }
 
     /// <summary>
@@ -154,7 +114,7 @@ public partial class DataTablePage : ContentPage
     {
         // update BodyTableHeader property
         await ConfigureBodyHeader();
-        await ConfigureDataFields();
+        await ConfigurePageFields();
     }
 
     /// <summary>

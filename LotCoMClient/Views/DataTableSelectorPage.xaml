@@ -349,17 +349,20 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="1">
                 <!-- Page Body Table Header Label -->
-                <!-- <Label 
+                <Label 
                     x:Name="PageBodyTableHeaderLabel"
+                    IsVisible="{Binding Options.IsBodyHeaderLabelShown}"
                     Text="{Binding Options.BodyTableHeaderText}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontAttributes="None"
                     FontSize="16"
                     Margin="22,20,20,20"
                     HorizontalOptions="Start"
-                    VerticalOptions="Center"/> -->
+                    VerticalOptions="Center"/>
                 <!-- Page Navigation Control Grid -->
-                <Grid>
+                <Grid
+                    x:Name="BodyHeaderNavigationPanel"
+                    IsVisible="{Binding Options.IsBodyNavigationPanelShown}">
                     <Grid.RowDefinitions>
                         <!-- Padding Row -->
                         <RowDefinition Height="10"/>
@@ -399,17 +402,18 @@
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Grid.Column="3"
+                        SelectedIndex="{Binding Options.SelectedShownRecordCountIndex}"
                         Margin="0,0,0,2"
                         HorizontalOptions="Center"
                         VerticalOptions="End">
                         <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:Int16}">
-                                <x:Int16>15</x:Int16>
-                                <x:Int16>25</x:Int16>
-                                <x:Int16>35</x:Int16>
-                                <x:Int16>50</x:Int16>
-                                <x:Int16>75</x:Int16>
-                                <x:Int16>100</x:Int16>
+                            <x:Array Type="{x:Type x:Int32}">
+                                <x:Int32>15</x:Int32>
+                                <x:Int32>25</x:Int32>
+                                <x:Int32>35</x:Int32>
+                                <x:Int32>50</x:Int32>
+                                <x:Int32>75</x:Int32>
+                                <x:Int32>100</x:Int32>
                             </x:Array>
                         </Picker.ItemsSource>
                     </Picker>
@@ -419,7 +423,7 @@
                         Grid.Column="4"
                         Grid.ColumnSpan="3"
                         Margin="5,0,5,0"
-                        Text="of [Record #] records"
+                        Text="{Binding Options.TotalRecordCount, StringFormat='of {0} records'}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
                         FontSize="16"
                         HorizontalOptions="Start"
@@ -481,19 +485,6 @@
                         VerticalOptions="Center"/>
                 </Grid>
             </HorizontalStackLayout>
-
-            <!-- Page Body Table Header Label -->
-            <Label 
-                x:Name="PageBodyTableHeaderLabel"
-                Text="{Binding Options.BodyTableHeaderText}"
-                Grid.Row="0"
-                Grid.Column="0"
-                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                FontAttributes="None"
-                FontSize="16"
-                Margin="22,20,20,20"
-                HorizontalOptions="Start"
-                VerticalOptions="Center"/>
                 
             <!-- Page Body Table ScrollView -->
             <!-- Activity Indicator (Shows While Loading Data) -->

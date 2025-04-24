@@ -13,26 +13,6 @@ public partial class DataTable : ObservableObject
     /// </summary>
     private readonly RecordParser Parser = new RecordParser();
 
-    /// <summary>
-    /// Holds a List of strings resulting from the latest file read.
-    /// </summary>
-    private List<string> LastReadLines = [];
-
-    /// <summary>
-    /// Holds a List of strings that are matching results of the latest Search algorithm.
-    /// </summary>
-    private List<string> SearchResultLines = [];
-
-    /// <summary>
-    /// Holds a List of Pages created from this Table's data.
-    /// </summary>
-    private List<Page> Pages = [];
-
-    /// <summary>
-    /// Holds a custom List of Pages created from the latest Search algorithm.
-    /// </summary>
-    private List<Page> SearchPages = [];
-
     private string _path = "";
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
@@ -72,6 +52,26 @@ public partial class DataTable : ObservableObject
         get {return _process;}
         private set {_process = value;}
     }
+
+    /// <summary>
+    /// Holds a List of strings resulting from the latest file read.
+    /// </summary>
+    private List<string> LastReadLines = [];
+
+    /// <summary>
+    /// Holds a List of strings that are matching results of the latest Search algorithm.
+    /// </summary>
+    private List<string> SearchResultLines = [];
+
+    /// <summary>
+    /// Holds a List of Pages created from this Table's data.
+    /// </summary>
+    private PageSet Pages;
+
+    /// <summary>
+    /// Holds a custom List of Pages created from the latest Search algorithm.
+    /// </summary>
+    private PageSet SearchPages;
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.
@@ -146,126 +146,6 @@ public partial class DataTable : ObservableObject
         // reverse list to show newest Lines first
         LastReadLines.Reverse();
         return LastReadLines;
-    }
-
-    /// <summary>
-    /// Creates a List of Page objects from the Lines in LastReadLines and stores them in Table.Pages.
-    /// </summary>
-    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
-    /// <returns></returns>
-    private async Task<List<Page>> PaginateAsync(int PageLength)
-    {
-        // confirm that the Table has Lines stored in the LastReadProperty
-        if (LastReadLines.Count < 1)
-        {
-            await ReadLinesAsync();
-        }
-        // create pages of PageLength Lines, starting with the newest lines
-        int TakenLines = 0;
-        while (TakenLines < LastReadLines.Count)
-        {
-            // take the first PageLength + TakenLines elements from LastReadLines to create a Page
-            Page _page = new Page(PageLength);
-            _page.Lines = LastReadLines
-                .Skip(TakenLines)
-                .Take(PageLength)
-                .ToList();
-            // increment the amount of lines taken and add the Page to the Table
-            TakenLines += PageLength;
-            Pages.Add(_page);
-        }
-        return Pages;
-    }
-
-    /// <summary>
-    /// Parses DataRecords from every Line in a Page and saves those DataRecords in the Page's Page.DataRecords property.
-    /// </summary>
-    /// <param name="PageNumber">The Page in Table.Pages to Parse 
-    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
-    /// </param>
-    /// <returns></returns>
-    private async Task<Page> ParsePageAsync(int PageNumber)
-    {
-        // confirm that the Page hasn't already been parsed out
-        if (Pages[PageNumber].DataRecords.Count > 0) 
-        {
-            return Pages[PageNumber];
-        }
-        // parse a DataRecord from every Line in Page.Lines and save it in Page.DataRecords
-        IEnumerable<Task<DataRecord>>? ParseTasks = Pages[PageNumber]
-            .Lines
-            .Select(ParseRecordAsync);
-        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
-        // confirm that the Parse was successful and add the Parsed DataRecords to Page.DataRecords
-        if (ParseResults is null) 
-        {
-            Pages[PageNumber].DataRecords = [];
-        }
-        Pages[PageNumber].DataRecords = ParseResults!.ToList();
-        // return the updated Page object
-        return Pages[PageNumber];
-    }
-
-    /// <summary>
-    /// Creates a List of Page objects from the Lines in SearchResultLines and stores them in Table.SearchPages.
-    /// </summary>
-    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
-    /// <returns></returns>
-    private async Task<List<Page>> PaginateSearchResultsAsync(int PageLength)
-    {
-        return await Task.Run(() => 
-        {
-            // confirm that the Table has Lines stored in the SearchResultLines
-            if (SearchResultLines.Count < 1)
-            {
-                SearchPages = [];
-                return SearchPages;
-            }
-            // create pages of PageLength Lines, starting with the newest lines
-            int TakenLines = 0;
-            while (TakenLines < SearchResultLines.Count)
-            {
-                // take the first PageLength + TakenLines elements from SearchResultLines to create a Page
-                Page _page = new Page(PageLength);
-                _page.Lines = SearchResultLines
-                    .Skip(TakenLines)
-                    .Take(PageLength)
-                    .ToList();
-                // increment the amount of lines taken and add the Page to the Table
-                TakenLines += PageLength;
-                SearchPages.Add(_page);
-            }
-            return SearchPages;
-        });
-    }
-
-    /// <summary>
-    /// Parses DataRecords from every Line in a Page and saves those DataRecords in the Page's Page.DataRecords property.
-    /// </summary>
-    /// <param name="PageNumber">The Page in Table.SearchPages to Parse 
-    /// (NOTE: Table.SearchPages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
-    /// </param>
-    /// <returns></returns>
-    private async Task<Page> ParseSearchResultsPageAsync(int PageNumber)
-    {
-        // confirm that the Page hasn't already been parsed out
-        if (SearchPages[PageNumber].DataRecords.Count > 0) 
-        {
-            return SearchPages[PageNumber];
-        }
-        // parse a DataRecord from every Line in Page.Lines and save it in Page.DataRecords
-        IEnumerable<Task<DataRecord>>? ParseTasks = SearchPages[PageNumber]
-            .Lines
-            .Select(ParseRecordAsync);
-        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
-        // confirm that the Parse was successful and add the Parsed DataRecords to Page.DataRecords
-        if (ParseResults is null) 
-        {
-            SearchPages[PageNumber].DataRecords = [];
-        }
-        SearchPages[PageNumber].DataRecords = ParseResults!.ToList();
-        // return the updated Page object
-        return SearchPages[PageNumber];
     }
 
     /// <summary>
@@ -371,6 +251,9 @@ public partial class DataTable : ObservableObject
         {
             throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}' because the Process '{ProcessName}' is not defined.");
         }
+        // set up the Table's PageSets
+        Pages = new PageSet(RecordType);
+        SearchPages = new PageSet(RecordType);
     }
 
     /// <summary>
@@ -384,13 +267,20 @@ public partial class DataTable : ObservableObject
     /// <returns>A Page object with PageLength DataRecords ready to be displayed.</returns>
     public async Task<Page> RequestPage(int PageNumber, int PageLength) 
     {
-        // confirm that there are Pages of the correct size available
-        if (Pages.Count < 1 || Pages[0].MaxLength != PageLength)
+        // confirm that Pages is set to provide Pages of the correct size
+        if (Pages.Count < 1 || Pages.Pages[0].MaxLength != PageLength)
         {
-            await PaginateAsync(PageLength);
+            Pages = new PageSet(LastReadLines, RecordType, PageLength: PageLength);
         }
-        // parse DataRecords out of the requested Page of Lines
-        return await ParsePageAsync(PageNumber);
+        // get the requested Page
+        try
+        {
+            return await Pages.GetPage(PageNumber);
+        }
+        catch
+        {
+            throw new IndexOutOfRangeException();
+        }
     }
 
     /// <summary>
@@ -414,9 +304,8 @@ public partial class DataTable : ObservableObject
         {
             await SearchSingleFieldAsync(SearchTerm, PropertyName);
         }
-        // paginate the new LastReadLines value and Parse the first Page in that new set
-        await PaginateSearchResultsAsync(PageLength);
-        await ParseSearchResultsPageAsync(0);
-        return SearchPages[0];
+        // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
+        SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
+        return await SearchPages.GetPage(0);
     }
 }

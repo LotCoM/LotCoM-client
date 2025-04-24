@@ -1,5 +1,9 @@
 namespace LotCoMClient.Models.Datasources;
 
+/// <summary>
+/// Creates a set of Lines and/or DataRecords that can be displayed in a ListView.
+/// </summary>
+/// <param name="PageLength">The maximum number of Lines/DataRecords this Page can hold.</param>
 public class Page(int PageLength)
 {
     /// <summary>

@@ -111,8 +111,8 @@ public partial class DataTableViewModel : ObservableObject
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
             Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
-            Options.Process = new ProcessData().GetIndividualProcess(Table.TableProcess);
-            Options.LeftPanelHeaderText = Table!.TableProcess;
+            Options.Process = Table.Process;
+            Options.LeftPanelHeaderText = Table.Process!.FullName;
             Options.SetBodyHeaderModeToLabel("Loading records...");
         // no Process is assigned at instantiation
         } 
@@ -143,10 +143,12 @@ public partial class DataTableViewModel : ObservableObject
     /// Configures the Data property to only show those match hits.
     /// </summary>
     /// <returns></returns>
-    public void SearchDataTable() {
+    public void SearchDataTable() 
+    {
         // get the selected Field from the Searching Field Picker
         string PropertyName = Options.SearchableFields[Options.SelectedSearchingFieldIndex];
-        if (PropertyName != "All") {
+        if (PropertyName != "All") 
+        {
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class

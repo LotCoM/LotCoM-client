@@ -54,10 +54,15 @@ public partial class DataTable : ObservableObject
         private set {_headers = value;}
     }
 
+    private Process? _process = null;
     /// <summary>
-    /// Observable property exposing the Name of the Process producing the Records in this Table.
+    /// The Process producing the Records in this Table.
     /// </summary>
-    public Process TableProcess;
+    public Process? Process 
+    {
+        get {return _process;}
+        private set {_process = value;}
+    }
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.
@@ -307,7 +312,7 @@ public partial class DataTable : ObservableObject
             .Replace(".txt", "");
         try
         {
-            TableProcess = new ProcessData().GetIndividualProcess(ProcessName);
+            Process = new ProcessData().GetIndividualProcess(ProcessName);
         }
         catch
         {

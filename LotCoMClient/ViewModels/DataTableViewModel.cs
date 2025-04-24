@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Options;
 using LotCoMClient.Models.Services;
+using System.Linq.Dynamic;
 
 namespace LotCoMClient.ViewModels;
 
@@ -118,6 +119,38 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Performs an in-place sort of the DataRecords property of CurrentPage.
+    /// </summary>
+    /// <param name="SortingProperty"></param>
+    /// <param name="SortOrder"></param>
+    /// <returns></returns>
+    /// <exception cref="OperationCanceledException"></exception>
+    private async Task<NotifyTaskCompletion<Models.Datasources.Page>> SortCurrentPage(string SortingProperty, int SortOrder)
+    {
+        // confirm that the CurrentPage is available for operations
+        if (CurrentPage is null 
+            || CurrentPage.IsNotCompleted 
+            || CurrentPage.Result is null)
+        {
+            throw new OperationCanceledException();
+        }
+        return await Task.Run(() => 
+        {
+            // use LINQ dynamic to sort using the property selected in the sorting field picker
+            CurrentPage.Result.DataRecords = CurrentPage.Result.DataRecords
+                .AsQueryable()
+                .OrderBy(SortingProperty)
+                .ToList();
+            // invert the order (ascending by default) if descending sort was selected
+            if (SortOrder == 1) 
+            {
+                CurrentPage.Result.DataRecords.Reverse();
+            }
+            return CurrentPage;
+        });
+    }
+
+    /// <summary>
     /// Creates a ViewModel for the DataTablePage.
     /// </summary>
     /// <param name="DataTablePath">The desired display Database Table's full path.</param>
@@ -149,16 +182,16 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sorts the DataRecords in the Data property using the Sorting Field and orders it according to the Order selection.
+    /// Sorts the DataRecords in the CurrentPage property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>
-    public void SortDataTable()
+    public async Task SortPage()
     {
         // get the selected Field from the Sorting Field Picker
         string SortField = Options.DataFields[Options.SelectedSortingFieldIndex];
         SortField = ResolveDataRecordPropertyName(SortField);
         // sort using the Model class
-        Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RequestSort(SortField, Options.SelectedSortingOrderIndex));
+        CurrentPage = await SortCurrentPage(SortField, Options.SelectedSortingOrderIndex);
     }
 
     /// <summary>

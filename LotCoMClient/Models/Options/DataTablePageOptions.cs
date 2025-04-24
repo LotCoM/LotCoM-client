@@ -158,6 +158,12 @@ public partial class DataTablePageOptions() : ObservableObject()
     public partial List<Process> DepartmentProcesses {get; set;} = [];
 
     /// <summary>
+    /// Controls the Process that defines the Parts and Data currently shown on the Page.
+    /// </summary>
+    [ObservableProperty]
+    public partial Process? Process {get; set;} = null;
+
+    /// <summary>
     /// For Selector Pages;
     /// Controls the currently selected index of the Page's PageProcess Picker.
     /// </summary>

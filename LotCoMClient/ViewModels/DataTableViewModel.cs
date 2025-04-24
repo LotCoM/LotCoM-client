@@ -65,7 +65,8 @@ public partial class DataTableViewModel : ObservableObject
     private static string ResolveDataRecordPropertyName(string String) 
     {
         // create a conversion Library to convert plaintext selections to DataRecord property names
-        Dictionary<string, string> Conversions = new Dictionary<string, string>() {
+        Dictionary<string, string> Conversions = new Dictionary<string, string>() 
+        {
             {"Part Number", "RecordPart.PartNumber"},
             {"Part Name", "RecordPart.PartName"},
             {"Quantity", "Quantity"},
@@ -100,18 +101,19 @@ public partial class DataTableViewModel : ObservableObject
     /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
     public DataTableViewModel(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) 
     {
-        // assign properties
+        // configure the Page's basic properties
         Options.Title = PageTitle;
         Options.RecordType = RecordType;
+        Options.IsProcessAssigned = IsProcessAssigned;
         // configure the Page based on whether an initial Process is assigned
-        if (IsProcessAssigned) 
+        if (Options.IsProcessAssigned) 
         {
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
             Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
-            // set the left frame panel's header
+            Options.Process = new ProcessData().GetIndividualProcess(Table.TableProcess);
             Options.LeftPanelHeaderText = Table!.TableProcess;
-            Options.BodyTableHeaderText = "Loading records...";
+            Options.SetBodyHeaderModeToLabel("Loading records...");
         // no Process is assigned at instantiation
         } 
         else 
@@ -119,9 +121,7 @@ public partial class DataTableViewModel : ObservableObject
             // set the table to null
             Table = null;
             Data = null;
-            // set the left frame panel's header to a default no process string
-            Options.LeftPanelHeaderText = "Select Process...";
-            Options.BodyTableHeaderText = "";
+            Options.SetBodyHeaderModeToLabel("Select Process...");
         }
     }
 

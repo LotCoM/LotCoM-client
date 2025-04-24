@@ -15,6 +15,11 @@ public partial class DataTable : ObservableObject
     /// </summary>
     private readonly RecordParser Parser = new RecordParser();
 
+    /// <summary>
+    /// Holds a List of strings resulting from the latest file read.
+    /// </summary>
+    private List<string> LastReadLines = [];
+
     private string _path = "";
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
@@ -112,12 +117,15 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
+    /// Reads the data file and formats the text as a List of strings that can be counted and later parsed into DataRecord objects.
+    /// Stores the List in Table.LastReadLines.
     /// </summary>
+    /// <remarks>
+    /// Does not perform any formatting.
+    /// </remarks>
+    /// <returns></returns>
     /// <exception cref="OperationCanceledException"></exception>
-    /// <exception cref="RecordParseException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task<List<DataRecord>> ReadAsync() 
+    private async Task<List<string>> ReadLinesAsync()
     {
         // read the Database Table at the Path property
         string Text;
@@ -129,9 +137,23 @@ public partial class DataTable : ObservableObject
         {
             throw new OperationCanceledException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
         }
+        // split the text into a list of Line strings and update the cached Lines list
+        LastReadLines = await ParseLinesAsync(Text);
+        return LastReadLines;
+    }
+
+    /// <summary>
+    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
+    /// </summary>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <exception cref="RecordParseException"></exception>
+    /// <returns>A List of DataRecords.</returns>
+    private async Task<List<DataRecord>> ReadAsync() 
+    {
+        // read the Database Table at the Path property
+        await ReadLinesAsync();
         // parse the text into individual DataRecord objects as a batch of async Tasks
-        List<string> RecordLines = await ParseLinesAsync(Text);
-        IEnumerable<Task<DataRecord>>? Tasks = RecordLines.Select(ParseRecordAsync);
+        IEnumerable<Task<DataRecord>>? Tasks = LastReadLines.Select(ParseRecordAsync);
         DataRecord[]? ParseResult = await Task.WhenAll(Tasks);
         if (ParseResult == null) 
         {

@@ -1,7 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
-using LotCoMClient.Models.Options;
-using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;
 
@@ -53,15 +51,6 @@ public partial class DataTable : ObservableObject
     {
         get {return _recordType;}
         private set {_recordType = value;}
-    }
-
-    private DataTableRecordsState _recordsState = new DataTableRecordsState();
-    /// <summary>
-    /// Holds the Table's current DataRecords State.
-    /// </summary>
-    public DataTableRecordsState RecordsState {
-        get {return _recordsState;}
-        set {_recordsState = value;}
     }
 
     private List<string> _headers = [];
@@ -157,29 +146,6 @@ public partial class DataTable : ObservableObject
         // reverse list to show newest Lines first
         LastReadLines.Reverse();
         return LastReadLines;
-    }
-
-    /// <summary>
-    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
-    /// </summary>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <exception cref="RecordParseException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task<List<DataRecord>> ReadAsync() 
-    {
-        // read the Database Table at the Path property
-        await ReadLinesAsync();
-        // parse the text into individual DataRecord objects as a batch of async Tasks
-        IEnumerable<Task<DataRecord>>? Tasks = LastReadLines.Select(ParseRecordAsync);
-        DataRecord[]? ParseResult = await Task.WhenAll(Tasks);
-        if (ParseResult == null) 
-        {
-            return [];
-        }
-        else 
-        {
-            return ParseResult.ToList();
-        }
     }
 
     /// <summary>
@@ -303,67 +269,6 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Asynchronously opens and overwrites the data in DataTable._path with the current list of DataRecords in DataTable._records.
-    /// </summary>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task SaveAsync(List<DataRecord> Records) 
-    {
-        // format the passed DataRecords as single string separated by newlines on a new CPU thread
-        if (Records != null) 
-        {
-            string Text = await Task.Run(() => 
-            {
-                string Formatted = "";
-                foreach (DataRecord _record in Records) 
-                {
-                    Formatted = $"{Formatted}{_record.ToCSV()}\n";
-                }
-                // return the formatted single string
-                return Formatted;
-            });
-            // asynchronously write the single string as text to the Database Table file at _path
-            await File.WriteAllTextAsync(Path, Text);
-        } 
-        else 
-        {
-            throw new OperationCanceledException("Cannot save null to the Database Table file.");
-        }
-    }
-
-    /// <summary>
-    /// Sorts the Table's Records list using SortingProperty as the sort.
-    /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
-    /// Does NOT overwrite with the sorted list.
-    /// </summary>
-    /// <param name="SortingProperty"></param>
-    /// <param name="SortOrder"></param>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords sorted using the Property and Order.</returns>
-    private async Task<List<DataRecord>> SortRecordsAsync(string SortingProperty, int SortOrder) 
-    {
-        if (RecordsState.Current == null) 
-        {
-            throw new OperationCanceledException();
-        }
-        // perform the sort algorithm on a new CPU thread
-        return await Task.Run(() => 
-        {
-            // use LINQ dynamic to sort using the property selected in the sorting field picker
-            List<DataRecord> SortedData = RecordsState.Current
-                .AsQueryable()
-                .OrderBy(SortingProperty)
-                .ToList();
-            // invert the order (ascending by default) if descending sort was selected
-            if (SortOrder == 1) 
-            {
-                SortedData.Reverse();
-            }
-            return SortedData;
-        });
-    }
-
-    /// <summary>
     /// Searches each Line in LastReadLines for a match in ANY field (as a continuous CSV string). 
     /// </summary>
     /// <remarks>
@@ -469,30 +374,6 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Retrieves either the Current or LastRead List of DataRecords in the Table.
-    /// </summary>
-    /// <exception cref="SystemException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    public async Task<List<DataRecord>> RequestRecords() 
-    {
-        return await Task.Run(() => {
-            // return the DataRecords stored in runtime
-            if (RecordsState.Current != null)
-            {
-                return RecordsState.Current;
-            }
-            else if (RecordsState.LastRead != null)
-            {
-                return RecordsState.LastRead;
-            }
-            else 
-            {
-                return [];
-            }
-        });
-    }
-
-    /// <summary>
     /// Confirms that there are Pages in the Table and that they are of the correct Length.
     /// Checks if the requested Page has been parsed into DataRecords and does so if not.
     /// </summary>
@@ -510,68 +391,6 @@ public partial class DataTable : ObservableObject
         }
         // parse DataRecords out of the requested Page of Lines
         return await ParsePageAsync(PageNumber);
-    }
-
-    /// <summary>
-    /// Refreshes the Database Table in runtime.
-    /// </summary>
-    /// <returns>A list of DataRecords currently in the Database Table.</returns>
-    /// <exception cref="SystemException"></exception>
-    public async Task<List<DataRecord>> ReadRecordsAsync() 
-    {
-        // read the DataRecord and return the NotifyTaskCompletion object holding the promised list
-        try 
-        {
-            RecordsState.LastRead = await ReadAsync();
-            RecordsState.Current = RecordsState.LastRead;
-            return RecordsState.LastRead;
-        } 
-        catch (Exception _ex) 
-        {
-            throw new SystemException($"Could not complete the read request due to the following exception:\n {_ex.Message}");
-        }
-    }
-
-    /// <summary>
-    /// Asynchronously saves DataRecords to DataTable.Path and updates DataTable.RecordsState.LastRead in runtime.
-    /// </summary>
-    /// <param name="Records">A List of DataRecords to write to DataTable._path.</param>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="PathTooLongException"></exception>
-    /// <exception cref="DirectoryNotFoundException"></exception>
-    /// <exception cref="IOException"></exception>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    /// <exception cref="FileNotFoundException"></exception>
-    /// <exception cref="NotSupportedException"></exception>
-    /// <exception cref="System.Security.SecurityException"></exception>
-    public async Task SaveRecordsAsync(List<DataRecord> Records) 
-    {
-        // save the passed records to the Database table file
-        try 
-        {
-            await SaveAsync(Records);
-        } 
-        catch (Exception _ex) 
-        {
-            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
-        }
-        // update the RecordsState property
-        RecordsState.LastRead = await ReadAsync();
-        RecordsState.Current = RecordsState.LastRead;
-    }
-
-    /// <summary>
-    /// Sorts the Table's Records list using SortingProperty as the sort.
-    /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
-    /// </summary>
-    /// <param name="SortingProperty">A Property name applicable to the DataRecord class.</param>
-    /// <param name="Order">0 (ascending) or 1 (descending).</param>
-    /// <returns></returns>
-    public async Task<List<DataRecord>> RequestSort(string SortingProperty, int Order) 
-    {
-        RecordsState.Current = await SortRecordsAsync(SortingProperty, Order);
-        return RecordsState.Current;
     }
 
     /// <summary>

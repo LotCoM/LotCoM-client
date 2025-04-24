@@ -26,11 +26,11 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
-    private NotifyTaskCompletion<List<DataRecord>>? _data;
+    private NotifyTaskCompletion<Models.Datasources.Page>? _data;
     /// <summary>
     /// Serves the Data in the Page's assigned Database Table.
     /// </summary>
-    public NotifyTaskCompletion<List<DataRecord>>? Data 
+    public NotifyTaskCompletion<Models.Datasources.Page>? Data 
     {
         get {return _data;}
         set 
@@ -110,7 +110,7 @@ public partial class DataTableViewModel : ObservableObject
         {
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
-            Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
+            Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.ShownRecordCount));
             Options.Process = Table.Process;
             Options.LeftPanelHeaderText = Table.Process!.FullName;
             Options.SetBodyHeaderModeToLabel("Loading records...");
@@ -135,7 +135,7 @@ public partial class DataTableViewModel : ObservableObject
         string SortField = Options.DataFields[Options.SelectedSortingFieldIndex];
         SortField = ResolveDataRecordPropertyName(SortField);
         // sort using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, Options.SelectedSortingOrderIndex));
+        Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RequestSort(SortField, Options.SelectedSortingOrderIndex));
     }
 
     /// <summary>
@@ -152,6 +152,6 @@ public partial class DataTableViewModel : ObservableObject
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSearch(Options.SearchTerm, PropertyName));
+        Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RequestSearch(Options.SearchTerm, PropertyName));
     }
 }

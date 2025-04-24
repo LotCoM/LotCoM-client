@@ -21,9 +21,19 @@ public partial class DataTable : ObservableObject
     private List<string> LastReadLines = [];
 
     /// <summary>
+    /// Holds a List of strings that are matching results of the latest Search algorithm.
+    /// </summary>
+    private List<string> SearchResultLines = [];
+
+    /// <summary>
     /// Holds a List of Pages created from this Table's data.
     /// </summary>
     private List<Page> Pages = [];
+
+    /// <summary>
+    /// Holds a custom List of Pages created from the latest Search algorithm.
+    /// </summary>
+    private List<Page> SearchPages = [];
 
     private string _path = "";
     /// <summary>
@@ -231,6 +241,68 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
+    /// Creates a List of Page objects from the Lines in SearchResultLines and stores them in Table.SearchPages.
+    /// </summary>
+    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
+    /// <returns></returns>
+    private async Task<List<Page>> PaginateSearchResultsAsync(int PageLength)
+    {
+        return await Task.Run(() => 
+        {
+            // confirm that the Table has Lines stored in the SearchResultLines
+            if (SearchResultLines.Count < 1)
+            {
+                SearchPages = [];
+                return SearchPages;
+            }
+            // create pages of PageLength Lines, starting with the newest lines
+            int TakenLines = 0;
+            while (TakenLines < SearchResultLines.Count)
+            {
+                // take the first PageLength + TakenLines elements from SearchResultLines to create a Page
+                Page _page = new Page(PageLength);
+                _page.Lines = SearchResultLines
+                    .Skip(TakenLines)
+                    .Take(PageLength)
+                    .ToList();
+                // increment the amount of lines taken and add the Page to the Table
+                TakenLines += PageLength;
+                SearchPages.Add(_page);
+            }
+            return SearchPages;
+        });
+    }
+
+    /// <summary>
+    /// Parses DataRecords from every Line in a Page and saves those DataRecords in the Page's Page.DataRecords property.
+    /// </summary>
+    /// <param name="PageNumber">The Page in Table.SearchPages to Parse 
+    /// (NOTE: Table.SearchPages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
+    /// </param>
+    /// <returns></returns>
+    private async Task<Page> ParseSearchResultsPageAsync(int PageNumber)
+    {
+        // confirm that the Page hasn't already been parsed out
+        if (SearchPages[PageNumber].DataRecords.Count > 0) 
+        {
+            return SearchPages[PageNumber];
+        }
+        // parse a DataRecord from every Line in Page.Lines and save it in Page.DataRecords
+        IEnumerable<Task<DataRecord>>? ParseTasks = SearchPages[PageNumber]
+            .Lines
+            .Select(ParseRecordAsync);
+        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
+        // confirm that the Parse was successful and add the Parsed DataRecords to Page.DataRecords
+        if (ParseResults is null) 
+        {
+            SearchPages[PageNumber].DataRecords = [];
+        }
+        SearchPages[PageNumber].DataRecords = ParseResults!.ToList();
+        // return the updated Page object
+        return SearchPages[PageNumber];
+    }
+
+    /// <summary>
     /// Asynchronously opens and overwrites the data in DataTable._path with the current list of DataRecords in DataTable._records.
     /// </summary>
     /// <exception cref="OperationCanceledException"></exception>
@@ -292,84 +364,73 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Searches each DataRecord for a match in ANY field (as a continuous string). 
+    /// Searches each Line in LastReadLines for a match in ANY field (as a continuous CSV string). 
     /// </summary>
+    /// <remarks>
+    /// Updates LastReadLines to contain the matching Lines.
+    /// </remarks>
     /// <param name="SearchTerm">The term to match.</param>
     /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords that were match hits for the search.</returns>
-    private async Task<List<DataRecord>> SearchAllFieldsAsync(string SearchTerm) 
+    /// <returns>A List of strings that were match hits for the search.</returns>
+    private async Task<List<string>> SearchAllFieldsAsync(string SearchTerm) 
     {
-        if (RecordsState.LastRead == null) 
+        // confirm that there are Lines to search through
+        if (LastReadLines is null) 
         {
-            throw new OperationCanceledException();
-        }
-        // perform the search algorithm on a new CPU thread
-        return await Task.Run(() => 
-        {
-            // convert each DataRecord in RecordsState.LastRead to a CSV Line and check for a hit
-            List<DataRecord> SearchHits = [];
-            foreach (DataRecord _record in RecordsState.LastRead) 
+            try
             {
-                string _recordString = _record.ToCSV();
-                if (_recordString.Contains(SearchTerm)) 
-                {
-                    SearchHits.Add(_record);
-                }
+                await ReadLinesAsync();
             }
-            return SearchHits;
-        });
+            catch
+            {
+                throw new OperationCanceledException();
+            }
+        }
+        SearchResultLines = LastReadLines!;
+        // return all hits for the search term
+        SearchResultLines = SearchResultLines!
+            .Where(x => x
+            .Contains(SearchTerm))
+            .ToList();
+        return SearchResultLines;
     }
 
     /// <summary>
-    /// Searches each DataRecord for a match in PropertyName field.
+    /// Searches each Line in LastReadLines for a match in PropertyName field.
     /// </summary>
+    /// <remarks>
+    /// Updates LastReadLines to contain the matching Lines.
+    /// </remarks>
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
-    /// <returns>A List of DataRecords that were match hits for the search.</returns>
-    private async Task<List<DataRecord>> SearchSingleFieldAsync(string SearchTerm, string PropertyName) 
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <returns>A List of strings that were match hits for the search.</returns>
+    private async Task<List<string>> SearchSingleFieldAsync(string SearchTerm, string PropertyName) 
     {
-        if (RecordsState.LastRead == null) 
+        // first find all Lines with hits in any field
+        SearchResultLines = await SearchAllFieldsAsync(SearchTerm);
+        // convert all Hits into DataRecords
+        IEnumerable<Task<DataRecord>>? ParseTasks = SearchResultLines!
+            .Select(ParseRecordAsync);
+        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
+        // confirm that the Parse was successful
+        if (ParseResults is null) 
         {
-            throw new OperationCanceledException();
+            return [];
         }
-        return await Task.Run(() => 
-        {
-            // convert each DataRecord in _records to a CSV Line and check for a hit
-            List<DataRecord> SearchHits = [];
-            SearchHits = RecordsState.LastRead.Where(x => x.GetType()!
-                .GetProperty(PropertyName)!
-                .GetValue(x)!
-                .ToString()!
-                .Contains(SearchTerm))
-                .ToList();
-            return SearchHits;
-        });
-    }
-
-    /// <summary>
-    /// Runs one of the two Search Algorithms. 
-    /// The chosen Algorithm depends on the value of PropertyName.
-    /// </summary>
-    /// <param name="SearchTerm"></param>
-    /// <param name="PropertyName"></param>
-    /// <returns></returns>
-    private async Task<List<DataRecord>> SearchAsync(string SearchTerm, string PropertyName) 
-    {
-        return await Task.Run(async () => 
-        {
-            List<DataRecord> Hits;
-            // search in all fields of each DataRecord
-            if (PropertyName.Equals("All")) 
-            {
-                Hits = await SearchAllFieldsAsync(SearchTerm);
-            // search in a singular field of each DataRecord
-            } 
-            else 
-            {
-                Hits = await SearchSingleFieldAsync(SearchTerm, PropertyName);
-            }
-            return Hits;
-        });
+        // now find all DataRecords with a hit in the specific field requested
+        List<DataRecord> RecordHits = ParseResults
+            .Where(x => x.GetType()!
+            .GetProperty(PropertyName)!
+            .GetValue(x)!
+            .ToString()!
+            .Contains(SearchTerm))
+            .ToList();
+        // convert those DataRecords back to strings and return
+        SearchResultLines = RecordHits
+            .Select(x => x.ToCSV())
+            .ToList();
+        return SearchResultLines;
     }
 
     /// <summary>
@@ -514,17 +575,29 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Performs a search on the current data in _records. 
+    /// Performs a search on all of the current records in the Table.
     /// If All passed as PropertyName, checks for matches in every field of the Data Record.
     /// Otherwise, searches for match hits in the singular field passed as PropertyName.
+    /// Builds a new Page set from the search results.
     /// </summary>
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
     /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    public async Task<List<DataRecord>> RequestSearch(string SearchTerm, string PropertyName) 
+    private async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
     {
-        // perform the search algorithm on a new CPU thread
-        RecordsState.Current = await SearchAsync(SearchTerm, PropertyName);
-        return RecordsState.Current;
+        // search in all fields of each DataRecord
+        if (PropertyName.Equals("All")) 
+        {
+            await SearchAllFieldsAsync(SearchTerm);
+        // search in a singular field of each DataRecord
+        } 
+        else 
+        {
+            await SearchSingleFieldAsync(SearchTerm, PropertyName);
+        }
+        // paginate the new LastReadLines value and Parse the first Page in that new set
+        await PaginateSearchResultsAsync(PageLength);
+        await ParseSearchResultsPageAsync(0);
+        return SearchPages[0];
     }
 }

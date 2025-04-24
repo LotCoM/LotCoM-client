@@ -26,18 +26,33 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
-    private NotifyTaskCompletion<Models.Datasources.Page>? _data;
+    private NotifyTaskCompletion<Models.Datasources.Page>? _basePage;
     /// <summary>
-    /// Serves the Data in the Page's assigned Database Table.
+    /// An unmodified version of the DataRecord Page currently shown by the DataTablePage.
     /// </summary>
-    public NotifyTaskCompletion<Models.Datasources.Page>? Data 
+    public NotifyTaskCompletion<Models.Datasources.Page>? BasePage 
     {
-        get {return _data;}
+        get {return _basePage;}
         set 
         {
-            _data = value;
-            OnPropertyChanged(nameof(_data));
-            OnPropertyChanged(nameof(Data));
+            _basePage = value;
+            OnPropertyChanged(nameof(_basePage));
+            OnPropertyChanged(nameof(BasePage));
+        }
+    }
+
+    private NotifyTaskCompletion<Models.Datasources.Page>? _currentPage;
+    /// <summary>
+    /// A modifyable version of the DataRecord Page currently shown by the DataTablePage.
+    /// </summary>
+    public NotifyTaskCompletion<Models.Datasources.Page>? CurrentPage 
+    {
+        get {return _currentPage;}
+        set 
+        {
+            _currentPage = value;
+            OnPropertyChanged(nameof(_currentPage));
+            OnPropertyChanged(nameof(CurrentPage));
         }
     }
 
@@ -93,6 +108,16 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
+    /// </summary>
+    /// <param name="NewPage"></param>
+    private void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage)
+    {
+        BasePage = NewPage;
+        CurrentPage = NewPage;
+    }
+
+    /// <summary>
     /// Creates a ViewModel for the DataTablePage.
     /// </summary>
     /// <param name="DataTablePath">The desired display Database Table's full path.</param>
@@ -110,7 +135,8 @@ public partial class DataTableViewModel : ObservableObject
         {
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
-            Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.ShownRecordCount));
+            // display the first Page in the DataTable with the default PageLength
+            SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.ShownRecordCount)));
             Options.Process = Table.Process;
             Options.LeftPanelHeaderText = Table.Process!.FullName;
             Options.SetBodyHeaderModeToLabel("Loading records...");
@@ -118,9 +144,6 @@ public partial class DataTableViewModel : ObservableObject
         } 
         else 
         {
-            // set the table to null
-            Table = null;
-            Data = null;
             Options.SetBodyHeaderModeToLabel("Select Process...");
         }
     }

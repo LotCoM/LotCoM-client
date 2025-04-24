@@ -204,10 +204,17 @@ public partial class DataTable : ObservableObject
     /// <summary>
     /// Parses DataRecords from every Line in a Page and saves those DataRecords in the Page's Page.DataRecords property.
     /// </summary>
-    /// <param name="PageNumber">The Page in Table.Pages to Parse (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)</param>
+    /// <param name="PageNumber">The Page in Table.Pages to Parse 
+    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
+    /// </param>
     /// <returns></returns>
     private async Task<Page> ParsePageAsync(int PageNumber)
     {
+        // confirm that the Page hasn't already been parsed out
+        if (Pages[PageNumber].DataRecords.Count > 0) 
+        {
+            return Pages[PageNumber];
+        }
         // parse a DataRecord from every Line in Page.Lines and save it in Page.DataRecords
         IEnumerable<Task<DataRecord>>? ParseTasks = Pages[PageNumber]
             .Lines
@@ -422,6 +429,26 @@ public partial class DataTable : ObservableObject
                 return [];
             }
         });
+    }
+
+    /// <summary>
+    /// Confirms that there are Pages in the Table and that they are of the correct Length.
+    /// Checks if the requested Page has been parsed into DataRecords and does so if not.
+    /// </summary>
+    /// <param name="PageNumber">The Page in Table.Pages to Parse 
+    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
+    /// </param>
+    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
+    /// <returns>A Page object with PageLength DataRecords ready to be displayed.</returns>
+    public async Task<Page> RequestPage(int PageNumber, int PageLength) 
+    {
+        // confirm that there are Pages of the correct size available
+        if (Pages.Count < 1 || Pages[0].MaxLength != PageLength)
+        {
+            await PaginateAsync(PageLength);
+        }
+        // parse DataRecords out of the requested Page of Lines
+        return await ParsePageAsync(PageNumber);
     }
 
     /// <summary>

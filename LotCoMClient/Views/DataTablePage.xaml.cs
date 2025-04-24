@@ -1,5 +1,3 @@
-using LotCoMClient.Models.Options;
-
 namespace LotCoMClient.Views;
 
 /// <summary>
@@ -78,24 +76,15 @@ public partial class DataTablePage : ContentPage
     public async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
     {
         await Task.Delay(0);
-        // the Panel needs to collapse
         if (_viewModel.Options.IsLeftPanelShown) 
         {
-            // set the Left Panel properties in the Page Options
-            _viewModel.Options.IsLeftPanelShown = false;
-            _viewModel.Options.IsLeftPanelHidden = true;
-            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
-            PageLeftFrameCollapseButton.Rotation += 180;
-        // the Panel needs to raise
+            _viewModel.Options.CollapseLeftPanel();
         } 
         else 
         {
-            // set the Left Panel properties in the Page Options
-            _viewModel.Options.IsLeftPanelShown = true;
-            _viewModel.Options.IsLeftPanelHidden = false;
-            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
-            PageLeftFrameCollapseButton.Rotation += 180;
+            _viewModel.Options.RaiseLeftPanel();
         }
+        PageLeftFrameCollapseButton.Rotation += 180;
     }
 
     /// <summary>

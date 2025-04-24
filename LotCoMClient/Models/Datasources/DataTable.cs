@@ -101,6 +101,28 @@ public partial class DataTable : ObservableObject
     /// </summary>
     /// <param name="Text"></param>
     /// <returns>A List of strings.</returns>
+    private List<string> ParseLines(string Text) {
+        // separate the read text into record lines (split by newline character)
+        List<string> RecordLines = Text
+            .Split("\n")
+            .ToList();
+        // remove the first entry and save it as the headers property
+        Headers = RecordLines[0]
+            .Split(",")
+            .ToList();
+        RecordLines.RemoveAt(0);
+        // remove any empty lines
+        RecordLines = RecordLines
+            .Where(x => !x.Equals(""))
+            .ToList();
+        return RecordLines;
+    }
+
+    /// <summary>
+    /// Asynchronously parses a bulk string into Lines that can be parsed.
+    /// </summary>
+    /// <param name="Text"></param>
+    /// <returns>A List of strings.</returns>
     private async Task<List<string>> ParseLinesAsync(string Text) {
         return await Task.Run(() => {
             // separate the read text into record lines (split by newline character)
@@ -122,6 +144,33 @@ public partial class DataTable : ObservableObject
 
     /// <summary>
     /// Reads the data file and formats the text as a List of strings that can later be parsed into DataRecord objects.
+    /// Stores the List in Table.LastReadLines.
+    /// </summary>
+    /// <remarks>
+    /// Does not perform any formatting.
+    /// </remarks>
+    /// <returns>A List of Lines as strings.</returns>
+    private List<string> ReadLines()
+    {
+        // read the Database Table at the Path property
+        string Text;
+        try 
+        {
+            Text = File.ReadAllText(Path);
+        } 
+        catch (Exception _ex) 
+        {
+            throw new FileLoadException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
+        }
+        // split the text into a list of Line strings and update the cached Lines list
+        LastReadLines = ParseLines(Text);
+        // reverse list to show newest Lines first
+        LastReadLines.Reverse();
+        return LastReadLines;
+    }
+
+    /// <summary>
+    /// Asynchronously reads the data file and formats the text as a List of strings that can later be parsed into DataRecord objects.
     /// Stores the List in Table.LastReadLines.
     /// </summary>
     /// <remarks>
@@ -251,7 +300,8 @@ public partial class DataTable : ObservableObject
         {
             throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}' because the Process '{ProcessName}' is not defined.");
         }
-        // set up the Table's PageSets
+        // read the file synchronously (once) and set up the Table's PageSets
+        ReadLines();
         Pages = new PageSet(RecordType);
         SearchPages = new PageSet(RecordType);
     }
@@ -270,7 +320,8 @@ public partial class DataTable : ObservableObject
         // confirm that Pages is set to provide Pages of the correct size
         if (Pages.Count < 1 || Pages.Pages[0].MaxLength != PageLength)
         {
-            Pages = new PageSet(LastReadLines, RecordType, PageLength: PageLength);
+            await ReadLinesAsync();
+            Pages = new PageSet(LastReadLines!, RecordType, PageLength: PageLength);
         }
         // get the requested Page
         try

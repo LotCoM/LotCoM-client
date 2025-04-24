@@ -17,82 +17,88 @@ public partial class DataTablePageOptions() : ObservableObject()
         Open = 250
     }
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Title which appears in the top-left corner.
     /// </summary>
+    [ObservableProperty]
     public partial string Title {get; set;} = "";
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the visibility of the Page's Body Header which is between the Page's Title and Body (ListView).
     /// </summary>
+    [ObservableProperty]
     public partial bool IsBodyHeaderLabelShown {get; set;} = false;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the text of the Page's Body Table Header.
     /// </summary>
+    [ObservableProperty]
     public partial string BodyTableHeaderText {get; set;} = "";
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the visibility of the Page's Navigation Panel which is between the Page's Title and Body (ListView).
     /// </summary>
+    [ObservableProperty]
     public partial bool IsBodyNavigationPanelShown {get; set;} = false;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the number of DataRecords loaded by the Page's DataTable.
     /// </summary>
+    [ObservableProperty]
     public partial int TotalRecordCount {get; set;} = 0;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the Number of the currently displayed Page of DataRecords, controlled by the Page's Navigation Panel.
     /// </summary>
+    [ObservableProperty]
     public partial int PageNumber {get; set;} = 0;
 
+    /// <summary>
+    /// Controls the currently selected index of the Page's ShownRecordCount Picker.
+    /// </summary>
     [ObservableProperty]
+    public partial int SelectedShownRecordCountIndex {get; set;} = 1;
+
     /// <summary>
     /// Controls the number of DataRecords displayed by the Page's ListView, controlled by the Page's Navigation Panel.
     /// </summary>
-    public partial int DisplayedRecordCount {get; set;} = 0;
-
     [ObservableProperty]
+    public partial int ShownRecordCount {get; set;} = 25;
+
     /// <summary>
     /// Controls the text shown in the Page's Left Panel Header which appears at the top of the collapsable Left Panel.
     /// </summary>
+    [ObservableProperty]
     public partial string LeftPanelHeaderText {get; set;} = "";
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the text shown in the Page's Left Panel Footer which appears at the bottom of the collapsable Left Panel.
     /// </summary>
+    [ObservableProperty]
     public partial string LeftPanelFooterText {get; set;} = "Click to Collapse";
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Left Panel Shown state (boolean).
     /// </summary>
+    [ObservableProperty]
     public partial bool IsLeftPanelShown {get; set;} = true;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the Page's Left Panel Hidden state (boolean).
     /// </summary>
+    [ObservableProperty]
     public partial bool IsLeftPanelHidden {get; set;} = false;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the width of the Page's Left Panel.
     /// </summary>
+    [ObservableProperty]
     public partial int LeftPanelWidth {get; set;} = (int)LeftPanelWidths.Open;
     
-    [ObservableProperty]
     /// <summary>
     /// Controls the data fields that are included in DataRecords for the Page's ListView.
     /// </summary>
+    [ObservableProperty]
     public partial List<string> DataFields {get; set;} = 
     [
         "Part Number", 
@@ -104,10 +110,10 @@ public partial class DataTablePageOptions() : ObservableObject()
         "Operator ID"
     ];
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the fields that can be used to search the Page's ListView.
     /// </summary>
+    [ObservableProperty]
     public partial List<string> SearchableFields {get; set;} = 
     [
         "All", 
@@ -120,59 +126,59 @@ public partial class DataTablePageOptions() : ObservableObject()
         "Operator ID"
     ];
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SortingField Picker.
     /// </summary>
+    [ObservableProperty]
     public partial int SelectedSortingFieldIndex {get; set;} = -1;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SortingOrder Picker.
     /// </summary>
+    [ObservableProperty]
     public partial int SelectedSortingOrderIndex {get; set;} = -1;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the currently selected index of the Page's SearchingField Picker.
     /// </summary>
+    [ObservableProperty]
     public partial int SelectedSearchingFieldIndex {get; set;} = -1;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the currently entered Text value of the Page's ListViewSearchBar.
     /// </summary>
+    [ObservableProperty]
     public partial string SearchTerm {get; set;} = "";
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the Department that defines the Process currently shown on the Page.
     /// </summary>
+    [ObservableProperty]
     public partial Department? Department {get; set;} = null;
 
-    [ObservableProperty]
     /// <summary>
     /// For Selector Pages;
     /// Controls the Processes that are selectable in the Page's PageProcess Picker.
     /// </summary>
+    [ObservableProperty]
     public partial List<Process> DepartmentProcesses {get; set;} = [];
 
-    [ObservableProperty]
     /// <summary>
     /// For Selector Pages;
     /// Controls the currently selected index of the Page's PageProcess Picker.
     /// </summary>
+    [ObservableProperty]
     public partial int SelectedProcessIndex {get; set;} = -1;
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the subclass of DataRecord displayed by the Page's ListView.
     /// </summary>
+    [ObservableProperty]
     public partial Type RecordType {get; set;} = typeof(DataRecord);
 
-    [ObservableProperty]
     /// <summary>
     /// Controls the boolean condition of whether a Process has been assigned to the Page.
     /// </summary>
+    [ObservableProperty]
     public partial bool IsProcessAssigned {get; set;} = false;
 }

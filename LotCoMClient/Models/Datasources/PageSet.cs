@@ -11,11 +11,6 @@ public class PageSet
     private int MaxCount = -1;
 
     /// <summary>
-    /// Sets the maximum number of Lines allowed in each Page in this PageSet.
-    /// </summary>
-    private int PageLength = 25;
-
-    /// <summary>
     /// Sets the type of DataRecord that the Pages in this PageSet can hold.
     /// </summary>
     private Type RecordType;
@@ -32,6 +27,11 @@ public class PageSet
             _pages = value;
         }
     }
+
+    /// <summary>
+    /// Sets the maximum number of Lines allowed in each Page in this PageSet.
+    /// </summary>
+    public int PageLength = 25;
 
     /// <summary>
     /// The number of Page objects in this PageSet.
@@ -124,6 +124,7 @@ public class PageSet
     /// Returns a Page with DataRecords.
     /// </summary>
     /// <param name="PageNumber">The index of the requested Page in PageSet.Pages. 0-oriented.</param>
+    /// <exception cref="IndexOutOfRangeException"></exception>
     /// <returns></returns>
     public async Task<Page> GetPage(int PageNumber)
     {

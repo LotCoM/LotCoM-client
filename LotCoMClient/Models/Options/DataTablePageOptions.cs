@@ -42,12 +42,6 @@ public partial class DataTablePageOptions() : ObservableObject()
     public partial bool IsBodyNavigationPanelShown {get; set;} = false;
 
     /// <summary>
-    /// Controls the number of DataRecords loaded by the Page's DataTable.
-    /// </summary>
-    [ObservableProperty]
-    public partial int TotalRecordCount {get; set;} = 0;
-
-    /// <summary>
     /// Controls the Number of the currently displayed Page of DataRecords, controlled by the Page's Navigation Panel.
     /// </summary>
     [ObservableProperty]
@@ -181,4 +175,32 @@ public partial class DataTablePageOptions() : ObservableObject()
     /// </summary>
     [ObservableProperty]
     public partial bool IsProcessAssigned {get; set;} = false;
+
+    /// <summary>
+    /// Updates the Options object to use the Page's Body Header Label as the Body Header.
+    /// </summary>
+    /// <remarks>
+    /// Optionally accepts HeaderLabelText which will set the Label's text.
+    /// </remarks>
+    /// <param name="HeaderLabelText"></param>
+    public void SetBodyHeaderModeToLabel(string HeaderLabelText = "")
+    {
+        IsBodyHeaderLabelShown = true;
+        IsBodyNavigationPanelShown = false;
+        BodyTableHeaderText = HeaderLabelText;
+    }
+
+    /// <summary>
+    /// Updates the Options object to use the Page's Navigation Panel as the Body Header.
+    /// </summary>
+    /// <remarks>
+    /// Optionally accepts JumpToPageNumber which will set the current Page Number.
+    /// </remarks>
+    /// <param name="JumpToPageNumber"></param>
+    public void SetBodyHeaderModeToNavigation(int JumpToPageNumber = 1)
+    {
+        IsBodyHeaderLabelShown = false;
+        IsBodyNavigationPanelShown = true;
+        PageNumber = JumpToPageNumber;
+    }
 }

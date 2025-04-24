@@ -20,6 +20,11 @@ public partial class DataTable : ObservableObject
     /// </summary>
     private List<string> LastReadLines = [];
 
+    /// <summary>
+    /// Holds a List of Pages created from this Table's data.
+    /// </summary>
+    private List<Page> Pages = [];
+
     private string _path = "";
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
@@ -117,13 +122,13 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Reads the data file and formats the text as a List of strings that can be counted and later parsed into DataRecord objects.
+    /// Reads the data file and formats the text as a List of strings that can later be parsed into DataRecord objects.
     /// Stores the List in Table.LastReadLines.
     /// </summary>
     /// <remarks>
     /// Does not perform any formatting.
     /// </remarks>
-    /// <returns></returns>
+    /// <returns>A List of Lines as strings.</returns>
     /// <exception cref="OperationCanceledException"></exception>
     private async Task<List<string>> ReadLinesAsync()
     {
@@ -139,6 +144,8 @@ public partial class DataTable : ObservableObject
         }
         // split the text into a list of Line strings and update the cached Lines list
         LastReadLines = await ParseLinesAsync(Text);
+        // reverse list to show newest Lines first
+        LastReadLines.Reverse();
         return LastReadLines;
     }
 
@@ -163,6 +170,35 @@ public partial class DataTable : ObservableObject
         {
             return ParseResult.ToList();
         }
+    }
+
+    /// <summary>
+    /// Creates a List of Page objects from the Lines in LastReadLines and stores them in Table.Pages.
+    /// </summary>
+    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
+    /// <returns></returns>
+    private async Task<List<Page>> PaginateAsync(int PageLength)
+    {
+        // confirm that the Table has Lines stored in the LastReadProperty
+        if (LastReadLines.Count < 1)
+        {
+            await ReadLinesAsync();
+        }
+        // create pages of PageLength Lines, starting with the newest lines
+        int TakenLines = 0;
+        while (TakenLines < LastReadLines.Count)
+        {
+            // take the first PageLength + TakenLines elements from LastReadLines to create a Page
+            Page _page = new Page(PageLength);
+            _page.Lines = LastReadLines
+                .Skip(TakenLines)
+                .Take(PageLength)
+                .ToList();
+            // increment the amount of lines taken and add the Page to the Table
+            TakenLines += PageLength;
+            Pages.Add(_page);
+        }
+        return Pages;
     }
 
     /// <summary>

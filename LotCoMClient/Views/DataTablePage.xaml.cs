@@ -19,15 +19,13 @@ public partial class DataTablePage : ContentPage
     private readonly DataTablePageOptions _options;
 
     /// <summary>
-    /// Asynchronously evaluates the state of the Data property and sets the BodyTableHeader property accordingly.
-    /// If Data is loaded, shows the Record count. Else, shows "Loading Records...".
+    /// Asynchronously evaluates the state of the Data property and configures the Body Header accordingly.
+    /// If Data is loaded, shows the Navigation Panel. Else, shows "Loading Records...".
     /// </summary>
-    private async Task ConfigureBodyTableHeader() 
+    private async Task ConfigureBodyHeader() 
     {
         await Task.Run(() => 
         {
-            // get the count of Data entries
-            int DataCount;
             // do not do any processing if Data is null (no-Process instantiation)
             if (_viewModel.Data == null) 
             {
@@ -36,21 +34,13 @@ public partial class DataTablePage : ContentPage
             // the Data property is set and is either loading or completed
             if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) 
             {
-                DataCount = _viewModel.Data.Result.Count;
-                // update the BodyTableHeader to show the item count
-                if (DataCount > 1) 
-                {
-                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
-                } 
-                else 
-                {
-                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
-                }
-            // the data is not loaded yet; default BodyTableHeader property
+                // update the BodyTableHeader to show the item count and navigation
+                _options.SetBodyHeaderModeToNavigation();
             } 
             else 
             {
-                _options.BodyTableHeaderText = "Loading records...";
+                // the data is not loaded yet; default Body Table Header options
+                _options.SetBodyHeaderModeToLabel("Loading Records...");
             }
         });
     }
@@ -138,38 +128,20 @@ public partial class DataTablePage : ContentPage
         // the Panel needs to collapse
         if (_options.IsLeftPanelShown) 
         {
-            // set the Left Panel properties in the ViewModel
+            // set the Left Panel properties in the Page Options
             _options.IsLeftPanelShown = false;
             _options.IsLeftPanelHidden = true;
-            // non-animated collapse
             _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (250 -> 30 by increments of 10)
-            // while (_viewModel.LeftFrameWidth > 30) {
-            //     // animate the panel shrinking
-            //     _viewModel.LeftFrameWidth -= 10;
-            //     // animate the collapse button rotating
-            //     PageLeftFrameCollapseButton.Rotation += 15;
-            //     await Task.Delay(1);
-            // }
         // the Panel needs to raise
         } 
         else 
         {
-            // set the Left Panel properties in the ViewModel
+            // set the Left Panel properties in the Page Options
             _options.IsLeftPanelShown = true;
             _options.IsLeftPanelHidden = false;
-            // non-animated raise
             _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
             PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (30 -> 250 by increments of 10)
-            // while (_viewModel.LeftFrameWidth < 250) {
-            //     // animate the panel raising
-            //     _viewModel.LeftFrameWidth += 10;
-            //     // animate the collapse button rotating
-            //     PageLeftFrameCollapseButton.Rotation += 15;
-            //     await Task.Delay(1);
-            // }
         }
     }
 
@@ -181,7 +153,7 @@ public partial class DataTablePage : ContentPage
     public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
     {
         // update BodyTableHeader property
-        await ConfigureBodyTableHeader();
+        await ConfigureBodyHeader();
         await ConfigureDataFields();
     }
 

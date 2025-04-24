@@ -292,7 +292,7 @@ public partial class DataTable : ObservableObject
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
     /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    private async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
+    public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
     {
         // search in all fields of each DataRecord
         if (PropertyName.Equals("All")) 

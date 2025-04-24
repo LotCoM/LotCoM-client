@@ -11,40 +11,40 @@ public partial class DataTablePage : ContentPage
 	private readonly ViewModels.DataTableViewModel _viewModel;
 
     /// <summary>
-    /// Asynchronously evaluates the state of the Data property and configures the Body Header accordingly.
-    /// If Data is loaded, shows the Navigation Panel. Else, shows "Loading Records...".
+    /// Asynchronously evaluates the state of the CurrentPage property and configures the Body Header accordingly.
+    /// If CurrentPage is loaded, shows the Navigation Panel. Else, shows "Loading Records...".
     /// </summary>
     private async Task ConfigureBodyHeader() 
     {
         await Task.Run(() => 
         {
-            // do not do any processing if Data is null (no-Process instantiation)
-            if (_viewModel.Data == null) 
+            // do not do any processing if there is no CurrentPage to show (no-Process instantiation)
+            if (_viewModel.CurrentPage is null) 
             {
                 return;
             }
-            // the Data property is set and is either loading or completed
-            if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) 
+            // the CurrentPage is set and is either loading or completed
+            if (_viewModel.CurrentPage!.IsCompleted && _viewModel.CurrentPage.Result != null) 
             {
-                // update the BodyTableHeader to show the item count and navigation
+                // CurrentPage is loaded; update the BodyTableHeader to show the item count and navigation
                 _viewModel.Options.SetBodyHeaderModeToNavigation();
             } 
             else 
             {
-                // the data is not loaded yet; default Body Table Header options
-                _viewModel.Options.SetBodyHeaderModeToLabel("Loading Records...");
+                // the CurrentPage is not loaded yet; default Body Table Header options
+                _viewModel.Options.SetBodyHeaderModeToLabel("Loading records...");
             }
         });
     }
 
     /// <summary>
-    /// Checks that the Table has DataRecords available. Updates the Data and Search fields based on that Data.
+    /// Checks that the Table has a CurrentPage available. Updates the Data and Search fields based on that Page's DataRecords.
     /// </summary>
     /// <returns></returns>
     private async Task ConfigurePageFields() 
     {
         // confirm that the Data property has completed its async task
-        if (_viewModel.Data == null || _viewModel.Data.IsNotCompleted) 
+        if (_viewModel.CurrentPage is null || _viewModel.CurrentPage.IsNotCompleted) 
         {
             return;
         }
@@ -106,14 +106,11 @@ public partial class DataTablePage : ContentPage
     /// <param name="e"></param>
     public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
     {
-        await Task.Run(() => 
-        {
-            // update ViewModel sorting indexes
-            _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-            _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
-            // invoke the ViewModel sort method
-            _viewModel.SortDataTable();
-        });
+        // update ViewModel sorting indexes
+        _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+        _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+        // invoke the ViewModel sort method
+        await _viewModel.SortPage();
     }
 
     /// <summary>

@@ -1,10 +1,12 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace LotCoMClient.Models.Datasources;
 
 /// <summary>
 /// Creates a set of Lines and/or DataRecords that can be displayed in a ListView.
 /// </summary>
 /// <param name="PageLength">The maximum number of Lines/DataRecords this Page can hold.</param>
-public class Page(int PageLength, Type RecordType)
+public partial class Page(int PageLength, Type RecordType) : ObservableObject()
 {
     /// <summary>
     /// Sets the type of DataRecord that this Page can hold.
@@ -24,12 +26,14 @@ public class Page(int PageLength, Type RecordType)
     /// <summary>
     /// Contains an unparsed list of Lines assigned to this Page.
     /// </summary>
-    public List<string> Lines = [];
+    [ObservableProperty]
+    public partial List<string> Lines {get; set;} = [];
 
     /// <summary>
     /// Contains a parsed list of DataRecord objects assigned to this Page.
     /// </summary>
-    public List<DataRecord> DataRecords = [];
+    [ObservableProperty]
+    public partial List<DataRecord> DataRecords {get; set;} = [];
 
     /// <summary>
     /// Parses a DataRecord of the Page's RecordType from CSVLine.

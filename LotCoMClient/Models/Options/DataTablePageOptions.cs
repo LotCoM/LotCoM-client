@@ -209,4 +209,61 @@ public partial class DataTablePageOptions() : ObservableObject()
         IsBodyNavigationPanelShown = true;
         PageNumber = JumpToPageNumber;
     }
+
+    /// <summary>
+    /// Updates the Options object's DataFields and SearchableFields properties to provide the Page's Process Requirements.
+    /// </summary>
+    /// <returns></returns>
+    public async Task ConfigurePageFields() 
+    {
+        await Task.Run(() => 
+        {
+            // start with the universally included fields
+            List<string> Fields = 
+            [
+                "Part Number", 
+                "Part Name", 
+                "Quantity", 
+                "Production Date", 
+                "Production Time", 
+                "Production Shift", 
+                "Operator ID"
+            ];
+            if (Process is null)
+            {
+                return;
+            }
+            // add the variably-required DataRecord fields from the Page Process requirements
+            List<string> Requirements = Process.RequiredFields;
+            if (Requirements.Contains("JBKNumber")) 
+            {
+                Fields.Add("JBK Number");
+            }
+            if (Requirements.Contains("LotNumber")) 
+            {
+                Fields.Add("Lot Number");
+            }
+            if (Requirements.Contains("DeburrJBKNumber")) 
+            {
+                Fields.Add("Deburr JBK Number");
+            }
+            if (Requirements.Contains("DieNumber")) 
+            {
+                Fields.Add("Die Number");
+            }
+            if (Requirements.Contains("ModelNumber")) 
+            {
+                Fields.Add("Model Number");
+            }
+            if (Requirements.Contains("HeatNumber")) 
+            {
+                Fields.Add("Heat Number");
+            }
+            // update the DataFields and SearchableFields properties
+            DataFields = Fields;
+            SearchableFields = Fields
+                .Prepend("All")
+                .ToList();
+        });
+    }
 }

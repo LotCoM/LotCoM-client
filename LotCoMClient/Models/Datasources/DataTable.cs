@@ -202,6 +202,28 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
+    /// Parses DataRecords from every Line in a Page and saves those DataRecords in the Page's Page.DataRecords property.
+    /// </summary>
+    /// <param name="PageNumber">The Page in Table.Pages to Parse (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)</param>
+    /// <returns></returns>
+    private async Task<Page> ParsePageAsync(int PageNumber)
+    {
+        // parse a DataRecord from every Line in Page.Lines and save it in Page.DataRecords
+        IEnumerable<Task<DataRecord>>? ParseTasks = Pages[PageNumber]
+            .Lines
+            .Select(ParseRecordAsync);
+        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
+        // confirm that the Parse was successful and add the Parsed DataRecords to Page.DataRecords
+        if (ParseResults is null) 
+        {
+            Pages[PageNumber].DataRecords = [];
+        }
+        Pages[PageNumber].DataRecords = ParseResults!.ToList();
+        // return the updated Page object
+        return Pages[PageNumber];
+    }
+
+    /// <summary>
     /// Asynchronously opens and overwrites the data in DataTable._path with the current list of DataRecords in DataTable._records.
     /// </summary>
     /// <exception cref="OperationCanceledException"></exception>

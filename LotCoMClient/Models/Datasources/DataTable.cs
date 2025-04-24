@@ -54,11 +54,10 @@ public partial class DataTable : ObservableObject
         private set {_headers = value;}
     }
 
-    [ObservableProperty]
     /// <summary>
     /// Observable property exposing the Name of the Process producing the Records in this Table.
     /// </summary>
-    public partial string TableProcess {get; set;}
+    public Process TableProcess;
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.
@@ -300,12 +299,20 @@ public partial class DataTable : ObservableObject
         } 
         else 
         {
-            throw new ArgumentException($"Could not create a DataTable object from the file at {Path}.");
+            throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}'.");
         }
         // set the Table's Process using the filename
-        TableProcess = Path
+        string ProcessName = Path
             .Split("\\")[^1]
             .Replace(".txt", "");
+        try
+        {
+            TableProcess = new ProcessData().GetIndividualProcess(ProcessName);
+        }
+        catch
+        {
+            throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}' because the Process '{ProcessName}' is not defined.");
+        }
     }
 
     /// <summary>

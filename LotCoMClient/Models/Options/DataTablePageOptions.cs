@@ -266,4 +266,26 @@ public partial class DataTablePageOptions() : ObservableObject()
                 .ToList();
         });
     }
+
+    /// <summary>
+    /// Configures the Options object's properties to raise and show the Page's Left Panel.
+    /// </summary>
+    public void RaiseLeftPanel()
+    {
+        // set the Left Panel properties
+        IsLeftPanelShown = false;
+        IsLeftPanelHidden = true;
+        LeftPanelWidth = (int)LeftPanelWidths.Closed;
+    }
+
+    /// <summary>
+    /// Configures the Options object's properties to collapse and hide the Page's Left Panel.
+    /// </summary>
+    public void CollapseLeftPanel() 
+    {
+        // set the Left Panel properties
+    IsLeftPanelShown = true;
+    IsLeftPanelHidden = false;
+    LeftPanelWidth = (int)LeftPanelWidths.Open;
+    }
 }

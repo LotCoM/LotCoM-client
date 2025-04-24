@@ -1,4 +1,3 @@
-using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Options;
 
 namespace LotCoMClient.Views;
@@ -12,11 +11,6 @@ public partial class DataTablePage : ContentPage
     /// ViewModel object controlling the logic of this Page.
     /// </summary>
 	private readonly ViewModels.DataTableViewModel _viewModel;
-    
-    /// <summary>
-    /// The ViewModel's Options property, exposed for easier access.
-    /// </summary>
-    private readonly DataTablePageOptions _options;
 
     /// <summary>
     /// Asynchronously evaluates the state of the Data property and configures the Body Header accordingly.
@@ -35,12 +29,12 @@ public partial class DataTablePage : ContentPage
             if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) 
             {
                 // update the BodyTableHeader to show the item count and navigation
-                _options.SetBodyHeaderModeToNavigation();
+                _viewModel.Options.SetBodyHeaderModeToNavigation();
             } 
             else 
             {
                 // the data is not loaded yet; default Body Table Header options
-                _options.SetBodyHeaderModeToLabel("Loading Records...");
+                _viewModel.Options.SetBodyHeaderModeToLabel("Loading Records...");
             }
         });
     }
@@ -56,7 +50,7 @@ public partial class DataTablePage : ContentPage
         {
             return;
         }
-        await _options.ConfigurePageFields();
+        await _viewModel.Options.ConfigurePageFields();
     }
 
     /// <summary>
@@ -70,7 +64,6 @@ public partial class DataTablePage : ContentPage
     {
 		// instantiate the ViewModel
         _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle, RecordType, IsProcessAssigned);
-        _options = _viewModel.Options;
         BindingContext = _viewModel;
 
         // create the page from XAML
@@ -86,21 +79,21 @@ public partial class DataTablePage : ContentPage
     {
         await Task.Delay(0);
         // the Panel needs to collapse
-        if (_options.IsLeftPanelShown) 
+        if (_viewModel.Options.IsLeftPanelShown) 
         {
             // set the Left Panel properties in the Page Options
-            _options.IsLeftPanelShown = false;
-            _options.IsLeftPanelHidden = true;
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
+            _viewModel.Options.IsLeftPanelShown = false;
+            _viewModel.Options.IsLeftPanelHidden = true;
+            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
             PageLeftFrameCollapseButton.Rotation += 180;
         // the Panel needs to raise
         } 
         else 
         {
             // set the Left Panel properties in the Page Options
-            _options.IsLeftPanelShown = true;
-            _options.IsLeftPanelHidden = false;
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
+            _viewModel.Options.IsLeftPanelShown = true;
+            _viewModel.Options.IsLeftPanelHidden = false;
+            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
             PageLeftFrameCollapseButton.Rotation += 180;
         }
     }
@@ -127,8 +120,8 @@ public partial class DataTablePage : ContentPage
         await Task.Run(() => 
         {
             // update ViewModel sorting indexes
-            _options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-            _options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+            _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+            _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
             // invoke the ViewModel sort method
             _viewModel.SortDataTable();
         });
@@ -144,8 +137,8 @@ public partial class DataTablePage : ContentPage
         await Task.Run(() => 
         {
             // invoke the ViewModel local sort method using the current search term
-            _options.SearchTerm = ListViewSearchingSearchBar.Text;
-            _options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+            _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
+            _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
     }

@@ -14,11 +14,6 @@ public partial class DataTableSelectorPage : ContentPage
 	private readonly ViewModels.DataTableSelectorViewModel _viewModel;
 
     /// <summary>
-    /// The ViewModel's Options property, exposed for easier access.
-    /// </summary>
-    private readonly DataTablePageOptions _options;
-
-    /// <summary>
     /// Asynchronously evaluates the state of the Data property and configures the Body Header accordingly.
     /// If Data is loaded, shows the Navigation Panel. Else, shows "Loading Records...".
     /// </summary>
@@ -35,12 +30,12 @@ public partial class DataTableSelectorPage : ContentPage
             if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) 
             {
                 // update the BodyTableHeader to show the item count and navigation
-                _options.SetBodyHeaderModeToNavigation();
+                _viewModel.Options.SetBodyHeaderModeToNavigation();
             } 
             else 
             {
                 // the data is not loaded yet; default Body Table Header options
-                _options.SetBodyHeaderModeToLabel("Loading Records...");
+                _viewModel.Options.SetBodyHeaderModeToLabel("Loading Records...");
             }
         });
     }
@@ -56,7 +51,7 @@ public partial class DataTableSelectorPage : ContentPage
         {
             return;
         }
-        await _options.ConfigurePageFields();
+        await _viewModel.Options.ConfigurePageFields();
     }
 
     /// <summary>
@@ -67,7 +62,6 @@ public partial class DataTableSelectorPage : ContentPage
     {
 		// instantiate the ViewModel
         _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
-        _options = _viewModel.Options;
         BindingContext = _viewModel;
 
         // create the page from XAML
@@ -83,21 +77,21 @@ public partial class DataTableSelectorPage : ContentPage
     {
         await Task.Delay(0);
         // the Panel needs to collapse
-        if (_options.IsLeftPanelShown) 
+        if (_viewModel.Options.IsLeftPanelShown) 
         {
             // set the Left Panel properties in the Page Options
-            _options.IsLeftPanelShown = false;
-            _options.IsLeftPanelHidden = true;
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
+            _viewModel.Options.IsLeftPanelShown = false;
+            _viewModel.Options.IsLeftPanelHidden = true;
+            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
             PageLeftFrameCollapseButton.Rotation += 180;
         // the Panel needs to raise
         } 
         else 
         {
             // set the Left Panel properties in the Page Options
-            _options.IsLeftPanelShown = true;
-            _options.IsLeftPanelHidden = false;
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
+            _viewModel.Options.IsLeftPanelShown = true;
+            _viewModel.Options.IsLeftPanelHidden = false;
+            _viewModel.Options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
             PageLeftFrameCollapseButton.Rotation += 180;
         }
     }
@@ -112,13 +106,13 @@ public partial class DataTableSelectorPage : ContentPage
         // invoke the ViewModel method to update the UI
         _viewModel.UpdatePageProcess(PageProcessPicker);
         // update and collapse the Page's Left Frame Panel
-        _options.LeftPanelHeaderText = ((Process)PageProcessPicker.ItemsSource[_options.SelectedProcessIndex]!).FullName;
-        if (_options.IsLeftPanelShown) 
+        _viewModel.Options.LeftPanelHeaderText = ((Process)PageProcessPicker.ItemsSource[_viewModel.Options.SelectedProcessIndex]!).FullName;
+        if (_viewModel.Options.IsLeftPanelShown) 
         {
             OnPageLeftFrameCollapseButtonClicked(PageLeftFrameCollapseButton, new EventArgs());
         }
     }
-    
+
     /// <summary>
     /// Handler for the PropertyChanged event from the PageDataTableListView control.
     /// </summary>
@@ -141,8 +135,8 @@ public partial class DataTableSelectorPage : ContentPage
         await Task.Run(() => 
         {
             // update ViewModel sorting indexes
-            _options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-            _options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+            _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+            _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
             // invoke the ViewModel sort method
             _viewModel.SortDataTable();
         });
@@ -158,8 +152,8 @@ public partial class DataTableSelectorPage : ContentPage
         await Task.Run(() => 
         {
             // invoke the ViewModel local sort method using the current search term
-            _options.SearchTerm = ListViewSearchingSearchBar.Text;
-            _options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+            _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
+            _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
     }

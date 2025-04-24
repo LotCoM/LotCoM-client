@@ -72,7 +72,7 @@ public partial class DataTableSelectorViewModel : DataTableViewModel
         // update the Page's DataTable to consume data from the newly selected Process Database Table
         Table = new DataTable($"{FullPath}\\{SelectedProcess.FullName}.txt");
         // update the Page's Data
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table.RequestRecords());
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.ShownRecordCount)));
         Options.IsProcessAssigned = true;
     }
 }

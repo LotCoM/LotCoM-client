@@ -109,16 +109,6 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
-    /// </summary>
-    /// <param name="NewPage"></param>
-    private void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage)
-    {
-        BasePage = NewPage;
-        CurrentPage = NewPage;
-    }
-
-    /// <summary>
     /// Performs an in-place sort of the DataRecords property of CurrentPage.
     /// </summary>
     /// <param name="SortingProperty"></param>
@@ -182,6 +172,16 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
+    /// </summary>
+    /// <param name="NewPage"></param>
+    public void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage)
+    {
+        BasePage = NewPage;
+        CurrentPage = NewPage;
+    }
+
+    /// <summary>
     /// Sorts the DataRecords in the CurrentPage property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>
@@ -208,6 +208,6 @@ public partial class DataTableViewModel : ObservableObject
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        Data = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RequestSearch(Options.SearchTerm, PropertyName));
+        CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.ShownRecordCount));
     }
 }

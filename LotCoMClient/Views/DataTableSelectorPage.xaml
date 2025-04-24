@@ -423,7 +423,7 @@
                         Grid.Column="4"
                         Grid.ColumnSpan="3"
                         Margin="5,0,5,0"
-                        Text="{Binding Options.TotalRecordCount, StringFormat='of {0} records'}"
+                        Text="{Binding Data.Result.Count, StringFormat='of {0} records'}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
                         FontSize="16"
                         HorizontalOptions="Start"

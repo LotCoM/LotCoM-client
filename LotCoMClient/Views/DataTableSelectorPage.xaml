@@ -168,6 +168,7 @@
                         <!-- ListView Sorting Field Picker -->
                         <Picker
                             x:Name="ListViewSortingFieldPicker"
+                            SelectedIndex="{Binding Options.SelectedSortingFieldIndex}"
                             SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             Grid.Row="1"
                             Grid.Column="0"
@@ -182,6 +183,7 @@
                         <!-- ListView Sorting Order Picker -->
                         <Picker
                             x:Name="ListViewSortingOrderPicker"
+                            SelectedIndex="{Binding Options.SelectedSortingOrderIndex}"
                             SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
                             Grid.Row="2"
                             Grid.Column="0"
@@ -245,6 +247,7 @@
                         <Picker
                             x:Name="ListViewSearchingFieldPicker"
                             SelectedIndex="{Binding Options.SelectedSearchingFieldIndex}"
+                            SelectedItem="All"
                             Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"

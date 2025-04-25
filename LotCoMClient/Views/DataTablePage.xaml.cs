@@ -52,28 +52,11 @@ public partial class DataTablePage : ContentPage
     }
 
     /// <summary>
-    /// Creates a new DataTablePage.
-    /// </summary>
-    /// <param name="DataTablePath"></param>
-    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    /// <param name="RecordType">The subclass of DataRecord this Page is meant to display (PrintRecord || ScanRecord).</param>
-    /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
-    public DataTablePage(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) 
-    {
-		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle, RecordType, IsProcessAssigned);
-        BindingContext = _viewModel;
-
-        // create the page from XAML
-		InitializeComponent();
-    }
-
-    /// <summary>
     /// Handler for the Clicked event from the PageLeftFrameCollapseButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
+    private async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
     {
         await Task.Delay(0);
         if (_viewModel.Options.IsLeftPanelShown) 
@@ -92,7 +75,7 @@ public partial class DataTablePage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
+    private async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
     {
         // update BodyTableHeader property
         await ConfigureBodyHeader();
@@ -104,7 +87,7 @@ public partial class DataTablePage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
+    private async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
     {
         // update ViewModel sorting indexes
         _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
@@ -118,7 +101,7 @@ public partial class DataTablePage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
+    private async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
     {
         await Task.Run(() => 
         {
@@ -127,5 +110,62 @@ public partial class DataTablePage : ContentPage
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToFirstPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToFirstPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToFirstPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToPreviousPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToPreviousPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToPreviousPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToNextPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToNextPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToNextPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToLastPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToLastPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Creates a new DataTablePage.
+    /// </summary>
+    /// <param name="DataTablePath"></param>
+    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    /// <param name="RecordType">The subclass of DataRecord this Page is meant to display (PrintRecord || ScanRecord).</param>
+    /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
+    public DataTablePage(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) 
+    {
+		// instantiate the ViewModel
+        _viewModel = new ViewModels.DataTableViewModel(DataTablePath, PageTitle, RecordType, IsProcessAssigned);
+        BindingContext = _viewModel;
+
+        // create the page from XAML
+		InitializeComponent();
     }
 }

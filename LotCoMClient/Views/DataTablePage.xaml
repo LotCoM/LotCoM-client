@@ -397,6 +397,7 @@
                     <!-- Newest Button (back to start) -->
                     <Button 
                         x:Name="GoToFirstPageButton"
+                        Clicked="OnGoToFirstPageButtonClicked"
                         Grid.Row="2"
                         Grid.Column="1"
                         Padding="10"
@@ -410,6 +411,7 @@
                     <!-- Newer Button (back to previous) -->
                     <Button 
                         x:Name="GoToPreviousPageButton"
+                        Clicked="OnGoToPreviousPageButtonClicked"
                         Grid.Row="2"
                         Grid.Column="2"
                         Padding="10"
@@ -430,6 +432,7 @@
                     <!-- Older Button (forward to next) -->
                     <Button 
                         x:Name="GoToNextPageButton"
+                        Clicked="OnGoToNextPageButtonClicked"
                         Grid.Row="2"
                         Grid.Column="4"
                         Padding="10"
@@ -443,6 +446,7 @@
                     <!-- Oldest Button (forward to end) -->
                     <Button 
                         x:Name="GoToLastPageButton"
+                        Clicked="OnGoToLastPageButtonClicked"
                         Grid.Row="2"
                         Grid.Column="5"
                         Padding="10"
@@ -456,7 +460,7 @@
                 </Grid>
             </HorizontalStackLayout>
                 
-            <!-- Page Body Table ScrollView -->
+            <!-- Page Body ScrollView -->
             <!-- Activity Indicator (Shows While Loading Data) -->
             <ActivityIndicator 
                 x:Name="DataLoadingActivityIndicator"

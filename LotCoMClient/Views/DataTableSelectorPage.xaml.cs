@@ -54,25 +54,11 @@ public partial class DataTableSelectorPage : ContentPage
     }
 
     /// <summary>
-    /// Creates a new DataTableSelectorPage.
-    /// </summary>
-    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) 
-    {
-		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
-        BindingContext = _viewModel;
-
-        // create the page from XAML
-		InitializeComponent();
-    }
-
-    /// <summary>
     /// Handler for the Clicked event from the PageLeftFrameCollapseButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
+    private async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
     {
         await Task.Delay(0);
         if (_viewModel.Options.IsLeftPanelShown) 
@@ -83,24 +69,7 @@ public partial class DataTableSelectorPage : ContentPage
         {
             _viewModel.Options.RaiseLeftPanel();
         }
-        PageLeftFrameCollapseButton.Rotation += 180;
-    }
-
-    /// <summary>
-    /// Handler for the SelectedIndexChanged event from the PageProcessPicker control.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void OnPageProcessSelectionChanged(object sender, EventArgs e) 
-    {
-        // invoke the ViewModel method to update the UI
-        _viewModel.UpdatePageProcess(PageProcessPicker);
-        // update and collapse the Page's Left Frame Panel
-        _viewModel.Options.LeftPanelHeaderText = ((Process)PageProcessPicker.ItemsSource[_viewModel.Options.SelectedProcessIndex]!).FullName;
-        if (_viewModel.Options.IsLeftPanelShown) 
-        {
-            OnPageLeftFrameCollapseButtonClicked(PageLeftFrameCollapseButton, new EventArgs());
-        }
+        LeftPanelCollapseButton.Rotation += 180;
     }
 
     /// <summary>
@@ -108,7 +77,7 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
+    private async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
     {
         // update BodyTableHeader property
         await ConfigureBodyHeader();
@@ -120,7 +89,7 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
+    private async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
     {
         // update ViewModel sorting indexes
         _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
@@ -134,7 +103,7 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
+    private async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
     {
         await Task.Run(() => 
         {
@@ -143,5 +112,76 @@ public partial class DataTableSelectorPage : ContentPage
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the PageProcessPicker control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnPageProcessSelectionChanged(object sender, EventArgs e) 
+    {
+        // invoke the ViewModel method to update the UI
+        _viewModel.UpdatePageProcess(ProcessPicker);
+        // update and collapse the Page's Left Frame Panel
+        _viewModel.Options.LeftPanelHeaderText = ((Process)ProcessPicker.ItemsSource[_viewModel.Options.SelectedProcessIndex]!).FullName;
+        if (_viewModel.Options.IsLeftPanelShown) 
+        {
+            OnPageLeftFrameCollapseButtonClicked(LeftPanelCollapseButton, new EventArgs());
+        }
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToFirstPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToFirstPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToFirstPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToPreviousPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToPreviousPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToPreviousPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToNextPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToNextPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToNextPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToLastPageButtonClicked control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnGoToLastPageButtonClicked(object sender, EventArgs e)
+    {
+        await _viewModel.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Creates a new DataTableSelectorPage.
+    /// </summary>
+    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) 
+    {
+		// instantiate the ViewModel
+        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
+        BindingContext = _viewModel;
+
+        // create the page from XAML
+		InitializeComponent();
     }
 }

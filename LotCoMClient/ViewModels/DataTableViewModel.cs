@@ -172,6 +172,17 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Clears the Sorting and Searching options and resets them to the default values.
+    /// </summary>
+    public void ClearFilterOptions()
+    {
+        Options.SelectedSortingFieldIndex = DataTablePageOptions.OptionDefaults.SelectedSortingFieldIndex;
+        Options.SelectedSortingOrderIndex = DataTablePageOptions.OptionDefaults.SelectedSortingOrderIndex;
+        Options.SearchTerm = DataTablePageOptions.OptionDefaults.SearchTerm;
+        Options.SelectedSearchingFieldIndex = DataTablePageOptions.OptionDefaults.SelectedSearchingFieldIndex;
+    }
+
+    /// <summary>
     /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
     /// </summary>
     /// <param name="NewPage"></param>
@@ -240,6 +251,10 @@ public partial class DataTableViewModel : ObservableObject
     public async Task SortPage()
     {
         // get the selected Field from the Sorting Field Picker
+        if (Options.SelectedSortingFieldIndex == -1 || Options.SelectedSortingOrderIndex == -1)
+        {
+            return;
+        }
         string SortField = Options.DataFields[Options.SelectedSortingFieldIndex];
         SortField = ResolveDataRecordPropertyName(SortField);
         // sort using the Model class
@@ -254,6 +269,10 @@ public partial class DataTableViewModel : ObservableObject
     public void SearchDataTable() 
     {
         // get the selected Field from the Searching Field Picker
+        if (Options.SelectedSearchingFieldIndex == -1)
+        {
+            return;
+        }
         string PropertyName = Options.SearchableFields[Options.SelectedSearchingFieldIndex];
         if (PropertyName != "All") 
         {

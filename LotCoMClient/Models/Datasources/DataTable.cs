@@ -352,32 +352,6 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Performs a search on all of the current records in the Table.
-    /// If All passed as PropertyName, checks for matches in every field of the Data Record.
-    /// Otherwise, searches for match hits in the singular field passed as PropertyName.
-    /// Builds a new Page set from the search results.
-    /// </summary>
-    /// <param name="SearchTerm">The term to match.</param>
-    /// <param name="PropertyName">The name of the Property to search in.</param>
-    /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
-    {
-        // search in all fields of each DataRecord
-        if (PropertyName.Equals("All")) 
-        {
-            await SearchAllFieldsAsync(SearchTerm);
-        // search in a singular field of each DataRecord
-        } 
-        else 
-        {
-            await SearchSingleFieldAsync(SearchTerm, PropertyName);
-        }
-        // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
-        SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
-        return await SearchPages.GetActivePage();
-    }
-
-    /// <summary>
     /// Jumps to the first Page in the Table's current Pages (the newest Records).
     /// </summary>
     public async Task GoToFirstPage()
@@ -420,11 +394,67 @@ public partial class DataTable : ObservableObject
         await SearchPages.SetActivePage(0);
     }
 
-
+    /// <summary>
+    /// Swaps the Active Page Set to the last generated BasePages PageSet.
+    /// </summary>
+    /// <returns></returns>
     public async Task GoToBasePages()
     {
         // set the Active Page Set to use Base Pages and set the Active Page to the first page in the set
         ActivePageSet = BasePages;
         await BasePages.SetActivePage(0);
+    }
+
+    /// <summary>
+    /// Creates a new PageSet from the LastReadLines property. Replaces BasePages and SearchPages with this new PageSet.
+    /// </summary>
+    /// <param name="MaxCount"></param>
+    /// <param name="PageLength"></param>
+    /// <returns></returns>
+    /// <exception cref="OperationCanceledException"></exception>
+    public async Task RefreshPages(int MaxCount, int PageLength)
+    {
+        // confirm that there are Lines to create a PageSet from
+        if (LastReadLines is null) 
+        {
+            try
+            {
+                await ReadLinesAsync();
+            }
+            catch
+            {
+                throw new OperationCanceledException();
+            }
+        }
+        // create a new PageSet from LastReadLines using the passed PageLength and MaxCount
+        BasePages = new PageSet(LastReadLines!, RecordType, MaxCount, PageLength);
+        SearchPages = BasePages;
+        ActivePageSet = BasePages;
+    }
+
+    /// <summary>
+    /// Performs a search on all of the current records in the Table.
+    /// If All passed as PropertyName, checks for matches in every field of the Data Record.
+    /// Otherwise, searches for match hits in the singular field passed as PropertyName.
+    /// Builds a new Page set from the search results.
+    /// </summary>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <param name="PropertyName">The name of the Property to search in.</param>
+    /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
+    public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
+    {
+        // search in all fields of each DataRecord
+        if (PropertyName.Equals("All")) 
+        {
+            await SearchAllFieldsAsync(SearchTerm);
+        // search in a singular field of each DataRecord
+        } 
+        else 
+        {
+            await SearchSingleFieldAsync(SearchTerm, PropertyName);
+        }
+        // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
+        SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
+        return await SearchPages.GetActivePage();
     }
 }

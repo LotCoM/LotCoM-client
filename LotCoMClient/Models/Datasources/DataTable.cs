@@ -24,9 +24,9 @@ public partial class DataTable : ObservableObject
     private List<string> SearchResultLines = [];
 
     /// <summary>
-    /// Holds a List of Pages created from this Table's data.
+    /// Holds a List of Pages created from this Table's unfiltered data.
     /// </summary>
-    private PageSet Pages;
+    private PageSet BasePages;
 
     /// <summary>
     /// Holds a custom List of Pages created from the latest Search algorithm.
@@ -71,6 +71,16 @@ public partial class DataTable : ObservableObject
     {
         get {return _process;}
         private set {_process = value;}
+    }
+
+    private PageSet _activePageSet = new PageSet(typeof(DataRecord));
+    /// <summary>
+    /// Controls this Table's active PageSet, which is the PageSet the Table displays Pages from.
+    /// </summary>
+    public PageSet ActivePageSet
+    {
+        get {return _activePageSet;}
+        private set {_activePageSet = value;}
     }
 
     /// <summary>
@@ -307,8 +317,9 @@ public partial class DataTable : ObservableObject
         }
         // read the file synchronously (once) and set up the Table's PageSets
         ReadLines();
-        Pages = new PageSet(RecordType);
+        BasePages = new PageSet(RecordType);
         SearchPages = new PageSet(RecordType);
+        ActivePageSet = BasePages;
     }
 
     /// <summary>
@@ -323,15 +334,16 @@ public partial class DataTable : ObservableObject
     public async Task<Page> RequestPage(int PageNumber, int PageLength) 
     {
         // confirm that Pages is set to provide Pages of the correct size
-        if (Pages.Count < 1 || Pages.Pages[0].MaxLength != PageLength)
+        if (BasePages.Count < 1 || BasePages.Pages[0].MaxLength != PageLength)
         {
             await ReadLinesAsync();
-            Pages = new PageSet(LastReadLines!, RecordType, PageLength: PageLength);
+            BasePages = new PageSet(LastReadLines!, RecordType, PageLength: PageLength);
         }
         // get the requested Page
         try
         {
-            return await Pages.GetPage(PageNumber);
+            await BasePages.SetActivePage(PageNumber);
+            return await BasePages.GetActivePage();
         }
         catch
         {
@@ -362,6 +374,57 @@ public partial class DataTable : ObservableObject
         }
         // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
         SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
-        return await SearchPages.GetPage(0);
+        return await SearchPages.GetActivePage();
+    }
+
+    /// <summary>
+    /// Jumps to the first Page in the Table's current Pages (the newest Records).
+    /// </summary>
+    public async Task GoToFirstPage()
+    {
+        await ActivePageSet.GoToFirstPage();
+    }
+
+    /// <summary>
+    /// Goes to the previous Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task GoToPreviousPage()
+    {
+        await ActivePageSet.GoToPreviousPage();
+    }
+
+    /// <summary>
+    /// Jumps to the last Page in the Table's current Pages (the oldest Records).
+    /// </summary>
+    public async Task GoToLastPage()
+    {
+        await ActivePageSet.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Goes to the next Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task GoToNextPage()
+    {
+        await ActivePageSet.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Swaps the Active Page Set to the last generated SearchPages PageSet.
+    /// </summary>
+    /// <returns></returns>
+    public async Task GoToSearchPages()
+    {
+        // set the Active Page Set to use Search Pages and set the Active Page to the first page in the set
+        ActivePageSet = SearchPages;
+        await SearchPages.SetActivePage(0);
+    }
+
+
+    public async Task GoToBasePages()
+    {
+        // set the Active Page Set to use Base Pages and set the Active Page to the first page in the set
+        ActivePageSet = BasePages;
+        await BasePages.SetActivePage(0);
     }
 }

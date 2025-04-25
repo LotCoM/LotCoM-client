@@ -423,7 +423,7 @@
                         Grid.Column="4"
                         Grid.ColumnSpan="3"
                         Margin="5,0,5,0"
-                        Text="{Binding Data.Result.Count, StringFormat='of {0} records'}"
+                        Text="{Binding Table.RecordCount, StringFormat='of {0} records'}"
                         TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
                         FontSize="16"
                         HorizontalOptions="Start"
@@ -490,9 +490,9 @@
             <!-- Activity Indicator (Shows While Loading Data) -->
             <ActivityIndicator 
                 x:Name="PageDataLoadingActivityIndicator"
-                IsEnabled="{Binding Data.IsNotCompleted}"
-                IsVisible="{Binding Data.IsNotCompleted}"
-                IsRunning="{Binding Data.IsNotCompleted}"
+                IsEnabled="{Binding CurrentPage.IsNotCompleted}"
+                IsVisible="{Binding CurrentPage.IsNotCompleted}"
+                IsRunning="{Binding CurrentPage.IsNotCompleted}"
                 Grid.Row="1"
                 Grid.Column="0"
                 Color="{StaticResource Secondary}"
@@ -501,13 +501,13 @@
             <!-- Actual View -->
             <ScrollView
                 x:Name="PageBodyTableScrollView"
-                IsVisible="{Binding Data.IsCompleted}"
+                IsVisible="{Binding CurrentPage.IsCompleted}"
                 Grid.Row="1"
                 Grid.Column="0">
                 <!-- Page Data Table List View -->
                 <ListView
                     x:Name="PageDataTableListView"
-                    ItemsSource="{Binding Data.Result}"
+                    ItemsSource="{Binding CurrentPage.Result.DataRecords}"
                     PropertyChanged="OnPageDataTableListViewPropertyChanged"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->

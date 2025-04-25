@@ -182,6 +182,46 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Jumps to the first Page in the Table's current Pages (the newest Records).
+    /// </summary>
+    public async Task GoToFirstPage()
+    {
+        await Table!.GoToFirstPage();
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+    }
+
+    /// <summary>
+    /// Goes to the previous Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task GoToPreviousPage()
+    {
+        await Table!.GoToPreviousPage();
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+    }
+
+    /// <summary>
+    /// Jumps to the last Page in the Table's current Pages (the oldest Records).
+    /// </summary>
+    public async Task GoToLastPage()
+    {
+        await Table!.GoToLastPage();
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+    }
+
+    /// <summary>
+    /// Goes to the next Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task GoToNextPage()
+    {
+        await Table!.GoToLastPage();
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+    }
+
+    /// <summary>
     /// Sorts the DataRecords in the CurrentPage property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>

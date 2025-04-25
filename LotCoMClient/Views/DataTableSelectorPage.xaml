@@ -352,7 +352,7 @@
                 <Label 
                     x:Name="PageBodyTableHeaderLabel"
                     IsVisible="{Binding Options.IsBodyHeaderLabelShown}"
-                    Text="{Binding Options.BodyTableHeaderText}"
+                    Text="{Binding Options.BodyHeaderText}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontAttributes="None"
                     FontSize="16"
@@ -402,7 +402,7 @@
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Grid.Column="3"
-                        SelectedIndex="{Binding Options.SelectedShownRecordCountIndex}"
+                        SelectedIndex="{Binding Options.SelectedPageLengthIndex}"
                         Margin="0,0,0,2"
                         HorizontalOptions="Center"
                         VerticalOptions="End">

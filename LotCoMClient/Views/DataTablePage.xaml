@@ -34,21 +34,21 @@
         <!-- Title Frame -->
         <!-- Top-Left Page Corner Frame -->
         <BoxView
-            x:Name="PageTopLeftCornerFrameFill"
+            x:Name="TopLeftCornerFrameFill"
             Grid.Row="0"
             Grid.Column="0"
             WidthRequest="{Binding Options.LeftPanelWidth}"
             BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
         <!-- Title Frame -->
         <VerticalStackLayout
-            x:Name="PageTitleFrameLayout"
+            x:Name="TitleFrameLayout"
             Grid.Row="0"
             Grid.Column="1"
             Margin="0"
             BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}">
             <!-- Title Label -->
             <Label
-                x:Name="PageTitleFrameLabel"
+                x:Name="TitleFrameLabel"
                 Text="{Binding Options.Title}"
                 TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                 FontAttributes="None"
@@ -58,16 +58,16 @@
                 VerticalOptions="Center"/>
             <!-- Title Frame Bottom Border -->
             <BoxView
-                x:Name="PageTitleFrameBottomBorder"
+                x:Name="TitleFrameBottomBorder"
                 HeightRequest="1"
                 HorizontalOptions="Fill"
                 VerticalOptions="End"
                 BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
         </VerticalStackLayout>
 
-        <!-- Left-Side Frame -->
+        <!-- Left Panel -->
         <HorizontalStackLayout
-            x:Name="PageLeftFrameLayout"
+            x:Name="LeftPanelLayout"
             Grid.Row="1"
             Grid.Column="0"
             Margin="0"
@@ -238,9 +238,9 @@
                     </Grid>
                 </ScrollView>
 
-                <!-- Left Frame Footer Label -->
+                <!-- Left Panel Footer Label -->
                 <Label 
-                    x:Name="PageLeftFrameFooterLabel"
+                    x:Name="LeftPanelFooterLabel"
                     IsVisible="{Binding Options.IsLeftPanelShown}"
                     Margin="10,0,0,15"
                     Grid.Row="2"
@@ -253,7 +253,7 @@
                 
                 <!-- Panel Collapse Button -->
                 <Button
-                    x:Name="PageLeftFrameCollapseButton"
+                    x:Name="LeftPanelCollapseButton"
                     Clicked="OnPageLeftFrameCollapseButtonClicked"
                     Margin="-14,10,1,0"
                     Padding="10"
@@ -266,9 +266,9 @@
                     CornerRadius="30"
                     ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"/>
 
-                <!-- Left Frame Right Border -->
+                <!-- Left Panel Right Border -->
                 <BoxView
-                    x:Name="PageLeftFrameRightBorder"
+                    x:Name="LeftPanelRightBorder"
                     IsVisible="true"
                     Grid.Row="0"
                     Grid.RowSpan="3"
@@ -280,9 +280,9 @@
             </Grid>
         </HorizontalStackLayout>
 
-        <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
+        <!-- Left Panel Header Label (Defined outside of Panel for positioning) -->
         <Label 
-            x:Name="PageLeftFrameHeaderLabel"
+            x:Name="LeftPanelHeaderLabel"
             IsVisible="{Binding Options.IsLeftPanelShown}"
             Margin="0"
             Grid.Row="0"
@@ -309,16 +309,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Horizontal Layout For Body Table Header and Page Navigation Controls -->
+            <!-- Horizontal Layout For Body Header and Page Navigation Controls -->
             <HorizontalStackLayout
                 Grid.Row="0"
                 Grid.Column="0"
                 Grid.ColumnSpan="1">
-                <!-- Page Body Table Header Label -->
+                <!-- Page Body Header Label -->
                 <Label 
-                    x:Name="PageBodyTableHeaderLabel"
+                    x:Name="BodyHeaderLabel"
                     IsVisible="{Binding Options.IsBodyHeaderLabelShown}"
-                    Text="{Binding Options.BodyTableHeaderText}"
+                    Text="{Binding Options.BodyHeaderText}"
                     TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
                     FontAttributes="None"
                     FontSize="16"
@@ -362,13 +362,13 @@
                         FontSize="16"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"/>
-                    <!-- Shown Record Count Picker -->
+                    <!-- Page Length (Shown Record Number) Picker -->
                     <Picker
-                        x:Name="ShownRecordCountPicker"
+                        x:Name="PageLengthPicker"
                         Grid.Row="0"
                         Grid.RowSpan="2"
                         Grid.Column="3"
-                        SelectedIndex="{Binding Options.SelectedShownRecordCountIndex}"
+                        SelectedIndex="{Binding Options.SelectedPageLengthIndex}"
                         Margin="0,0,0,2"
                         HorizontalOptions="Center"
                         VerticalOptions="End">
@@ -396,6 +396,7 @@
                         VerticalOptions="Center"/>
                     <!-- Newest Button (back to start) -->
                     <Button 
+                        x:Name="GoToFirstPageButton"
                         Grid.Row="2"
                         Grid.Column="1"
                         Padding="10"
@@ -408,6 +409,7 @@
                         VerticalOptions="Center"/>
                     <!-- Newer Button (back to previous) -->
                     <Button 
+                        x:Name="GoToPreviousPageButton"
                         Grid.Row="2"
                         Grid.Column="2"
                         Padding="10"
@@ -427,6 +429,7 @@
                         VerticalOptions="Center"/>
                     <!-- Older Button (forward to next) -->
                     <Button 
+                        x:Name="GoToNextPageButton"
                         Grid.Row="2"
                         Grid.Column="4"
                         Padding="10"
@@ -439,6 +442,7 @@
                         VerticalOptions="Center"/>
                     <!-- Oldest Button (forward to end) -->
                     <Button 
+                        x:Name="GoToLastPageButton"
                         Grid.Row="2"
                         Grid.Column="5"
                         Padding="10"
@@ -455,7 +459,7 @@
             <!-- Page Body Table ScrollView -->
             <!-- Activity Indicator (Shows While Loading Data) -->
             <ActivityIndicator 
-                x:Name="PageDataLoadingActivityIndicator"
+                x:Name="DataLoadingActivityIndicator"
                 IsEnabled="{Binding CurrentPage.IsNotCompleted}"
                 IsVisible="{Binding CurrentPage.IsNotCompleted}"
                 IsRunning="{Binding CurrentPage.IsNotCompleted}"
@@ -466,13 +470,13 @@
                 HeightRequest="200"/>
             <!-- Actual View -->
             <ScrollView
-                x:Name="PageBodyTableScrollView"
+                x:Name="BodyScrollView"
                 IsVisible="{Binding CurrentPage.IsCompleted}"
                 Grid.Row="1"
                 Grid.Column="0">
                 <!-- Page Data Table List View -->
                 <ListView
-                    x:Name="PageDataTableListView"
+                    x:Name="DataTableListView"
                     ItemsSource="{Binding CurrentPage.Result.DataRecords}"
                     PropertyChanged="OnPageDataTableListViewPropertyChanged"
                     Margin="20">

@@ -84,7 +84,7 @@ public partial class DataTablePage : ContentPage
         {
             _viewModel.Options.RaiseLeftPanel();
         }
-        PageLeftFrameCollapseButton.Rotation += 180;
+        LeftPanelCollapseButton.Rotation += 180;
     }
 
     /// <summary>

@@ -33,7 +33,7 @@ public partial class DataTablePageOptions() : ObservableObject()
     /// Controls the text of the Page's Body Table Header.
     /// </summary>
     [ObservableProperty]
-    public partial string BodyTableHeaderText {get; set;} = "";
+    public partial string BodyHeaderText {get; set;} = "";
 
     /// <summary>
     /// Controls the visibility of the Page's Navigation Panel which is between the Page's Title and Body (ListView).
@@ -48,16 +48,16 @@ public partial class DataTablePageOptions() : ObservableObject()
     public partial int PageNumber {get; set;} = 0;
 
     /// <summary>
-    /// Controls the currently selected index of the Page's ShownRecordCount Picker.
+    /// Controls the currently selected index of the Page's PageLength Picker.
     /// </summary>
     [ObservableProperty]
-    public partial int SelectedShownRecordCountIndex {get; set;} = 1;
+    public partial int SelectedPageLengthIndex {get; set;} = 1;
 
     /// <summary>
-    /// Controls the number of DataRecords displayed by the Page's ListView, controlled by the Page's Navigation Panel.
+    /// Controls the number of DataRecords displayed by each Page of the DataTablePage's ListView, controlled by the Page's Navigation Panel.
     /// </summary>
     [ObservableProperty]
-    public partial int ShownRecordCount {get; set;} = 25;
+    public partial int PageLength {get; set;} = 25;
 
     /// <summary>
     /// Controls the text shown in the Page's Left Panel Header which appears at the top of the collapsable Left Panel.
@@ -193,7 +193,7 @@ public partial class DataTablePageOptions() : ObservableObject()
     {
         IsBodyHeaderLabelShown = true;
         IsBodyNavigationPanelShown = false;
-        BodyTableHeaderText = HeaderLabelText;
+        BodyHeaderText = HeaderLabelText;
     }
 
     /// <summary>

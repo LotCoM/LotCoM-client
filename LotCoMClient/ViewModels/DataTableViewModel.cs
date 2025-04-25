@@ -159,7 +159,7 @@ public partial class DataTableViewModel : ObservableObject
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
             // display the first Page in the DataTable with the default PageLength
-            SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.ShownRecordCount)));
+            SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.PageLength)));
             Options.Process = Table.Process;
             Options.LeftPanelHeaderText = Table.Process!.FullName;
             Options.SetBodyHeaderModeToLabel("Loading records...");
@@ -248,6 +248,6 @@ public partial class DataTableViewModel : ObservableObject
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.ShownRecordCount));
+        CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.PageLength));
     }
 }

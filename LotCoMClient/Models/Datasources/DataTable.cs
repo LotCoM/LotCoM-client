@@ -317,7 +317,7 @@ public partial class DataTable : ObservableObject
         }
         // read the file synchronously (once) and set up the Table's PageSets
         ReadLines();
-        BasePages = new PageSet(RecordType);
+        BasePages = new PageSet(LastReadLines, RecordType);
         SearchPages = new PageSet(RecordType);
         ActivePageSet = BasePages;
     }
@@ -406,7 +406,7 @@ public partial class DataTable : ObservableObject
     /// </summary>
     public async Task GoToNextPage()
     {
-        await ActivePageSet.GoToLastPage();
+        await ActivePageSet.GoToNextPage();
     }
 
     /// <summary>

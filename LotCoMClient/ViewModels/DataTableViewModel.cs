@@ -216,7 +216,7 @@ public partial class DataTableViewModel : ObservableObject
     /// </summary>
     public async Task GoToNextPage()
     {
-        await Table!.GoToLastPage();
+        await Table!.GoToNextPage();
         // update the DataTablePage to show the new Active Page of the PageSet
         SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
     }

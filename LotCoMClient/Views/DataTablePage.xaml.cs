@@ -153,6 +153,24 @@ public partial class DataTablePage : ContentPage
     }
 
     /// <summary>
+    /// Handler for the SelectedIndexChanged event from the PageLengthPicker control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnPageLengthPickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        // get the newly selected PageLength value and update it in the ViewModel
+        if (PageLengthPicker is null)
+        {
+            return;
+        }
+        int PageLength = (int)PageLengthPicker.ItemsSource[_viewModel.Options.SelectedPageLengthIndex]!;
+        _viewModel.Options.PageLength = PageLength;
+        // refresh the Data Table to use a new PageSet based on the selected PageLength
+        await _viewModel.RefreshPages();
+    }
+
+    /// <summary>
     /// Creates a new DataTablePage.
     /// </summary>
     /// <param name="DataTablePath"></param>

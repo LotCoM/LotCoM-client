@@ -132,7 +132,7 @@ public partial class DataTableSelectorPage : ContentPage
     }
 
     /// <summary>
-    /// Handler for the Clicked event from the OnGoToFirstPageButtonClicked control.
+    /// Handler for the Clicked event from the OnGoToFirstPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -142,7 +142,7 @@ public partial class DataTableSelectorPage : ContentPage
     }
 
     /// <summary>
-    /// Handler for the Clicked event from the OnGoToPreviousPageButtonClicked control.
+    /// Handler for the Clicked event from the OnGoToPreviousPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -152,7 +152,7 @@ public partial class DataTableSelectorPage : ContentPage
     }
 
     /// <summary>
-    /// Handler for the Clicked event from the OnGoToNextPageButtonClicked control.
+    /// Handler for the Clicked event from the OnGoToNextPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -162,13 +162,31 @@ public partial class DataTableSelectorPage : ContentPage
     }
 
     /// <summary>
-    /// Handler for the Clicked event from the OnGoToLastPageButtonClicked control.
+    /// Handler for the Clicked event from the OnGoToLastPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     private async void OnGoToLastPageButtonClicked(object sender, EventArgs e)
     {
         await _viewModel.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the PageLengthPicker control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnPageLengthPickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        // get the newly selected PageLength value and update it in the ViewModel
+        if (PageLengthPicker is null)
+        {
+            return;
+        }
+        int PageLength = (int)PageLengthPicker.ItemsSource[_viewModel.Options.SelectedPageLengthIndex]!;
+        _viewModel.Options.PageLength = PageLength;
+        // refresh the Data Table to use a new PageSet based on the selected PageLength
+        await _viewModel.RefreshPages();
     }
 
     /// <summary>

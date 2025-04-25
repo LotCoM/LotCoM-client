@@ -222,6 +222,18 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Refreshes the DataTable's PageSets to display a new PageSet with the passed configurations.
+    /// </summary>
+    /// <param name="MaxCount">(Optional) Set a limit on the number of Pages allowed in the PageSet.</param>
+    /// <returns></returns>
+    public async Task RefreshPages(int MaxCount = -1)
+    {
+        await Table!.RefreshPages(MaxCount, Options.PageLength);
+        // update the DataTablePage to show the Active Page of the new PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+    }
+
+    /// <summary>
     /// Sorts the DataRecords in the CurrentPage property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>

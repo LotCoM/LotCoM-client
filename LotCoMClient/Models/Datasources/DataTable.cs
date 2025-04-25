@@ -13,6 +13,26 @@ public partial class DataTable : ObservableObject
     /// </summary>
     private readonly RecordParser Parser = new RecordParser();
 
+    /// <summary>
+    /// Holds a List of strings resulting from the latest file read.
+    /// </summary>
+    private List<string> LastReadLines = [];
+
+    /// <summary>
+    /// Holds a List of strings that are matching results of the latest Search algorithm.
+    /// </summary>
+    private List<string> SearchResultLines = [];
+
+    /// <summary>
+    /// Holds a List of Pages created from this Table's data.
+    /// </summary>
+    private PageSet Pages;
+
+    /// <summary>
+    /// Holds a custom List of Pages created from the latest Search algorithm.
+    /// </summary>
+    private PageSet SearchPages;
+
     private string _path = "";
     /// <summary>
     /// The Path of the database table file in the LotCoM database filing system.
@@ -54,24 +74,9 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Holds a List of strings resulting from the latest file read.
+    /// Returns the total count of Records in the Data Table file (as of the last ReadLines call).
     /// </summary>
-    private List<string> LastReadLines = [];
-
-    /// <summary>
-    /// Holds a List of strings that are matching results of the latest Search algorithm.
-    /// </summary>
-    private List<string> SearchResultLines = [];
-
-    /// <summary>
-    /// Holds a List of Pages created from this Table's data.
-    /// </summary>
-    private PageSet Pages;
-
-    /// <summary>
-    /// Holds a custom List of Pages created from the latest Search algorithm.
-    /// </summary>
-    private PageSet SearchPages;
+    public int RecordCount => LastReadLines.Count;
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.

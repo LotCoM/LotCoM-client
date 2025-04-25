@@ -11,9 +11,29 @@ public class PageSet
     private int MaxCount = -1;
 
     /// <summary>
+    /// Returns whether or not the Page has a set MaxCount.
+    /// </summary>
+    private bool IsLimitedSize => MaxCount != -1;
+
+    /// <summary>
     /// Sets the type of DataRecord that the Pages in this PageSet can hold.
     /// </summary>
     private Type RecordType;
+
+    /// <summary>
+    /// Sets the currently active Page for this PageSet. 
+    /// </summary>
+    private int ActivePageIndex = 0;
+
+    /// <summary>
+    /// Returns the Page object that is currently active in this PageSet.
+    /// </summary>
+    private Page ActivePage => Pages[ActivePageIndex];
+
+    /// <summary>
+    /// Returns whether or not the PageSet has a Page immediately after the current Active Page.
+    /// </summary>
+    private bool HasNext => ActivePageIndex + 1 < Count - 1;
 
     private List<Page> _pages = [];
     /// <summary>
@@ -46,7 +66,7 @@ public class PageSet
     {
         get 
         {
-            if (MaxCount == -1)
+            if (!IsLimitedSize)
             {
                 return true;
             }
@@ -110,7 +130,7 @@ public class PageSet
         this.RecordType = RecordType;
         // paginate Lines and set the Pages property
         List<Page> GeneratedPages = Paginate(Lines);
-        if (MaxCount != -1)
+        if (IsLimitedSize)
         {
             Pages = GeneratedPages.Take(MaxCount).ToList();
         }
@@ -137,5 +157,103 @@ public class PageSet
         // populate the Page's DataRecords property
         await RequestedPage.GenerateDataRecords();
         return RequestedPage;
+    }
+
+    /// <summary>
+    /// Returns the PageSet's current Active Page object.
+    /// </summary>
+    /// <remarks>
+    /// Throws IndexOutOfRangeException if there was no Page at Pages[ActivePageIndex].
+    /// </remarks>
+    /// <returns></returns>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    public Page GetActivePage() {
+        // confirm a Page exists at the ActivePageIndex and return it
+        try
+        {
+            return ActivePage;
+        }
+        catch
+        {
+            throw new IndexOutOfRangeException("There is no Page at the set ActivePageIndex.");
+        }
+    }
+
+    /// <summary>
+    /// Sets the PageSet's Active Page by setting ActivePageIndex. 
+    /// </summary>
+    /// <remarks>
+    /// Cannot be set to integer values lower than 0 (negative integers).
+    /// Cannot exceed the PageSet's maximum Page count (if set).
+    /// Throws IndexOutOfRangeException if there is no Page object at Pages[PageNumber].
+    /// </remarks>
+    /// <param name="PageNumber"></param>
+    /// <exception cref="IndexOutOfRangeException"></exception>
+    public void SetActivePage(int PageNumber)
+    {
+        // bar from setting to negative indexes and exceeding a set MaxCount
+        if (PageNumber < 0)
+        {
+            PageNumber = 0;
+        }
+        if (IsLimitedSize && PageNumber > MaxCount - 1)
+        {
+            PageNumber = MaxCount - 1;
+        }
+        // confirm that there is a Page at the requested index
+        try
+        {
+            _ = Pages[PageNumber];
+            // if this line is reached, there was a Page at PageNumber index
+            ActivePageIndex = PageNumber;
+        }
+        catch
+        {
+            throw new IndexOutOfRangeException("There is no Page at the requested Index.");
+        }
+    }
+
+    /// <summary>
+    /// Jumps to the first Page in the PageSet (the newest Records).
+    /// </summary>
+    public void GoToFirstPage()
+    {
+        ActivePageIndex = 0;
+    }
+
+    /// <summary>
+    /// Goes to the previous Page in the PageSet (if one exists).
+    /// </summary>
+    public void GoToPreviousPage()
+    {
+        // bar from going below 0
+        if (ActivePageIndex == 0)
+        {
+            ActivePageIndex = 0;
+        }
+        else
+        {
+            ActivePageIndex -= 1;
+        }
+    }
+
+    /// <summary>
+    /// Jumps to the last Page in the PageSet (the oldest Records).
+    /// </summary>
+    public void GoToLastPage()
+    {
+        ActivePageIndex = Count - 1;
+    }
+
+    /// <summary>
+    /// Goes to the next Page in the PageSet (if one exists).
+    /// </summary>
+    public void GoToNextPage()
+    {
+        // confirm the PageSet has a Page after the current one
+        if (HasNext)
+        {
+            ActivePageIndex += 1;
+        }
     }
 }

@@ -90,6 +90,10 @@ public partial class DataTablePage : ContentPage
     private async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
     {
         // update ViewModel sorting indexes
+        if (ListViewSortingFieldPicker is null || ListViewSortingOrderPicker is null)
+        {
+            return;
+        }
         _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
         _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
         // invoke the ViewModel sort method
@@ -106,6 +110,10 @@ public partial class DataTablePage : ContentPage
         await Task.Run(() => 
         {
             // invoke the ViewModel local sort method using the current search term
+            if (ListViewSearchingFieldPicker is null)
+            {
+                return;
+            }
             _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
@@ -168,6 +176,7 @@ public partial class DataTablePage : ContentPage
         _viewModel.Options.PageLength = PageLength;
         // refresh the Data Table to use a new PageSet based on the selected PageLength
         await _viewModel.RefreshPages();
+        _viewModel.ClearFilterOptions();
     }
 
     /// <summary>

@@ -101,7 +101,7 @@ public partial class DataRecord : ObservableObject
     public string ToCSV() 
     {
         // add the front set of universal data
-        string CSVLine = $",{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
+        string CSVLine = $"{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
         // add the variably-required data fields to the Line
         if (IncludesJBKNumber) 
         {
@@ -128,7 +128,7 @@ public partial class DataRecord : ObservableObject
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
-        CSVLine = $"{CSVLine},{RecordDate},{RecordTime},{RecordShift},{OperatorID}";
+        CSVLine = $"{CSVLine},{RecordDate}-{RecordTime},{RecordShift},{OperatorID}";
         return CSVLine;
     }
 }

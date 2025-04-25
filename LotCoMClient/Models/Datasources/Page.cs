@@ -11,17 +11,22 @@ public partial class Page(int PageLength, Type RecordType) : ObservableObject()
     /// <summary>
     /// Sets the type of DataRecord that this Page can hold.
     /// </summary>
-    private Type RecordType = RecordType;
+    private readonly Type RecordType = RecordType;
 
     /// <summary>
     /// The maximum number of Lines/DataRecords this Page can hold.
     /// </summary>
-    public int MaxLength = PageLength;
+    public readonly int MaxLength = PageLength;
 
     /// <summary>
     /// Returns the current number of DataRecords contained in this Page.
     /// </summary>
     public int Count => DataRecords.Count;
+
+    /// <summary>
+    /// Whether or not the Page's Lines have been Parsed into DataRecords.
+    /// </summary>
+    public bool IsParsed = false;
 
     /// <summary>
     /// Contains an unparsed list of Lines assigned to this Page.
@@ -76,5 +81,7 @@ public partial class Page(int PageLength, Type RecordType) : ObservableObject()
             DataRecords = [];
         }
         DataRecords = ParseResults!.ToList();
+        // set the Page as Parsed
+        IsParsed = true;
     }
 }

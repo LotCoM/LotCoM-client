@@ -8,7 +8,7 @@ public class PageSet
     /// <summary>
     /// Sets a maximum number of Pages allowed in this PageSet.
     /// </summary>
-    private int MaxCount = -1;
+    private readonly int MaxCount = -1;
 
     /// <summary>
     /// Returns whether or not the Page has a set MaxCount.
@@ -18,7 +18,7 @@ public class PageSet
     /// <summary>
     /// Sets the type of DataRecord that the Pages in this PageSet can hold.
     /// </summary>
-    private Type RecordType;
+    private readonly Type RecordType;
 
     /// <summary>
     /// Sets the currently active Page for this PageSet. 
@@ -100,6 +100,19 @@ public class PageSet
     }
 
     /// <summary>
+    /// Parses the Lines of the PageSet's Active Page so it can be displayed.
+    /// </summary>
+    /// <returns></returns>
+    private async Task GenerateActivePage()
+    {
+        // Parse the Active Page so it can be displayed
+        if (!ActivePage.IsParsed)
+        {
+            await ActivePage.GenerateDataRecords();
+        }
+    }
+
+    /// <summary>
     /// Creates a new, empty PageSet.
     /// </summary>
     /// <param name="MaxCount">(Optional) Constrains the amount of Pages that are allowed in the PageSet.</param>
@@ -141,25 +154,6 @@ public class PageSet
     }
 
     /// <summary>
-    /// Returns a Page with DataRecords.
-    /// </summary>
-    /// <param name="PageNumber">The index of the requested Page in PageSet.Pages. 0-oriented.</param>
-    /// <exception cref="IndexOutOfRangeException"></exception>
-    /// <returns></returns>
-    public async Task<Page> GetPage(int PageNumber)
-    {
-        // confirm that a Page exists at the requested Page Number
-        if (Count - 1 < PageNumber) 
-        {
-            throw new IndexOutOfRangeException($"There is no Page at the requested index {PageNumber}.");
-        }
-        Page RequestedPage = Pages[PageNumber];
-        // populate the Page's DataRecords property
-        await RequestedPage.GenerateDataRecords();
-        return RequestedPage;
-    }
-
-    /// <summary>
     /// Returns the PageSet's current Active Page object.
     /// </summary>
     /// <remarks>
@@ -167,10 +161,11 @@ public class PageSet
     /// </remarks>
     /// <returns></returns>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public Page GetActivePage() {
+    public async Task<Page> GetActivePage() {
         // confirm a Page exists at the ActivePageIndex and return it
         try
         {
+            await GenerateActivePage();
             return ActivePage;
         }
         catch
@@ -189,7 +184,7 @@ public class PageSet
     /// </remarks>
     /// <param name="PageNumber"></param>
     /// <exception cref="IndexOutOfRangeException"></exception>
-    public void SetActivePage(int PageNumber)
+    public async Task SetActivePage(int PageNumber)
     {
         // bar from setting to negative indexes and exceeding a set MaxCount
         if (PageNumber < 0)
@@ -211,20 +206,22 @@ public class PageSet
         {
             throw new IndexOutOfRangeException("There is no Page at the requested Index.");
         }
+        await GenerateActivePage();
     }
 
     /// <summary>
     /// Jumps to the first Page in the PageSet (the newest Records).
     /// </summary>
-    public void GoToFirstPage()
+    public async Task GoToFirstPage()
     {
         ActivePageIndex = 0;
+        await GenerateActivePage();
     }
 
     /// <summary>
     /// Goes to the previous Page in the PageSet (if one exists).
     /// </summary>
-    public void GoToPreviousPage()
+    public async Task GoToPreviousPage()
     {
         // bar from going below 0
         if (ActivePageIndex == 0)
@@ -235,25 +232,28 @@ public class PageSet
         {
             ActivePageIndex -= 1;
         }
+        await GenerateActivePage();
     }
 
     /// <summary>
     /// Jumps to the last Page in the PageSet (the oldest Records).
     /// </summary>
-    public void GoToLastPage()
+    public async Task GoToLastPage()
     {
         ActivePageIndex = Count - 1;
+        await GenerateActivePage();
     }
 
     /// <summary>
     /// Goes to the next Page in the PageSet (if one exists).
     /// </summary>
-    public void GoToNextPage()
+    public async Task GoToNextPage()
     {
         // confirm the PageSet has a Page after the current one
         if (HasNext)
         {
             ActivePageIndex += 1;
         }
+        await GenerateActivePage();
     }
 }

@@ -323,35 +323,6 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Confirms that there are Pages in the Table and that they are of the correct Length.
-    /// Checks if the requested Page has been parsed into DataRecords and does so if not.
-    /// </summary>
-    /// <param name="PageNumber">The Page in Table.Pages to Parse 
-    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
-    /// </param>
-    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
-    /// <returns>A Page object with PageLength DataRecords ready to be displayed.</returns>
-    public async Task<Page> RequestPage(int PageNumber, int PageLength) 
-    {
-        // confirm that Pages is set to provide Pages of the correct size
-        if (BasePages.Count < 1 || BasePages.Pages[0].MaxLength != PageLength)
-        {
-            await ReadLinesAsync();
-            BasePages = new PageSet(LastReadLines!, RecordType, PageLength: PageLength);
-        }
-        // get the requested Page
-        try
-        {
-            await BasePages.SetActivePage(PageNumber);
-            return await BasePages.GetActivePage();
-        }
-        catch
-        {
-            throw new IndexOutOfRangeException();
-        }
-    }
-
-    /// <summary>
     /// Jumps to the first Page in the Table's current Pages (the newest Records).
     /// </summary>
     public async Task GoToFirstPage()
@@ -430,6 +401,35 @@ public partial class DataTable : ObservableObject
         BasePages = new PageSet(LastReadLines!, RecordType, MaxCount, PageLength);
         SearchPages = BasePages;
         ActivePageSet = BasePages;
+    }
+
+    /// <summary>
+    /// Confirms that there are Pages in the Table and that they are of the correct Length.
+    /// Checks if the requested Page has been parsed into DataRecords and does so if not.
+    /// </summary>
+    /// <param name="PageNumber">The Page in Table.Pages to Parse 
+    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
+    /// </param>
+    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
+    /// <param name="MaxCount">(Optional) Set a limit on the number of Pages allowed in the PageSet.</param>
+    /// <returns>A Page object with PageLength DataRecords ready to be displayed.</returns>
+    public async Task<Page> RequestPage(int PageNumber, int PageLength, int MaxCount = -1) 
+    {
+        // confirm that Pages is set to provide Pages of the correct size
+        if (ActivePageSet.Count < 1 || ActivePageSet.Pages[0].MaxLength != PageLength)
+        {
+            await RefreshPages(MaxCount, PageLength);
+        }
+        // get the requested Page
+        try
+        {
+            await ActivePageSet.SetActivePage(PageNumber);
+            return await ActivePageSet.GetActivePage();
+        }
+        catch
+        {
+            throw new IndexOutOfRangeException();
+        }
     }
 
     /// <summary>

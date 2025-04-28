@@ -455,6 +455,7 @@ public partial class DataTable : ObservableObject
         }
         // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
         SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
+        await GoToSearchPages();
         return await SearchPages.GetActivePage();
     }
 }

@@ -3,6 +3,7 @@ using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Options;
 using LotCoMClient.Models.Services;
 using System.Linq.Dynamic;
+using System.Threading.Tasks;
 
 namespace LotCoMClient.ViewModels;
 
@@ -195,41 +196,37 @@ public partial class DataTableViewModel : ObservableObject
     /// <summary>
     /// Jumps to the first Page in the Table's current Pages (the newest Records).
     /// </summary>
-    public async Task GoToFirstPage()
+    public void GoToFirstPage()
     {
-        await Table!.GoToFirstPage();
         // update the DataTablePage to show the new Active Page of the PageSet
-        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToFirstPage()));
     }
 
     /// <summary>
     /// Goes to the previous Page in the Table's current Pages (if one exists).
     /// </summary>
-    public async Task GoToPreviousPage()
+    public void GoToPreviousPage()
     {
-        await Table!.GoToPreviousPage();
         // update the DataTablePage to show the new Active Page of the PageSet
-        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToPreviousPage()));
     }
 
     /// <summary>
     /// Jumps to the last Page in the Table's current Pages (the oldest Records).
     /// </summary>
-    public async Task GoToLastPage()
+    public void GoToLastPage()
     {
-        await Table!.GoToLastPage();
         // update the DataTablePage to show the new Active Page of the PageSet
-        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToLastPage()));
     }
 
     /// <summary>
     /// Goes to the next Page in the Table's current Pages (if one exists).
     /// </summary>
-    public async Task GoToNextPage()
+    public void GoToNextPage()
     {
-        await Table!.GoToNextPage();
         // update the DataTablePage to show the new Active Page of the PageSet
-        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToNextPage()));
     }
 
     /// <summary>
@@ -237,11 +234,10 @@ public partial class DataTableViewModel : ObservableObject
     /// </summary>
     /// <param name="MaxCount">(Optional) Set a limit on the number of Pages allowed in the PageSet.</param>
     /// <returns></returns>
-    public async Task RefreshPages(int MaxCount = -1)
+    public void RefreshPages(int MaxCount = -1)
     {
-        await Table!.RefreshPages(MaxCount, Options.PageLength);
         // update the DataTablePage to show the Active Page of the new PageSet
-        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.ActivePageSet.GetActivePage()));
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RefreshPages(MaxCount, Options.PageLength)));
     }
 
     /// <summary>

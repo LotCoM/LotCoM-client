@@ -33,7 +33,7 @@ public class PageSet
     /// <summary>
     /// Returns whether or not the PageSet has a Page immediately after the current Active Page.
     /// </summary>
-    private bool HasNext => ActivePageIndex + 1 < Count - 1;
+    private bool HasNext => ActivePageIndex + 1 < PageCount - 1;
 
     private List<Page> _pages = [];
     /// <summary>
@@ -56,7 +56,12 @@ public class PageSet
     /// <summary>
     /// The number of Page objects in this PageSet.
     /// </summary>
-    public int Count => Pages.Count;
+    public int PageCount => Pages.Count;
+
+    /// <summary>
+    /// The total number of entries in this PageSet (totalled from each included Page object).
+    /// </summary>
+    public int EntryCount => GetTotalEntryCount();
 
     /// <summary>
     /// Whether this PageSet can contain more Pages or not.
@@ -240,7 +245,7 @@ public class PageSet
     /// </summary>
     public async Task GoToLastPage()
     {
-        ActivePageIndex = Count - 1;
+        ActivePageIndex = PageCount - 1;
         await GenerateActivePage();
     }
 
@@ -255,5 +260,19 @@ public class PageSet
             ActivePageIndex += 1;
         }
         await GenerateActivePage();
+    }
+
+    /// <summary>
+    /// Calculates a Total of all entries in the PageSet's individual Pages.
+    /// </summary>
+    /// <returns></returns>
+    public int GetTotalEntryCount()
+    {
+        int TotalCount = 0;
+        foreach (Page _page in Pages)
+        {
+            TotalCount += _page.Lines.Count;
+        }
+        return TotalCount;
     }
 }

@@ -102,11 +102,15 @@
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Sorting Order Picker Row -->
                             <RowDefinition Height="Auto"/>
+                            <!-- ListView Sorting Clear Button Row -->
+                            <RowDefinition Height="Auto"/>
                             <!-- ListView Searching Label Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Searching SearchBar Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Searching Field Picker Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ListView Searching Clear Button Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
@@ -173,9 +177,23 @@
                                 </x:Array>
                             </Picker.ItemsSource>
                         </Picker>
+                        <!-- ListView Sort Clear Button -->
+                        <Button 
+                            x:Name="ListViewSortingClearButton"
+                            Clicked="OnListViewFilterClearButtonClicked"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="Reset"
+                            FontSize="10"
+                            Margin="11,0,0,12"
+                            CornerRadius="3"
+                            WidthRequest="65"
+                            HeightRequest="30"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                         <!-- Sorting Panel Lower Border BoxView -->
                         <BoxView
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"
@@ -184,7 +202,7 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         <!-- Searching Panel Upper Border BoxView -->
                         <BoxView
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"
@@ -193,7 +211,7 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         <!-- ListView Searching Label -->
                         <Label 
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Text="Search Records"
                             TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
@@ -207,7 +225,7 @@
                             x:Name="ListViewSearchingSearchBar"
                             SearchButtonPressed="OnListViewSearchButtonPressed"
                             Text="{Binding Options.SearchTerm}"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"
                             FontSize="10"
@@ -219,7 +237,7 @@
                             x:Name="ListViewSearchingFieldPicker"
                             SelectedIndex="{Binding Options.SelectedSearchingFieldIndex}"
                             SelectedItem="All"
-                            Grid.Row="5"
+                            Grid.Row="6"
                             Grid.Column="0"
                             Margin="10"
                             Title="Search field"
@@ -229,9 +247,23 @@
                             HeightRequest="65"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
+                        <!-- ListView Search Clear Button -->
+                        <Button 
+                            x:Name="ListViewSearchingClearButton"
+                            Clicked="OnListViewFilterClearButtonClicked"
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Text="Clear"
+                            FontSize="10"
+                            Margin="11,0,0,12"
+                            CornerRadius="3"
+                            WidthRequest="65"
+                            HeightRequest="30"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                         <!-- Searching Panel Lower Border BoxView -->
                         <BoxView
-                            Grid.Row="5"
+                            Grid.Row="7"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"

@@ -1,3 +1,5 @@
+using LotCoMClient.Models.Services;
+
 namespace LotCoMClient.Views;
 
 /// <summary>
@@ -118,6 +120,20 @@ public partial class DataTablePage : ContentPage
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
             _viewModel.SearchDataTable();
         });
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the ListViewSearchingClearButton and ListViewSortingClearButton controls. 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnListViewFilterClearButtonClicked(object sender, EventArgs e)
+    {
+        // clear the Page's filtering Options, refresh the Base Pages, and reset the Page's CurrentPage
+        _viewModel.ClearFilterOptions();
+        await _viewModel.Table!.RefreshPages(-1, _viewModel.Options.PageLength);
+        await _viewModel.Table!.GoToBasePages();
+        _viewModel.CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(_viewModel.Table.ActivePageSet.GetActivePage());
     }
 
     /// <summary>

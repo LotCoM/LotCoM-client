@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Services;
 
@@ -159,9 +160,9 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnGoToFirstPageButtonClicked(object sender, EventArgs e)
+    private void OnGoToFirstPageButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.GoToFirstPage();
+        _viewModel.GoToFirstPage();
     }
 
     /// <summary>
@@ -169,9 +170,9 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnGoToPreviousPageButtonClicked(object sender, EventArgs e)
+    private void OnGoToPreviousPageButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.GoToPreviousPage();
+        _viewModel.GoToPreviousPage();
     }
 
     /// <summary>
@@ -179,9 +180,9 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnGoToNextPageButtonClicked(object sender, EventArgs e)
+    private void OnGoToNextPageButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.GoToNextPage();
+        _viewModel.GoToNextPage();
     }
 
     /// <summary>
@@ -189,9 +190,9 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnGoToLastPageButtonClicked(object sender, EventArgs e)
+    private void OnGoToLastPageButtonClicked(object sender, EventArgs e)
     {
-        await _viewModel.GoToLastPage();
+        _viewModel.GoToLastPage();
     }
 
     /// <summary>
@@ -199,7 +200,7 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private async void OnPageLengthPickerSelectedIndexChanged(object sender, EventArgs e)
+    private void OnPageLengthPickerSelectedIndexChanged(object sender, EventArgs e)
     {
         // get the newly selected PageLength value and update it in the ViewModel
         if (PageLengthPicker is null)
@@ -209,7 +210,7 @@ public partial class DataTableSelectorPage : ContentPage
         int PageLength = (int)PageLengthPicker.ItemsSource[_viewModel.Options.SelectedPageLengthIndex]!;
         _viewModel.Options.PageLength = PageLength;
         // refresh the Data Table to use a new PageSet based on the selected PageLength
-        await _viewModel.RefreshPages();
+        _viewModel.RefreshPages();
         _viewModel.ClearFilterOptions();
     }
 

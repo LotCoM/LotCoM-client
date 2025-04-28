@@ -325,33 +325,33 @@ public partial class DataTable : ObservableObject
     /// <summary>
     /// Jumps to the first Page in the Table's current Pages (the newest Records).
     /// </summary>
-    public async Task GoToFirstPage()
+    public async Task<Page> GoToFirstPage()
     {
-        await ActivePageSet.GoToFirstPage();
+        return await ActivePageSet.GoToFirstPage();
     }
 
     /// <summary>
     /// Goes to the previous Page in the Table's current Pages (if one exists).
     /// </summary>
-    public async Task GoToPreviousPage()
+    public async Task<Page> GoToPreviousPage()
     {
-        await ActivePageSet.GoToPreviousPage();
+        return await ActivePageSet.GoToPreviousPage();
     }
 
     /// <summary>
     /// Jumps to the last Page in the Table's current Pages (the oldest Records).
     /// </summary>
-    public async Task GoToLastPage()
+    public async Task<Page> GoToLastPage()
     {
-        await ActivePageSet.GoToLastPage();
+        return await ActivePageSet.GoToLastPage();
     }
 
     /// <summary>
     /// Goes to the next Page in the Table's current Pages (if one exists).
     /// </summary>
-    public async Task GoToNextPage()
+    public async Task<Page> GoToNextPage()
     {
-        await ActivePageSet.GoToNextPage();
+        return await ActivePageSet.GoToNextPage();
     }
 
     /// <summary>
@@ -381,9 +381,9 @@ public partial class DataTable : ObservableObject
     /// </summary>
     /// <param name="MaxCount"></param>
     /// <param name="PageLength"></param>
-    /// <returns></returns>
+    /// <returns>The currently Active Page of the new PageSet.</returns>
     /// <exception cref="OperationCanceledException"></exception>
-    public async Task RefreshPages(int MaxCount, int PageLength)
+    public async Task<Page> RefreshPages(int MaxCount, int PageLength)
     {
         // confirm that there are Lines to create a PageSet from
         if (LastReadLines is null) 
@@ -401,6 +401,7 @@ public partial class DataTable : ObservableObject
         BasePages = new PageSet(LastReadLines!, RecordType, MaxCount, PageLength);
         SearchPages = BasePages;
         ActivePageSet = BasePages;
+        return await ActivePageSet.GetActivePage();
     }
 
     /// <summary>
@@ -436,11 +437,11 @@ public partial class DataTable : ObservableObject
     /// Performs a search on all of the current records in the Table.
     /// If All passed as PropertyName, checks for matches in every field of the Data Record.
     /// Otherwise, searches for match hits in the singular field passed as PropertyName.
-    /// Builds a new Page set from the search results.
+    /// Builds a new PageSet from the search results and activates the new SearchPages PageSet.
     /// </summary>
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
-    /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
+    /// <returns>The ActivePage of the new SearchPages PageSet.</returns>
     public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
     {
         // search in all fields of each DataRecord

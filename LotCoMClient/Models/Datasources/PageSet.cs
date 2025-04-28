@@ -217,16 +217,17 @@ public class PageSet
     /// <summary>
     /// Jumps to the first Page in the PageSet (the newest Records).
     /// </summary>
-    public async Task GoToFirstPage()
+    public async Task<Page> GoToFirstPage()
     {
         ActivePageIndex = 0;
         await GenerateActivePage();
+        return ActivePage;
     }
 
     /// <summary>
     /// Goes to the previous Page in the PageSet (if one exists).
     /// </summary>
-    public async Task GoToPreviousPage()
+    public async Task<Page> GoToPreviousPage()
     {
         // bar from going below 0
         if (ActivePageIndex == 0)
@@ -238,21 +239,23 @@ public class PageSet
             ActivePageIndex -= 1;
         }
         await GenerateActivePage();
+        return ActivePage;
     }
 
     /// <summary>
     /// Jumps to the last Page in the PageSet (the oldest Records).
     /// </summary>
-    public async Task GoToLastPage()
+    public async Task<Page> GoToLastPage()
     {
         ActivePageIndex = PageCount - 1;
         await GenerateActivePage();
+        return ActivePage;
     }
 
     /// <summary>
     /// Goes to the next Page in the PageSet (if one exists).
     /// </summary>
-    public async Task GoToNextPage()
+    public async Task<Page> GoToNextPage()
     {
         // confirm the PageSet has a Page after the current one
         if (HasNext)
@@ -260,6 +263,7 @@ public class PageSet
             ActivePageIndex += 1;
         }
         await GenerateActivePage();
+        return ActivePage;
     }
 
     /// <summary>

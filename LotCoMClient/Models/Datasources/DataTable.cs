@@ -80,13 +80,13 @@ public partial class DataTable : ObservableObject
     public PageSet ActivePageSet
     {
         get {return _activePageSet;}
-        private set {_activePageSet = value;}
+        private set 
+        {
+            _activePageSet = value;
+            OnPropertyChanged(nameof(_activePageSet));
+            OnPropertyChanged(nameof(ActivePageSet));
+        }
     }
-
-    /// <summary>
-    /// Returns the total count of Records in the Data Table file (as of the last ReadLines call).
-    /// </summary>
-    public int RecordCount => LastReadLines.Count;
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.
@@ -416,7 +416,7 @@ public partial class DataTable : ObservableObject
     public async Task<Page> RequestPage(int PageNumber, int PageLength, int MaxCount = -1) 
     {
         // confirm that Pages is set to provide Pages of the correct size
-        if (ActivePageSet.Count < 1 || ActivePageSet.Pages[0].MaxLength != PageLength)
+        if (ActivePageSet.PageCount < 1 || ActivePageSet.Pages[0].MaxLength != PageLength)
         {
             await RefreshPages(MaxCount, PageLength);
         }

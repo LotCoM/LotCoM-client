@@ -30,23 +30,24 @@ public partial class RecordParser()
     private static partial Regex GenerateIPAddressRegex();
     
     /// <summary>
-    /// Asynchronously checks if the first element of a split CSV Line is an IP address.
+    /// Asynchronously checks if the third element (IP Address field location) of a split CSV Line is an IP address.
     /// </summary>
     /// <param name="SplitCSVLine">A CSV Line that has already been split by commas.</param>
-    /// <returns>Null if the first element is not an IP address; the IP address if it is.</returns>
-    private async Task<string?> ParseIPAddressAsync(List<string> SplitCSVLine) 
+    /// <returns>The IP address.</returns>
+    /// <exception cref="RecordParseException"></exception>
+    private static async Task<string?> ParseIPAddressAsync(List<string> SplitCSVLine) 
     {
         return await Task.Run(() => 
         {
-            // peek the first element and test it as an IP Address using a Regex pattern
-            if (IPAddressRegex.IsMatch(SplitCSVLine[0])) 
+            // peek the third element and test it as an IP Address using a Regex pattern
+            if (IPAddressRegex.IsMatch(SplitCSVLine[2])) 
             {
                 // return the first field (confirmed as an IP Address)
-                return SplitCSVLine[0];
+                return SplitCSVLine[2];
             } 
             else 
             {
-                return null;
+                throw new RecordParseException($"Cannot parse an IP Address from '{SplitCSVLine[2]}'.");
             }
         });
     }
@@ -229,23 +230,41 @@ public partial class RecordParser()
             .ToList();
         // test for an IP Address
         string? ScanAddress;
-        ScanAddress = await ParseIPAddressAsync(SplitLine);
-        // remove the IP address from the SplitLine list (if parsed)
-        if (ScanAddress is null) 
+        try
         {
-            throw new RecordParseException();
+            ScanAddress = await ParseIPAddressAsync(SplitLine);
+            // remove the IP address from the SplitLine list (if parsed)
+            SplitLine.RemoveAt(2);
         }
-        else 
+        catch (Exception _ex)
         {
-            SplitLine.RemoveAt(0);
+            throw new RecordParseException(_ex.Message);
         }
-        // parse a base DataRecord, apply the IP address value, and convert to ScanRecord object
+        // remove the Record Date from the CSV line and save it to be swapped with the production time
+        List<string> Timestamp = SplitLine[1]
+            .Split("-")
+            .ToList();
+        string RecordDate = Timestamp[0];
+        string RecordTime = Timestamp[1];
+        SplitLine.RemoveAt(1);
+        // parse a base DataRecord and convert it to a ScanRecord
         ScanRecord ParsedRecord;
         try
         {
             DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
-            BaseRecord.ScanAddress = ScanAddress;
             ParsedRecord = ScanRecord.ConvertFromBase(BaseRecord);
+            // Why swap the RecordDate and ProductionDate properties:
+            //   ParseBaseDataRecord parses the ProductionDate from the Record,
+            //   assuming it is the only Date value in the Record.
+            //   ScanRecords are not the same and contain both RecordDates and
+            //   ProductionDates, since the Record could be Printed one day and
+            //   not be scanned for a week
+            ParsedRecord.ProductionDate = ParsedRecord.RecordDate;
+            ParsedRecord.ProductionTime = ParsedRecord.RecordTime;
+            ParsedRecord.RecordDate = RecordDate;
+            ParsedRecord.RecordTime = RecordTime;
+            // save the IP Address as well
+            ParsedRecord.ScanAddress = ScanAddress;
         }
         catch
         {

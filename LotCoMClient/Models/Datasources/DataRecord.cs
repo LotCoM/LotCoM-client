@@ -10,6 +10,10 @@ public partial class DataRecord : ObservableObject
     [ObservableProperty]
     public partial string? ScanAddress {get; set;}
     [ObservableProperty]
+    public partial string? ProductionDate {get; set;}
+    [ObservableProperty]
+    public partial string? ProductionTime {get; set;}
+    [ObservableProperty]
     public partial Process RecordProcess {get; set;}
     [ObservableProperty]
     public partial Part RecordPart {get; set;}
@@ -67,7 +71,9 @@ public partial class DataRecord : ObservableObject
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>
     /// <param name="OperatorID">The Operator ID assigned to this record.</param>
     /// <param name="ScanAddress">(Optional) the IP Address of the Scanner producing this record. Only applicable to ScanRecords.</param>
-    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null) 
+    /// <param name="ProductionDate">(Optional) the Production Date of the Record's Label. Only applicable to ScanRecords.</param>
+    /// <param name="ProductionTime">(Optional) the Production Time of the Record's Label. Only applicable to ScanRecords.</param>
+    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null, string? ProductionDate = null, string? ProductionTime = null) 
     {
         // set the Record's properties
         this.RecordProcess = RecordProcess;
@@ -84,6 +90,8 @@ public partial class DataRecord : ObservableObject
         this.RecordShift = RecordShift;
         this.OperatorID = OperatorID;
         this.ScanAddress = ScanAddress;
+        this.ProductionDate = ProductionDate;
+        this.ProductionTime = ProductionTime;
         // configure the Includes flags using the RecordProcess' requirements
         List<string> Requirements = RecordProcess.RequiredFields;
         IncludesJBKNumber = Requirements.Contains("JBKNumber");
@@ -101,7 +109,7 @@ public partial class DataRecord : ObservableObject
     public string ToCSV() 
     {
         // add the front set of universal data
-        string CSVLine = $"{RecordProcess.FullName},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
+        string CSVLine = $"{RecordProcess.FullName},{RecordDate}-{RecordTime},{ScanAddress},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
         // add the variably-required data fields to the Line
         if (IncludesJBKNumber) 
         {
@@ -128,7 +136,7 @@ public partial class DataRecord : ObservableObject
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
-        CSVLine = $"{CSVLine},{RecordDate}-{RecordTime},{RecordShift},{OperatorID}";
+        CSVLine = $"{CSVLine},{ProductionDate}-{ProductionTime},{RecordShift},{OperatorID}";
         return CSVLine;
     }
 }

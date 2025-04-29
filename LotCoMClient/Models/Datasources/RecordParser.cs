@@ -252,6 +252,7 @@ public partial class RecordParser()
         try
         {
             DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
+            BaseRecord.ScanAddress = ScanAddress;
             ParsedRecord = ScanRecord.ConvertFromBase(BaseRecord);
             // Why swap the RecordDate and ProductionDate properties:
             //   ParseBaseDataRecord parses the ProductionDate from the Record,
@@ -263,8 +264,6 @@ public partial class RecordParser()
             ParsedRecord.ProductionTime = ParsedRecord.RecordTime;
             ParsedRecord.RecordDate = RecordDate;
             ParsedRecord.RecordTime = RecordTime;
-            // save the IP Address as well
-            ParsedRecord.ScanAddress = ScanAddress;
         }
         catch
         {

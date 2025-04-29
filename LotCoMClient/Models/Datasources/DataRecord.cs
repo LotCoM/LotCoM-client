@@ -53,6 +53,10 @@ public partial class DataRecord : ObservableObject
     public partial bool IncludesModelNumber {get; set;} = false;
     [ObservableProperty]
     public partial bool IncludesHeatNumber {get; set;} = false;
+    [ObservableProperty]
+    public partial bool IncludesScanAddress {get; set;} = false;
+    [ObservableProperty]
+    public partial bool IncludesProductionDate {get; set;} = false;
 
     /// <summary>
     /// Creates a new DataRecord object.
@@ -100,6 +104,8 @@ public partial class DataRecord : ObservableObject
         IncludesDieNumber = Requirements.Contains("DieNumber");
         IncludesDieNumber = Requirements.Contains("ModelNumber");
         IncludesHeatNumber = Requirements.Contains("HeatNumber");
+        IncludesScanAddress = ScanAddress is not null;
+        IncludesProductionDate = ProductionDate is not null;
     }
 
     /// <summary>
@@ -111,11 +117,11 @@ public partial class DataRecord : ObservableObject
         // add required Process name
         string CSVLine = $"{RecordProcess.FullName}";
         // add ScanRecord specific data fields
-        if (ProductionDate is not null)
+        if (IncludesProductionDate)
         {
             CSVLine = $"{CSVLine},{RecordDate}-{RecordTime}";
         }
-        if (ScanAddress is not null)
+        if (IncludesScanAddress)
         {
             CSVLine = $"{CSVLine},{ScanAddress}";
         }
@@ -147,7 +153,7 @@ public partial class DataRecord : ObservableObject
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
-        if (ProductionDate is not null)
+        if (IncludesProductionDate)
         {
             CSVLine = $"{CSVLine},{ProductionDate}-{ProductionTime}";
         }

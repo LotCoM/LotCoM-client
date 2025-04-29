@@ -108,8 +108,19 @@ public partial class DataRecord : ObservableObject
     /// <returns></returns>
     public string ToCSV() 
     {
-        // add the front set of universal data
-        string CSVLine = $"{RecordProcess.FullName},{RecordDate}-{RecordTime},{ScanAddress},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
+        // add required Process name
+        string CSVLine = $"{RecordProcess.FullName}";
+        // add ScanRecord specific data fields
+        if (ProductionDate is not null)
+        {
+            CSVLine = $"{CSVLine},{RecordDate}-{RecordTime}";
+        }
+        if (ScanAddress is not null)
+        {
+            CSVLine = $"{CSVLine},{ScanAddress}";
+        }
+        // add universal required fields
+        CSVLine = $"{CSVLine},{RecordPart.PartNumber},{RecordPart.PartName},{Quantity}";
         // add the variably-required data fields to the Line
         if (IncludesJBKNumber) 
         {
@@ -136,7 +147,15 @@ public partial class DataRecord : ObservableObject
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
-        CSVLine = $"{CSVLine},{ProductionDate}-{ProductionTime},{RecordShift},{OperatorID}";
+        if (ProductionDate is not null)
+        {
+            CSVLine = $"{CSVLine},{ProductionDate}-{ProductionTime}";
+        }
+        else
+        {
+            CSVLine = $"{CSVLine},{RecordDate}-{RecordTime}";
+        }
+        CSVLine = $"{CSVLine},{RecordShift},{OperatorID}";
         return CSVLine;
     }
 }

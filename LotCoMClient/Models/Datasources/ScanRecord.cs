@@ -17,7 +17,9 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
 /// <param name="ScanAddress">The IP Address of the Scanner producing this record.</param>
-public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string ScanAddress): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress) 
+/// <param name="ProductionDate">The Production Date of the Record's Label.</param>
+/// <param name="ProductionTime">The Production Time of the Record's Label.</param>
+public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string ScanAddress, string ProductionDate, string ProductionTime): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, ScanAddress, ProductionDate, ProductionTime) 
 {
     /// <summary>
     /// Converts a DataRecord base class type object into a ScanRecord object (explicit cast).
@@ -31,6 +33,6 @@ public partial class ScanRecord(Process RecordProcess, Part RecordPart, string Q
         {
             throw new ArgumentException($"Cannot convert base DataRecord into a ScanRecord without a non-null 'ScanAddress' property value.");
         }
-        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.ModelNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID, BaseRecord.ScanAddress);
+        return new ScanRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.ModelNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID, BaseRecord.ScanAddress, BaseRecord.ProductionDate!, BaseRecord.ProductionTime!);
     }
 }

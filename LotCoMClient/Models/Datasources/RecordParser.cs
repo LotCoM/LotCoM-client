@@ -253,6 +253,8 @@ public partial class RecordParser()
         {
             DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
             BaseRecord.ScanAddress = ScanAddress;
+            BaseRecord.ProductionDate = RecordDate;
+            BaseRecord.ProductionTime = RecordTime;
             ParsedRecord = ScanRecord.ConvertFromBase(BaseRecord);
             // Why swap the RecordDate and ProductionDate properties:
             //   ParseBaseDataRecord parses the ProductionDate from the Record,

@@ -28,7 +28,7 @@ public class PageSet
     /// <summary>
     /// Returns whether or not the PageSet has a Page immediately after the current Active Page.
     /// </summary>
-    private bool HasNext => ActivePageIndex + 1 < PageCount - 1;
+    private bool HasNext => ActivePageIndex + 1 < PageCount;
 
     private List<Page> _pages = [];
     /// <summary>

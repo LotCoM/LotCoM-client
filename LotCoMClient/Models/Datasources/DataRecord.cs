@@ -63,12 +63,7 @@ public partial class DataRecord : ObservableObject
     /// <param name="RecordProcess">The Process this record belongs to.</param>
     /// <param name="RecordPart">The Part assigned to this record.</param>
     /// <param name="Quantity">The Quantity assigned to this record.</param>
-    /// <param name="JBKNumber">The JBK Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="ModelNumber">The Model Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
+    /// <param name="VariableFields">The VariableFieldSet assigned to this record.</param>
     /// <param name="RecordDate">The Date assigned to this record.</param>
     /// <param name="RecordTime">The Time assigned to this record.</param>
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>

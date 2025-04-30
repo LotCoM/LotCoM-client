@@ -1,3 +1,5 @@
+using LotCoMClient.Models.Options;
+
 namespace LotCoMClient.Models.Datasources;
 
 /// <summary>
@@ -6,17 +8,12 @@ namespace LotCoMClient.Models.Datasources;
 /// <param name="RecordProcess">The Process this record belongs to.</param>
 /// <param name="RecordPart">The Part assigned to this record.</param>
 /// <param name="Quantity">The Quantity assigned to this record.</param>
-/// <param name="JBKNumber">The JBK Number assigned to this record (if required for RecordProcess).</param>
-/// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
-/// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
-/// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
-/// <param name="ModelNumber">The Model Number assigned to this record (if required for RecordProcess).</param>
-/// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
+/// <param name="VariableFields">The VariableFieldSet assigned to this record.</param>
 /// <param name="RecordDate">The Date assigned to this record.</param>
 /// <param name="RecordTime">The Time assigned to this record.</param>
 /// <param name="RecordShift">The Shift Number assigned to this record.</param>
 /// <param name="OperatorID">The Operator ID assigned to this record.</param>
-public partial class PrintRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, JBKNumber, LotNumber, DeburrJBKNumber, DieNumber, ModelNumber, HeatNumber, RecordDate, RecordTime, RecordShift, OperatorID, null, null, null) 
+public partial class PrintRecord(Process RecordProcess, Part RecordPart, int Quantity, VariableFieldSet VariableFields, string RecordDate, string RecordTime, int RecordShift, string OperatorID): DataRecord(RecordProcess, RecordPart, Quantity, VariableFields, RecordDate, RecordTime, RecordShift, OperatorID, null, null, null) 
 {
     /// <summary>
     /// Converts a DataRecord base class type object into a PrintRecord object (explicit cast).
@@ -25,6 +22,6 @@ public partial class PrintRecord(Process RecordProcess, Part RecordPart, string 
     /// <returns></returns>
     public static PrintRecord ConvertFromBase(DataRecord BaseRecord) 
     {
-        return new PrintRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.JBKNumber, BaseRecord.LotNumber, BaseRecord.DeburrJBKNumber, BaseRecord.DieNumber, BaseRecord.ModelNumber, BaseRecord.HeatNumber, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
+        return new PrintRecord(BaseRecord.RecordProcess, BaseRecord.RecordPart, BaseRecord.Quantity, BaseRecord.VariableFields, BaseRecord.RecordDate, BaseRecord.RecordTime, BaseRecord.RecordShift, BaseRecord.OperatorID);
     }
 }

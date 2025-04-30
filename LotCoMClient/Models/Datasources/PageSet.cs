@@ -21,11 +21,6 @@ public class PageSet
     private readonly Type RecordType;
 
     /// <summary>
-    /// Sets the currently active Page for this PageSet. 
-    /// </summary>
-    private int ActivePageIndex = 0;
-
-    /// <summary>
     /// Returns the Page object that is currently active in this PageSet.
     /// </summary>
     private Page ActivePage => Pages[ActivePageIndex];
@@ -47,6 +42,15 @@ public class PageSet
             _pages = value;
         }
     }
+    
+    /// <summary>
+    /// Sets the currently active Page for this PageSet. 
+    /// </summary>
+    public int ActivePageIndex
+    {
+        get;
+        private set;
+    } = 0;
 
     /// <summary>
     /// Sets the maximum number of Lines allowed in each Page in this PageSet.

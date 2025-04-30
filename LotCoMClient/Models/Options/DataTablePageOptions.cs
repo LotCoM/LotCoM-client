@@ -26,7 +26,7 @@ public partial class DataTablePageOptions() : ObservableObject()
         public const bool IsBodyHeaderLabelShown = false;
         public const string BodyHeaderText = "";
         public const bool IsBodyNavigationPanelShown = false;
-        public const int PageNumber = 0;
+        public const int PageNumber = 1;
         public const int SelectedPageLengthIndex = 1;
         public const int PageLength = 25;
         public const string LeftPanelHeaderText = "";
@@ -70,6 +70,7 @@ public partial class DataTablePageOptions() : ObservableObject()
 
     /// <summary>
     /// Controls the Number of the currently displayed Page of DataRecords, controlled by the Page's Navigation Panel.
+    /// This value is 1-oriented, so Page 1 will refer to index 0 of a PageSet.Pages List.
     /// </summary>
     [ObservableProperty]
     public partial int PageNumber {get; set;} = OptionDefaults.PageNumber;

@@ -539,11 +539,15 @@
                                         <!-- Left-Side Padding Column -->
                                         <ColumnDefinition Width="25"/>
                                         <!-- Date Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Time Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!-- ScanRecord Scanner Address Column -->
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!-- ScanRecord Production Timestamp Column -->
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Shift Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Operator Column -->
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
@@ -552,7 +556,7 @@
                                         Margin="0,10,0,0"
                                         Grid.Row="0"
                                         Grid.Column="1"
-                                        Grid.ColumnSpan="4">
+                                        Grid.ColumnSpan="6">
                                         <!-- DataRecord Part Number -->
                                         <Label
                                             Text="{Binding RecordPart.PartNumber, StringFormat='Part: {0}'}"
@@ -631,21 +635,41 @@
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
-                                    <!-- DataRecord Shift Label -->
+                                    <!-- ScanRecord Scanner Address Label -->
                                     <Label
-                                        Margin="5,0,0,0"
+                                        Margin="20,0,0,0"
+                                        IsVisible="{Binding IsScanRecord}"
                                         Grid.Row="1"
                                         Grid.Column="3"
+                                        Text="{Binding ScanAddress, StringFormat='Scanner: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- ScanRecord Production Timestamp -->
+                                    <Label 
+                                        Margin="20,0,0,0"
+                                        IsVisible="{Binding IsScanRecord}"
+                                        Grid.Row="1"
+                                        Grid.Column="4"
+                                        Text="{Binding ProductionTimestamp, StringFormat='Produced: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- DataRecord Shift Label -->
+                                    <Label
+                                        Margin="10,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="5"
                                         Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
-                                    <!-- DataRecord Operator Label -->
-                                    <Label
-                                        Margin="5,0,0,0"
+                                    <!-- DataRecord Production Operator -->
+                                    <Label 
+                                        Margin="10,0,0,0"
                                         Grid.Row="1"
-                                        Grid.Column="4"
-                                        Text="{Binding OperatorID, StringFormat='ID: {0}'}"
+                                        Grid.Column="6"
+                                        Text="{Binding OperatorID, StringFormat='Operator: {0}'}"
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
@@ -653,7 +677,7 @@
                                     <BoxView
                                         Grid.Row="2"
                                         Grid.Column="0"
-                                        Grid.ColumnSpan="5"
+                                        Grid.ColumnSpan="7"
                                         HeightRequest="1"
                                         HorizontalOptions="Fill"
                                         VerticalOptions="Center"

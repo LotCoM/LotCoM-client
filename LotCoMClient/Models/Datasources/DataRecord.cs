@@ -110,7 +110,7 @@ public partial class DataRecord : ObservableObject
         IncludesLotNumber = Requirements.Contains("LotNumber");
         IncludesDeburrJBKNumber = Requirements.Contains("DeburrJBKNumber");
         IncludesDieNumber = Requirements.Contains("DieNumber");
-        IncludesDieNumber = Requirements.Contains("ModelNumber");
+        IncludesModelNumber = Requirements.Contains("ModelNumber");
         IncludesHeatNumber = Requirements.Contains("HeatNumber");
         IncludesScanAddress = ScanAddress is not null;
         IncludesProductionDate = ProductionDate is not null;

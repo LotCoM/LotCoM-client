@@ -58,6 +58,14 @@ public partial class DataRecord : ObservableObject
     [ObservableProperty]
     public partial bool IncludesProductionDate {get; set;} = false;
 
+    // these flags control the different display mode for ScanRecords
+    [ObservableProperty]
+    public partial bool IsScanRecord {get; set;}
+    [ObservableProperty]
+    public partial bool IsNotScanRecord {get; set;}
+    [ObservableProperty]
+    public partial string? ProductionTimestamp {get; set;}
+
     /// <summary>
     /// Creates a new DataRecord object.
     /// </summary>
@@ -106,6 +114,12 @@ public partial class DataRecord : ObservableObject
         IncludesHeatNumber = Requirements.Contains("HeatNumber");
         IncludesScanAddress = ScanAddress is not null;
         IncludesProductionDate = ProductionDate is not null;
+        // configure ScanRecord flags
+        IsScanRecord = IncludesScanAddress && IncludesProductionDate;
+        if (IsScanRecord)
+        {
+            ProductionTimestamp = $"{ProductionDate}-{ProductionTime}";
+        }
     }
 
     /// <summary>
@@ -117,11 +131,11 @@ public partial class DataRecord : ObservableObject
         // add required Process name
         string CSVLine = $"{RecordProcess.FullName}";
         // add ScanRecord specific data fields
-        if (IncludesProductionDate)
+        if (IsScanRecord)
         {
             CSVLine = $"{CSVLine},{RecordDate}-{RecordTime}";
         }
-        if (IncludesScanAddress)
+        if (IsScanRecord)
         {
             CSVLine = $"{CSVLine},{ScanAddress}";
         }
@@ -153,7 +167,7 @@ public partial class DataRecord : ObservableObject
             CSVLine = $"{CSVLine},{HeatNumber}";
         }
         // add the back set of universal data
-        if (IncludesProductionDate)
+        if (IsScanRecord)
         {
             CSVLine = $"{CSVLine},{ProductionDate}-{ProductionTime}";
         }

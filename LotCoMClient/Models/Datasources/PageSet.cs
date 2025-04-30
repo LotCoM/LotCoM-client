@@ -26,6 +26,11 @@ public class PageSet
     private Page ActivePage => Pages[ActivePageIndex];
 
     /// <summary>
+    /// Returns whether or not the PageSet has a Page immediately before the current Active Page.
+    /// </summary>
+    private bool HasPrevious => ActivePageIndex - 1 >= 0;
+
+    /// <summary>
     /// Returns whether or not the PageSet has a Page immediately after the current Active Page.
     /// </summary>
     private bool HasNext => ActivePageIndex + 1 < PageCount;
@@ -233,12 +238,8 @@ public class PageSet
     /// </summary>
     public async Task<Page> GoToPreviousPage()
     {
-        // bar from going below 0
-        if (ActivePageIndex == 0)
-        {
-            ActivePageIndex = 0;
-        }
-        else
+        // confirm the PageSet has a Page before the current one
+        if (HasPrevious)
         {
             ActivePageIndex -= 1;
         }

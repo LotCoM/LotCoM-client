@@ -462,7 +462,7 @@
                     <Label
                         Grid.Row="2"
                         Grid.Column="3"
-                        Text="Page #"
+                        Text="{Binding PageNumberContext}"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"/>
                     <!-- Older Button (forward to next) -->

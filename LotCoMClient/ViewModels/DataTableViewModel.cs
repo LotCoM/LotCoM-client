@@ -73,6 +73,21 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
+    private string _pageNumberContext = "";
+    /// <summary>
+    /// Provides a formatted string that gives the context of the currently displayed Page Number in the PageSet.
+    /// </summary>
+    public string PageNumberContext
+    {
+        get {return _pageNumberContext;}
+        set
+        {
+            _pageNumberContext = value;
+            OnPropertyChanged(nameof(_pageNumberContext));
+            OnPropertyChanged(nameof(PageNumberContext));
+        }
+    }
+
     /// <summary>
     /// Resolves a defined Property Name on DataRecord from a passed String.
     /// </summary>
@@ -191,6 +206,8 @@ public partial class DataTableViewModel : ObservableObject
     {
         BasePage = NewPage;
         CurrentPage = NewPage;
+        Options.PageNumber = Table!.ActivePageSet.ActivePageIndex + 1;
+        PageNumberContext = $"{Options.PageNumber} of {Table!.ActivePageSet.PageCount}";
     }
 
     /// <summary>

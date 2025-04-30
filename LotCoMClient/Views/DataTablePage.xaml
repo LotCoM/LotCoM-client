@@ -578,42 +578,42 @@
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesJBKNumber}"
-                                            Text="{Binding JBKNumber, StringFormat='JBK #: {0}'}"
+                                            Text="{Binding VariableFields.JBKNumber, StringFormat='JBK #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Lot Number -->
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesLotNumber}"
-                                            Text="{Binding LotNumber, StringFormat='Lot #: {0}'}"
+                                            Text="{Binding VariableFields.LotNumber, StringFormat='Lot #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Deburr JBK Number -->
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesDeburrJBKNumber}"
-                                            Text="{Binding DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
+                                            Text="{Binding VariableFields.DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Die Number -->
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesDieNumber}"
-                                            Text="{Binding DieNumber, StringFormat='Die #: {0}'}"
+                                            Text="{Binding VariableFields.DieNumber, StringFormat='Die #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Model Number -->
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesModelNumber}"
-                                            Text="{Binding ModelNumber, StringFormat='Model #: {0}'}"
+                                            Text="{Binding VariableFields.ModelNumber, StringFormat='Model #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Heat Number -->
                                         <Label
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesHeatNumber}"
-                                            Text="{Binding HeatNumber, StringFormat='Heat #: {0}'}"
+                                            Text="{Binding VariableFields.HeatNumber, StringFormat='Heat #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                     </HorizontalStackLayout>

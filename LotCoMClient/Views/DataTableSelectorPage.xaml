@@ -34,14 +34,14 @@
         <!-- Title Frame -->
         <!-- Top-Left Page Corner Frame -->
         <BoxView
-            x:Name="PageTopLeftCornerFrameFill"
+            x:Name="TopLeftCornerFrameFill"
             Grid.Row="0"
             Grid.Column="0"
             WidthRequest="{Binding Options.LeftPanelWidth}"
             BackgroundColor="{AppThemeBinding Light={StaticResource Framing}, Dark={StaticResource FramingDark}}"/>
         <!-- Title Frame -->
         <VerticalStackLayout
-            x:Name="PageTitleFrameLayout"
+            x:Name="TitleFrameLayout"
             Grid.Row="0"
             Grid.Column="1"
             Margin="0"
@@ -50,7 +50,7 @@
             <HorizontalStackLayout>
                 <!-- Title Label -->
                 <Label
-                    x:Name="PageTitleFrameLabel"
+                    x:Name="TitleFrameLabel"
                     Text="{Binding Options.Title}"
                     TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
                     FontAttributes="None"
@@ -69,7 +69,7 @@
                     VerticalOptions="Center"/>
                 <!-- Process Selector -->
                 <Picker
-                    x:Name="PageProcessPicker"
+                    x:Name="ProcessPicker"
                     ItemsSource="{Binding Options.DepartmentProcesses}"
                     ItemDisplayBinding="{Binding FullName}"
                     SelectedIndexChanged="OnPageProcessSelectionChanged"
@@ -85,16 +85,16 @@
             </HorizontalStackLayout>
             <!-- Title Frame Bottom Border -->
             <BoxView
-                x:Name="PageTitleFrameBottomBorder"
+                x:Name="TitleFrameBottomBorder"
                 HeightRequest="1"
                 HorizontalOptions="Fill"
                 VerticalOptions="End"
                 BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
         </VerticalStackLayout>
 
-        <!-- Left-Side Frame -->
+        <!-- Left Panel -->
         <HorizontalStackLayout
-            x:Name="PageLeftFrameLayout"
+            x:Name="LeftPanelLayout"
             Grid.Row="1"
             Grid.Column="0"
             Margin="0"
@@ -129,11 +129,15 @@
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Sorting Order Picker Row -->
                             <RowDefinition Height="Auto"/>
+                            <!-- ListView Sorting Clear Button Row -->
+                            <RowDefinition Height="Auto"/>
                             <!-- ListView Searching Label Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Searching SearchBar Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- ListView Searching Field Picker Row -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- ListView Searching Clear Button Row -->
                             <RowDefinition Height="Auto"/>
                             <!-- Expand Rows to Add Frame Entries -->
                             <RowDefinition Height="*"/>
@@ -146,7 +150,6 @@
                         <!-- Add ScrollView Entries Here -->
                         <!-- Sorting Panel Upper Border BoxView -->
                         <BoxView
-                            IsVisible="{Binding Options.IsProcessAssigned}"
                             Grid.Row="0"
                             Grid.Column="0"
                             Margin="0,0,1,0"
@@ -156,7 +159,6 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         <!-- ListView Sorting Label -->
                         <Label 
-                            IsVisible="{Binding Options.IsProcessAssigned}"
                             Grid.Row="0"
                             Grid.Column="0"
                             Text="Sort Records"
@@ -169,8 +171,8 @@
                         <!-- ListView Sorting Field Picker -->
                         <Picker
                             x:Name="ListViewSortingFieldPicker"
+                            SelectedIndex="{Binding Options.SelectedSortingFieldIndex}"
                             SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
-                            IsVisible="{Binding Options.IsProcessAssigned}"
                             Grid.Row="1"
                             Grid.Column="0"
                             Margin="10"
@@ -184,8 +186,8 @@
                         <!-- ListView Sorting Order Picker -->
                         <Picker
                             x:Name="ListViewSortingOrderPicker"
+                            SelectedIndex="{Binding Options.SelectedSortingOrderIndex}"
                             SelectedIndexChanged="OnSortParameterSelectedIndexChanged"
-                            IsVisible="{Binding Options.IsProcessAssigned}"
                             Grid.Row="2"
                             Grid.Column="0"
                             Margin="10"
@@ -202,10 +204,23 @@
                                 </x:Array>
                             </Picker.ItemsSource>
                         </Picker>
+                        <!-- ListView Sort Clear Button -->
+                        <Button 
+                            x:Name="ListViewSortingClearButton"
+                            Clicked="OnListViewFilterClearButtonClicked"
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Text="Reset"
+                            FontSize="10"
+                            Margin="11,0,0,12"
+                            CornerRadius="3"
+                            WidthRequest="65"
+                            HeightRequest="30"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                         <!-- Sorting Panel Lower Border BoxView -->
                         <BoxView
-                            IsVisible="{Binding Options.IsProcessAssigned}"
-                            Grid.Row="2"
+                            Grid.Row="3"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"
@@ -214,8 +229,7 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         <!-- Searching Panel Upper Border BoxView -->
                         <BoxView
-                            IsVisible="{Binding Options.IsProcessAssigned}"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"
@@ -224,8 +238,7 @@
                             BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
                         <!-- ListView Searching Label -->
                         <Label 
-                            IsVisible="{Binding Options.IsProcessAssigned}"
-                            Grid.Row="3"
+                            Grid.Row="4"
                             Grid.Column="0"
                             Text="Search Records"
                             TextColor="{AppThemeBinding Light={StaticResource SecondaryText}, Dark={StaticResource SecondaryTextDark}}"
@@ -239,7 +252,7 @@
                             x:Name="ListViewSearchingSearchBar"
                             SearchButtonPressed="OnListViewSearchButtonPressed"
                             Text="{Binding Options.SearchTerm}"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.Column="0"
                             Margin="10"
                             FontSize="10"
@@ -250,7 +263,8 @@
                         <Picker
                             x:Name="ListViewSearchingFieldPicker"
                             SelectedIndex="{Binding Options.SelectedSearchingFieldIndex}"
-                            Grid.Row="5"
+                            SelectedItem="All"
+                            Grid.Row="6"
                             Grid.Column="0"
                             Margin="10"
                             Title="Search field"
@@ -260,9 +274,23 @@
                             HeightRequest="65"
                             HorizontalOptions="Start"
                             VerticalOptions="Center"/>
+                        <!-- ListView Search Clear Button -->
+                        <Button 
+                            x:Name="ListViewSearchingClearButton"
+                            Clicked="OnListViewFilterClearButtonClicked"
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Text="Clear"
+                            FontSize="10"
+                            Margin="11,0,0,12"
+                            CornerRadius="3"
+                            WidthRequest="65"
+                            HeightRequest="30"
+                            HorizontalOptions="Start"
+                            VerticalOptions="Center"/>
                         <!-- Searching Panel Lower Border BoxView -->
                         <BoxView
-                            Grid.Row="5"
+                            Grid.Row="7"
                             Grid.Column="0"
                             Margin="0,0,1,0"
                             HorizontalOptions="Fill"
@@ -272,9 +300,9 @@
                     </Grid>
                 </ScrollView>
 
-                <!-- Left Frame Footer Label -->
+                <!-- Left Panel Footer Label -->
                 <Label 
-                    x:Name="PageLeftFrameFooterLabel"
+                    x:Name="LeftPanelFooterLabel"
                     IsVisible="{Binding Options.IsLeftPanelShown}"
                     Margin="10,0,0,15"
                     Grid.Row="2"
@@ -287,7 +315,7 @@
                 
                 <!-- Panel Collapse Button -->
                 <Button
-                    x:Name="PageLeftFrameCollapseButton"
+                    x:Name="LeftPanelCollapseButton"
                     Clicked="OnPageLeftFrameCollapseButtonClicked"
                     Margin="-14,10,1,0"
                     Padding="10"
@@ -300,9 +328,9 @@
                     CornerRadius="30"
                     ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"/>
 
-                <!-- Left Frame Right Border -->
+                <!-- Left Panel Right Border -->
                 <BoxView
-                    x:Name="PageLeftFrameRightBorder"
+                    x:Name="LeftPanelRightBorder"
                     IsVisible="true"
                     Grid.Row="0"
                     Grid.RowSpan="3"
@@ -310,13 +338,13 @@
                     WidthRequest="1"
                     HorizontalOptions="End"
                     VerticalOptions="Fill"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource Gray600}}"/>
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Foreground}, Dark={StaticResource ForegroundDark}}"/>
             </Grid>
         </HorizontalStackLayout>
 
-        <!-- Left Frame Header Label (Defined outside of frame for positioning) -->
+        <!-- Left Panel Header Label (Defined outside of Panel for positioning) -->
         <Label 
-            x:Name="PageLeftFrameHeaderLabel"
+            x:Name="LeftPanelHeaderLabel"
             IsVisible="{Binding Options.IsLeftPanelShown}"
             Margin="0"
             Grid.Row="0"
@@ -343,26 +371,165 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Page Body Table Header Label -->
-            <Label 
-                x:Name="PageBodyTableHeaderLabel"
-                Text="{Binding Options.BodyTableHeaderText}"
+            <!-- Horizontal Layout For Body Header and Page Navigation Controls -->
+            <HorizontalStackLayout
                 Grid.Row="0"
                 Grid.Column="0"
-                TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
-                FontAttributes="None"
-                FontSize="16"
-                Margin="22,20,20,20"
-                HorizontalOptions="Start"
-                VerticalOptions="Center"/>
+                Grid.ColumnSpan="1">
+                <!-- Page Body Header Label -->
+                <Label 
+                    x:Name="BodyHeaderLabel"
+                    IsVisible="{Binding Options.IsBodyHeaderLabelShown}"
+                    Text="{Binding Options.BodyHeaderText}"
+                    TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+                    FontAttributes="None"
+                    FontSize="16"
+                    Margin="22,20,20,20"
+                    HorizontalOptions="Start"
+                    VerticalOptions="Center"/>
+                <!-- Page Navigation Control Grid -->
+                <Grid
+                    x:Name="BodyHeaderNavigationPanel"
+                    IsVisible="{Binding Options.IsBodyNavigationPanelShown}">
+                    <Grid.RowDefinitions>
+                        <!-- Padding Row -->
+                        <RowDefinition Height="10"/>
+                        <!-- Showing Records Number Row -->
+                        <RowDefinition Height="50"/>
+                        <!-- Page Number Control Row -->
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <!-- Padding Column -->
+                        <ColumnDefinition Width="20"/>
+                        <!-- Newer Records (Back) Page Navigation Controls Columns -->
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <!-- Page Number Label Columns -->
+                        <ColumnDefinition Width="75"/>
+                        <!-- Older Records (Forward) Page Navigation Controls Columns -->
+                        <ColumnDefinition Width="40"/>
+                        <ColumnDefinition Width="40"/>
+                        <!-- "of [Record Number] records" Label Extension Column -->
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!-- "Showing" Label -->
+                    <Label 
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Grid.ColumnSpan="2"
+                        Margin="5,0,5,0"
+                        Text="Showing"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        FontSize="16"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Page Length (Shown Record Number) Picker -->
+                    <Picker
+                        x:Name="PageLengthPicker"
+                        SelectedIndex="{Binding Options.SelectedPageLengthIndex}"
+                        SelectedIndexChanged="OnPageLengthPickerSelectedIndexChanged"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        Grid.Column="3"
+                        Margin="0,0,0,2"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:Int32}">
+                                <x:Int32>15</x:Int32>
+                                <x:Int32>25</x:Int32>
+                                <x:Int32>35</x:Int32>
+                                <x:Int32>50</x:Int32>
+                                <x:Int32>75</x:Int32>
+                                <x:Int32>100</x:Int32>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                    <!-- "Of <Record Count>" Label -->
+                    <Label 
+                        Grid.Row="1"
+                        Grid.Column="4"
+                        Grid.ColumnSpan="3"
+                        Margin="5,0,5,0"
+                        Text="{Binding Table.ActivePageSet.EntryCount, StringFormat='of {0} records'}"
+                        TextColor="{AppThemeBinding Light={StaticResource PrimaryText}, Dark={StaticResource PrimaryTextDark}}"
+                        FontSize="16"
+                        HorizontalOptions="Start"
+                        VerticalOptions="Center"/>
+                    <!-- Newest Button (back to start) -->
+                    <Button 
+                        x:Name="GoToFirstPageButton"
+                        Clicked="OnGoToFirstPageButtonClicked"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Newer Button (back to previous) -->
+                    <Button 
+                        x:Name="GoToPreviousPageButton"
+                        Clicked="OnGoToPreviousPageButtonClicked"
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=left_arrow_black.png, Dark=left_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Page Number Label -->
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="3"
+                        Text="{Binding PageNumberContext}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Older Button (forward to next) -->
+                    <Button 
+                        x:Name="GoToNextPageButton"
+                        Clicked="OnGoToNextPageButtonClicked"
+                        Grid.Row="2"
+                        Grid.Column="4"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=right_arrow_black.png, Dark=right_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                    <!-- Oldest Button (forward to end) -->
+                    <Button 
+                        x:Name="GoToLastPageButton"
+                        Clicked="OnGoToLastPageButtonClicked"
+                        Grid.Row="2"
+                        Grid.Column="5"
+                        Padding="10"
+                        WidthRequest="15"
+                        HeightRequest="15"
+                        CornerRadius="100"
+                        BackgroundColor="Transparent"
+                        ImageSource="{AppThemeBinding Light=right_arrow_black.png, Dark=right_arrow_white.png}"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"/>
+                </Grid>
+            </HorizontalStackLayout>
                 
-            <!-- Page Body Table ScrollView -->
+            <!-- Page Body ScrollView -->
             <!-- Activity Indicator (Shows While Loading Data) -->
             <ActivityIndicator 
-                x:Name="PageDataLoadingActivityIndicator"
-                IsEnabled="{Binding Data.IsNotCompleted}"
-                IsVisible="{Binding Data.IsNotCompleted}"
-                IsRunning="{Binding Data.IsNotCompleted}"
+                x:Name="DataLoadingActivityIndicator"
+                IsEnabled="{Binding CurrentPage.IsNotCompleted}"
+                IsVisible="{Binding CurrentPage.IsNotCompleted}"
+                IsRunning="{Binding CurrentPage.IsNotCompleted}"
                 Grid.Row="1"
                 Grid.Column="0"
                 Color="{StaticResource Secondary}"
@@ -370,14 +537,14 @@
                 HeightRequest="200"/>
             <!-- Actual View -->
             <ScrollView
-                x:Name="PageBodyTableScrollView"
-                IsVisible="{Binding Data.IsCompleted}"
+                x:Name="BodyScrollView"
+                IsVisible="{Binding CurrentPage.IsCompleted}"
                 Grid.Row="1"
                 Grid.Column="0">
                 <!-- Page Data Table List View -->
                 <ListView
-                    x:Name="PageDataTableListView"
-                    ItemsSource="{Binding Data.Result}"
+                    x:Name="DataTableListView"
+                    ItemsSource="{Binding CurrentPage.Result.DataRecords}"
                     PropertyChanged="OnPageDataTableListViewPropertyChanged"
                     Margin="20">
                     <!-- Configure DataRecord ItemTemplate -->
@@ -399,11 +566,15 @@
                                         <!-- Left-Side Padding Column -->
                                         <ColumnDefinition Width="25"/>
                                         <!-- Date Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Time Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!-- ScanRecord Scanner Address Column -->
+                                        <ColumnDefinition Width="Auto"/>
+                                        <!-- ScanRecord Production Timestamp Column -->
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Shift Column -->
-                                        <ColumnDefinition Width="125"/>
+                                        <ColumnDefinition Width="Auto"/>
                                         <!-- Operator Column -->
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
@@ -412,7 +583,7 @@
                                         Margin="0,10,0,0"
                                         Grid.Row="0"
                                         Grid.Column="1"
-                                        Grid.ColumnSpan="4">
+                                        Grid.ColumnSpan="6">
                                         <!-- DataRecord Part Number -->
                                         <Label
                                             Text="{Binding RecordPart.PartNumber, StringFormat='Part: {0}'}"
@@ -491,21 +662,41 @@
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
-                                    <!-- DataRecord Shift Label -->
+                                    <!-- ScanRecord Scanner Address Label -->
                                     <Label
-                                        Margin="5,0,0,0"
+                                        Margin="20,0,0,0"
+                                        IsVisible="{Binding IsScanRecord}"
                                         Grid.Row="1"
                                         Grid.Column="3"
+                                        Text="{Binding ScanAddress, StringFormat='Scanner: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- ScanRecord Production Timestamp -->
+                                    <Label 
+                                        Margin="20,0,0,0"
+                                        IsVisible="{Binding IsScanRecord}"
+                                        Grid.Row="1"
+                                        Grid.Column="4"
+                                        Text="{Binding ProductionTimestamp, StringFormat='Produced: {0}'}"
+                                        FontSize="12"
+                                        TextColor="{StaticResource Gray500}"
+                                        VerticalOptions="Start"/>
+                                    <!-- DataRecord Shift Label -->
+                                    <Label
+                                        Margin="10,0,0,0"
+                                        Grid.Row="1"
+                                        Grid.Column="5"
                                         Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
-                                    <!-- DataRecord Operator Label -->
-                                    <Label
-                                        Margin="5,0,0,0"
+                                    <!-- DataRecord Production Operator -->
+                                    <Label 
+                                        Margin="10,0,0,0"
                                         Grid.Row="1"
-                                        Grid.Column="4"
-                                        Text="{Binding OperatorID, StringFormat='ID: {0}'}"
+                                        Grid.Column="6"
+                                        Text="{Binding OperatorID, StringFormat='Operator: {0}'}"
                                         FontSize="12"
                                         TextColor="{StaticResource Gray500}"
                                         VerticalOptions="Start"/>
@@ -513,7 +704,7 @@
                                     <BoxView
                                         Grid.Row="2"
                                         Grid.Column="0"
-                                        Grid.ColumnSpan="5"
+                                        Grid.ColumnSpan="7"
                                         HeightRequest="1"
                                         HorizontalOptions="Fill"
                                         VerticalOptions="Center"

@@ -2,6 +2,8 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Datasources;
 using LotCoMClient.Models.Options;
 using LotCoMClient.Models.Services;
+using System.Linq.Dynamic;
+using System.Threading.Tasks;
 
 namespace LotCoMClient.ViewModels;
 
@@ -26,18 +28,33 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
-    private NotifyTaskCompletion<List<DataRecord>>? _data;
+    private NotifyTaskCompletion<Models.Datasources.Page>? _basePage;
     /// <summary>
-    /// Serves the Data in the Page's assigned Database Table.
+    /// An unmodified version of the DataRecord Page currently shown by the DataTablePage.
     /// </summary>
-    public NotifyTaskCompletion<List<DataRecord>>? Data 
+    public NotifyTaskCompletion<Models.Datasources.Page>? BasePage 
     {
-        get {return _data;}
+        get {return _basePage;}
         set 
         {
-            _data = value;
-            OnPropertyChanged(nameof(_data));
-            OnPropertyChanged(nameof(Data));
+            _basePage = value;
+            OnPropertyChanged(nameof(_basePage));
+            OnPropertyChanged(nameof(BasePage));
+        }
+    }
+
+    private NotifyTaskCompletion<Models.Datasources.Page>? _currentPage;
+    /// <summary>
+    /// A modifyable version of the DataRecord Page currently shown by the DataTablePage.
+    /// </summary>
+    public NotifyTaskCompletion<Models.Datasources.Page>? CurrentPage 
+    {
+        get {return _currentPage;}
+        set 
+        {
+            _currentPage = value;
+            OnPropertyChanged(nameof(_currentPage));
+            OnPropertyChanged(nameof(CurrentPage));
         }
     }
 
@@ -56,6 +73,21 @@ public partial class DataTableViewModel : ObservableObject
         }
     }
 
+    private string _pageNumberContext = "";
+    /// <summary>
+    /// Provides a formatted string that gives the context of the currently displayed Page Number in the PageSet.
+    /// </summary>
+    public string PageNumberContext
+    {
+        get {return _pageNumberContext;}
+        set
+        {
+            _pageNumberContext = value;
+            OnPropertyChanged(nameof(_pageNumberContext));
+            OnPropertyChanged(nameof(PageNumberContext));
+        }
+    }
+
     /// <summary>
     /// Resolves a defined Property Name on DataRecord from a passed String.
     /// </summary>
@@ -65,7 +97,8 @@ public partial class DataTableViewModel : ObservableObject
     private static string ResolveDataRecordPropertyName(string String) 
     {
         // create a conversion Library to convert plaintext selections to DataRecord property names
-        Dictionary<string, string> Conversions = new Dictionary<string, string>() {
+        Dictionary<string, string> Conversions = new Dictionary<string, string>() 
+        {
             {"Part Number", "RecordPart.PartNumber"},
             {"Part Name", "RecordPart.PartName"},
             {"Quantity", "Quantity"},
@@ -92,6 +125,38 @@ public partial class DataTableViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Performs an in-place sort of the DataRecords property of CurrentPage.
+    /// </summary>
+    /// <param name="SortingProperty"></param>
+    /// <param name="SortOrder"></param>
+    /// <returns></returns>
+    /// <exception cref="OperationCanceledException"></exception>
+    private async Task<NotifyTaskCompletion<Models.Datasources.Page>> SortCurrentPage(string SortingProperty, int SortOrder)
+    {
+        // confirm that the CurrentPage is available for operations
+        if (CurrentPage is null 
+            || CurrentPage.IsNotCompleted 
+            || CurrentPage.Result is null)
+        {
+            throw new OperationCanceledException();
+        }
+        return await Task.Run(() => 
+        {
+            // use LINQ dynamic to sort using the property selected in the sorting field picker
+            CurrentPage.Result.DataRecords = CurrentPage.Result.DataRecords
+                .AsQueryable()
+                .OrderBy(SortingProperty)
+                .ToList();
+            // invert the order (ascending by default) if descending sort was selected
+            if (SortOrder == 1) 
+            {
+                CurrentPage.Result.DataRecords.Reverse();
+            }
+            return CurrentPage;
+        });
+    }
+
+    /// <summary>
     /// Creates a ViewModel for the DataTablePage.
     /// </summary>
     /// <param name="DataTablePath">The desired display Database Table's full path.</param>
@@ -100,42 +165,113 @@ public partial class DataTableViewModel : ObservableObject
     /// <param name="IsProcessAssigned">Indicates whether the Selector Page has been assigned a Process (True by default).</param>
     public DataTableViewModel(string DataTablePath, string PageTitle, Type RecordType, bool IsProcessAssigned = true) 
     {
-        // assign properties
+        // configure the Page's basic properties
         Options.Title = PageTitle;
         Options.RecordType = RecordType;
+        Options.IsProcessAssigned = IsProcessAssigned;
         // configure the Page based on whether an initial Process is assigned
-        if (IsProcessAssigned) 
+        if (Options.IsProcessAssigned) 
         {
             // create a DataTable from the path passed in DataTablePath
             Table = new DataTable(DataTablePath);
-            Data = new NotifyTaskCompletion<List<DataRecord>>(Table.ReadRecordsAsync());
-            // set the left frame panel's header
-            Options.LeftPanelHeaderText = Table!.TableProcess;
-            Options.BodyTableHeaderText = "Loading records...";
+            // display the first Page in the DataTable with the default PageLength
+            SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table.RequestPage(0, Options.PageLength)));
+            Options.Process = Table.Process;
+            Options.LeftPanelHeaderText = Table.Process!.FullName;
+            Options.SetBodyHeaderModeToLabel("Loading records...");
         // no Process is assigned at instantiation
         } 
         else 
         {
-            // set the table to null
-            Table = null;
-            Data = null;
-            // set the left frame panel's header to a default no process string
-            Options.LeftPanelHeaderText = "Select Process...";
-            Options.BodyTableHeaderText = "";
+            Options.SetBodyHeaderModeToLabel("Select Process...");
         }
     }
 
     /// <summary>
-    /// Sorts the DataRecords in the Data property using the Sorting Field and orders it according to the Order selection.
+    /// Clears the Sorting and Searching options and resets them to the default values.
+    /// </summary>
+    public void ClearFilterOptions()
+    {
+        Options.SelectedSortingFieldIndex = DataTablePageOptions.OptionDefaults.SelectedSortingFieldIndex;
+        Options.SelectedSortingOrderIndex = DataTablePageOptions.OptionDefaults.SelectedSortingOrderIndex;
+        Options.SearchTerm = DataTablePageOptions.OptionDefaults.SearchTerm;
+        Options.SelectedSearchingFieldIndex = DataTablePageOptions.OptionDefaults.SelectedSearchingFieldIndex;
+    }
+
+    /// <summary>
+    /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
+    /// </summary>
+    /// <param name="NewPage"></param>
+    public void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage)
+    {
+        BasePage = NewPage;
+        CurrentPage = NewPage;
+        Options.PageNumber = Table!.ActivePageSet.ActivePageIndex + 1;
+        PageNumberContext = $"{Options.PageNumber} of {Table!.ActivePageSet.PageCount}";
+    }
+
+    /// <summary>
+    /// Jumps to the first Page in the Table's current Pages (the newest Records).
+    /// </summary>
+    public void GoToFirstPage()
+    {
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToFirstPage()));
+    }
+
+    /// <summary>
+    /// Goes to the previous Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public void GoToPreviousPage()
+    {
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToPreviousPage()));
+    }
+
+    /// <summary>
+    /// Jumps to the last Page in the Table's current Pages (the oldest Records).
+    /// </summary>
+    public void GoToLastPage()
+    {
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToLastPage()));
+    }
+
+    /// <summary>
+    /// Goes to the next Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public void GoToNextPage()
+    {
+        // update the DataTablePage to show the new Active Page of the PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.GoToNextPage()));
+    }
+
+    /// <summary>
+    /// Refreshes the DataTable's PageSets to display a new PageSet with the passed configurations.
+    /// </summary>
+    /// <param name="MaxCount">(Optional) Set a limit on the number of Pages allowed in the PageSet.</param>
+    /// <returns></returns>
+    public void RefreshPages(int MaxCount = -1)
+    {
+        // update the DataTablePage to show the Active Page of the new PageSet
+        SetNewPage(new NotifyTaskCompletion<Models.Datasources.Page>(Table!.RefreshPages(MaxCount, Options.PageLength)));
+    }
+
+    /// <summary>
+    /// Sorts the DataRecords in the CurrentPage property using the Sorting Field and orders it according to the Order selection.
     /// </summary>
     /// <returns></returns>
-    public void SortDataTable()
+    public async Task SortPage()
     {
         // get the selected Field from the Sorting Field Picker
+        if (Options.SelectedSortingFieldIndex == -1 || Options.SelectedSortingOrderIndex == -1)
+        {
+            return;
+        }
         string SortField = Options.DataFields[Options.SelectedSortingFieldIndex];
         SortField = ResolveDataRecordPropertyName(SortField);
         // sort using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSort(SortField, Options.SelectedSortingOrderIndex));
+        CurrentPage = await SortCurrentPage(SortField, Options.SelectedSortingOrderIndex);
     }
 
     /// <summary>
@@ -143,13 +279,19 @@ public partial class DataTableViewModel : ObservableObject
     /// Configures the Data property to only show those match hits.
     /// </summary>
     /// <returns></returns>
-    public void SearchDataTable() {
+    public void SearchDataTable() 
+    {
         // get the selected Field from the Searching Field Picker
+        if (Options.SelectedSearchingFieldIndex == -1)
+        {
+            return;
+        }
         string PropertyName = Options.SearchableFields[Options.SelectedSearchingFieldIndex];
-        if (PropertyName != "All") {
+        if (PropertyName != "All") 
+        {
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        Data = new NotifyTaskCompletion<List<DataRecord>>(Table!.RequestSearch(Options.SearchTerm, PropertyName));
+        CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.PageLength));
     }
 }

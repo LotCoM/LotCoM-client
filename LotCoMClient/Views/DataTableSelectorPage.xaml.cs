@@ -1,5 +1,6 @@
+using System.Threading.Tasks;
 using LotCoMClient.Models.Datasources;
-using LotCoMClient.Models.Options;
+using LotCoMClient.Models.Services;
 
 namespace LotCoMClient.Views;
 
@@ -14,114 +15,44 @@ public partial class DataTableSelectorPage : ContentPage
 	private readonly ViewModels.DataTableSelectorViewModel _viewModel;
 
     /// <summary>
-    /// The ViewModel's Options property, exposed for easier access.
+    /// Asynchronously evaluates the state of the CurrentPage property and configures the Body Header accordingly.
+    /// If CurrentPage is loaded, shows the Navigation Panel. Else, shows "Loading Records...".
     /// </summary>
-    private readonly DataTablePageOptions _options;
-
-    /// <summary>
-    /// Asynchronously evaluates the state of the Data property and sets the BodyTableHeader property accordingly.
-    /// If Data is loaded, shows the Record count. Else, shows "Loading Records...".
-    /// </summary>
-    private async Task ConfigureBodyTableHeader() 
+    private async Task ConfigureBodyHeader() 
     {
         await Task.Run(() => 
         {
-            // get the count of Data entries
-            int DataCount;
-            // do not do any processing if Data is null (no-Process instantiation)
-            if (_viewModel.Data == null) 
+            // do not do any processing if there is no CurrentPage to show (no-Process instantiation)
+            if (_viewModel.CurrentPage is null) 
             {
                 return;
             }
-            // the Data property is set and is either loading or completed
-            if (_viewModel.Data!.IsCompleted && _viewModel.Data.Result != null) 
+            // the CurrentPage is set and is either loading or completed
+            if (_viewModel.CurrentPage!.IsCompleted && _viewModel.CurrentPage.Result != null) 
             {
-                DataCount = _viewModel.Data.Result.Count;
-                // update the BodyTableHeader to show the item count
-                if (DataCount > 1) 
-                {
-                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
-                } 
-                else 
-                {
-                    _options.BodyTableHeaderText = $"Showing {DataCount} records";
-                }
-            // the data is not loaded yet; default BodyTableHeader property
+                // CurrentPage is loaded; update the BodyTableHeader to show the item count and navigation
+                _viewModel.Options.SetBodyHeaderModeToNavigation();
             } 
             else 
             {
-                _options.BodyTableHeaderText = "Loading records...";
+                // the CurrentPage is not loaded yet; default Body Table Header options
+                _viewModel.Options.SetBodyHeaderModeToLabel("Loading records...");
             }
         });
     }
 
     /// <summary>
-    /// Checks that the Table has DataRecords available. Updates the Data fields based on that Data.
+    /// Checks that the Table has a CurrentPage available. Updates the Data and Search fields based on that Page's DataRecords.
     /// </summary>
     /// <returns></returns>
-    private async Task ConfigureDataFields() 
+    private async Task ConfigurePageFields() 
     {
-        // perform the config logic on a new CPU thread
-        await Task.Run(() => 
+        // confirm that the Data property has completed its async task
+        if (_viewModel.CurrentPage is null || _viewModel.CurrentPage.IsNotCompleted) 
         {
-            // confirm that the Data property has completed its async task
-            if (_viewModel.Data == null || _viewModel.Data.IsNotCompleted) 
-            {
-                return;
-            }
-            List<string> Sortables = ["Part Number", "Part Name", "Quantity"];
-            // add the variably-required DataRecord fields (only if Data is loaded)
-            DataRecord SampleRecord;
-            if (_viewModel.Data.Result != null && _viewModel.Data.Result.Count > 0) 
-            {
-                SampleRecord = _viewModel.Data.Result[0];
-                if (SampleRecord.IncludesJBKNumber) 
-                {
-                    Sortables.Add("JBK Number");
-                }
-                if (SampleRecord.IncludesLotNumber) 
-                {
-                    Sortables.Add("Lot Number");
-                }
-                if (SampleRecord.IncludesDeburrJBKNumber) 
-                {
-                    Sortables.Add("Deburr JBK Number");
-                }
-                if (SampleRecord.IncludesDieNumber) 
-                {
-                    Sortables.Add("Die Number");
-                }
-                if (SampleRecord.IncludesModelNumber) 
-                {
-                    Sortables.Add("Model Number");
-                }
-                if (SampleRecord.IncludesHeatNumber) 
-                {
-                    Sortables.Add("Heat Number");
-                }
-            }
-            Sortables.AddRange(["Production Date", "Production Time", "Production Shift", "Operator ID"]);
-            // update the ViewModel DataFields and SearchableFields property
-            _options.DataFields = Sortables;
-            _options.SearchableFields = Sortables
-                .Prepend("All")
-                .ToList();
-        });
-    }
-
-    /// <summary>
-    /// Creates a new DataTableSelectorPage.
-    /// </summary>
-    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
-    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) 
-    {
-		// instantiate the ViewModel
-        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
-        _options = _viewModel.Options;
-        BindingContext = _viewModel;
-
-        // create the page from XAML
-		InitializeComponent();
+            return;
+        }
+        await _viewModel.Options.ConfigurePageFields();
     }
 
     /// <summary>
@@ -129,45 +60,82 @@ public partial class DataTableSelectorPage : ContentPage
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
+    private async void OnPageLeftFrameCollapseButtonClicked(object sender, EventArgs e) 
     {
         await Task.Delay(0);
-        // the Panel needs to collapse
-        if (_options.IsLeftPanelShown) 
+        if (_viewModel.Options.IsLeftPanelShown) 
         {
-            // set the Left Panel properties in the ViewModel
-            _options.IsLeftPanelShown = false;
-            _options.IsLeftPanelHidden = true;
-            // non-animated collapse
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Closed;
-            PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (250 -> 30 by increments of 10)
-            // while (_viewModel.LeftFrameWidth > 30) {
-            //     // animate the panel shrinking
-            //     _viewModel.LeftFrameWidth -= 10;
-            //     // animate the collapse button rotating
-            //     PageLeftFrameCollapseButton.Rotation += 15;
-            //     await Task.Delay(1);
-            // }
-        // the Panel needs to raise
+            _viewModel.Options.CollapseLeftPanel();
         } 
         else 
         {
-            // set the Left Panel properties in the ViewModel
-            _options.IsLeftPanelShown = true;
-            _options.IsLeftPanelHidden = false;
-            // non-animated raise
-            _options.LeftPanelWidth = (int)DataTablePageOptions.LeftPanelWidths.Open;
-            PageLeftFrameCollapseButton.Rotation += 180;
-            // // 12 frame animation (30 -> 250 by increments of 10)
-            // while (_viewModel.LeftFrameWidth < 250) {
-            //     // animate the panel raising
-            //     _viewModel.LeftFrameWidth += 10;
-            //     // animate the collapse button rotating
-            //     PageLeftFrameCollapseButton.Rotation += 15;
-            //     await Task.Delay(1);
-            // }
+            _viewModel.Options.RaiseLeftPanel();
         }
+        LeftPanelCollapseButton.Rotation += 180;
+    }
+
+    /// <summary>
+    /// Handler for the PropertyChanged event from the PageDataTableListView control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
+    {
+        // update BodyTableHeader property
+        await ConfigureBodyHeader();
+        await ConfigurePageFields();
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the ListViewSortingFieldPicker and ListViewSortingOrderPicker controls.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
+    {
+        // update ViewModel sorting indexes
+        if (ListViewSortingFieldPicker is null || ListViewSortingOrderPicker is null)
+        {
+            return;
+        }
+        _viewModel.Options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
+        _viewModel.Options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
+        // invoke the ViewModel sort method
+        await _viewModel.SortPage();
+    }
+
+    /// <summary>
+    /// Handler for the SearchButtonPressed event from the ListViewSearchingSearchBar control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
+    {
+        await Task.Run(() => 
+        {
+            // invoke the ViewModel local sort method using the current search term
+            if (ListViewSearchingFieldPicker is null)
+            {
+                return;
+            }
+            _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
+            _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
+            _viewModel.SearchDataTable();
+        });
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the ListViewSearchingClearButton and ListViewSortingClearButton controls. 
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private async void OnListViewFilterClearButtonClicked(object sender, EventArgs e)
+    {
+        // clear the Page's filtering Options, refresh the Base Pages, and reset the Page's CurrentPage
+        _viewModel.ClearFilterOptions();
+        await _viewModel.Table!.RefreshPages(-1, _viewModel.Options.PageLength);
+        await _viewModel.Table!.GoToBasePages();
+        _viewModel.CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(_viewModel.Table.ActivePageSet.GetActivePage());
     }
 
     /// <summary>
@@ -178,57 +146,85 @@ public partial class DataTableSelectorPage : ContentPage
     private void OnPageProcessSelectionChanged(object sender, EventArgs e) 
     {
         // invoke the ViewModel method to update the UI
-        _viewModel.UpdatePageProcess(PageProcessPicker);
+        _viewModel.UpdatePageProcess(ProcessPicker);
         // update and collapse the Page's Left Frame Panel
-        _options.LeftPanelHeaderText = ((Process)PageProcessPicker.ItemsSource[_options.SelectedProcessIndex]!).FullName;
-        if (_options.IsLeftPanelShown) 
+        _viewModel.Options.LeftPanelHeaderText = ((Process)ProcessPicker.ItemsSource[_viewModel.Options.SelectedProcessIndex]!).FullName;
+        if (_viewModel.Options.IsLeftPanelShown) 
         {
-            OnPageLeftFrameCollapseButtonClicked(PageLeftFrameCollapseButton, new EventArgs());
+            OnPageLeftFrameCollapseButtonClicked(LeftPanelCollapseButton, new EventArgs());
         }
     }
-    
+
     /// <summary>
-    /// Handler for the PropertyChanged event from the PageDataTableListView control.
+    /// Handler for the Clicked event from the OnGoToFirstPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnPageDataTableListViewPropertyChanged(object sender, EventArgs e) 
+    private void OnGoToFirstPageButtonClicked(object sender, EventArgs e)
     {
-        // update BodyTableHeader property
-        await ConfigureBodyTableHeader();
-        await ConfigureDataFields();
+        _viewModel.GoToFirstPage();
     }
 
     /// <summary>
-    /// Handler for the SelectedIndexChanged event from the ListViewSortingFieldPicker and ListViewSortingOrderPicker controls.
+    /// Handler for the Clicked event from the OnGoToPreviousPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnSortParameterSelectedIndexChanged(object sender, EventArgs e) 
+    private void OnGoToPreviousPageButtonClicked(object sender, EventArgs e)
     {
-        await Task.Run(() => 
-        {
-            // update ViewModel sorting indexes
-            _options.SelectedSortingFieldIndex = ListViewSortingFieldPicker.SelectedIndex;
-            _options.SelectedSortingOrderIndex = ListViewSortingOrderPicker.SelectedIndex;
-            // invoke the ViewModel sort method
-            _viewModel.SortDataTable();
-        });
+        _viewModel.GoToPreviousPage();
     }
 
     /// <summary>
-    /// Handler for the SearchButtonPressed event from the ListViewSearchingSearchBar control.
+    /// Handler for the Clicked event from the OnGoToNextPageButton control.
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    public async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
+    private void OnGoToNextPageButtonClicked(object sender, EventArgs e)
     {
-        await Task.Run(() => 
+        _viewModel.GoToNextPage();
+    }
+
+    /// <summary>
+    /// Handler for the Clicked event from the OnGoToLastPageButton control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnGoToLastPageButtonClicked(object sender, EventArgs e)
+    {
+        _viewModel.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Handler for the SelectedIndexChanged event from the PageLengthPicker control.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void OnPageLengthPickerSelectedIndexChanged(object sender, EventArgs e)
+    {
+        // get the newly selected PageLength value and update it in the ViewModel
+        if (PageLengthPicker is null)
         {
-            // invoke the ViewModel local sort method using the current search term
-            _options.SearchTerm = ListViewSearchingSearchBar.Text;
-            _options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
-            _viewModel.SearchDataTable();
-        });
+            return;
+        }
+        int PageLength = (int)PageLengthPicker.ItemsSource[_viewModel.Options.SelectedPageLengthIndex]!;
+        _viewModel.Options.PageLength = PageLength;
+        // refresh the Data Table to use a new PageSet based on the selected PageLength
+        _viewModel.RefreshPages();
+        _viewModel.ClearFilterOptions();
+    }
+
+    /// <summary>
+    /// Creates a new DataTableSelectorPage.
+    /// </summary>
+    /// <param name="PageTitle">A string to apply as the Page's Title.</param>
+    public DataTableSelectorPage(string DataTablePath, string PageTitle, string Department, Type RecordType, bool IsProcessAssigned = true) 
+    {
+		// instantiate the ViewModel
+        _viewModel = new ViewModels.DataTableSelectorViewModel(DataTablePath, PageTitle, Department, RecordType, IsProcessAssigned);
+        BindingContext = _viewModel;
+
+        // create the page from XAML
+		InitializeComponent();
     }
 }

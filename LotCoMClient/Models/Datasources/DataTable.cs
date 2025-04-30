@@ -1,7 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using LotCoMClient.Models.Exceptions;
-using LotCoMClient.Models.Options;
-using System.Linq.Dynamic;
 
 namespace LotCoMClient.Models.Datasources;
 
@@ -14,6 +12,26 @@ public partial class DataTable : ObservableObject
     /// Allows parsing of CSV Lines into DataRecord objects.
     /// </summary>
     private readonly RecordParser Parser = new RecordParser();
+
+    /// <summary>
+    /// Holds a List of strings resulting from the latest file read.
+    /// </summary>
+    private List<string> LastReadLines = [];
+
+    /// <summary>
+    /// Holds a List of strings that are matching results of the latest Search algorithm.
+    /// </summary>
+    private List<string> SearchResultLines = [];
+
+    /// <summary>
+    /// Holds a List of Pages created from this Table's unfiltered data.
+    /// </summary>
+    private PageSet BasePages;
+
+    /// <summary>
+    /// Holds a custom List of Pages created from the latest Search algorithm.
+    /// </summary>
+    private PageSet SearchPages;
 
     private string _path = "";
     /// <summary>
@@ -35,15 +53,6 @@ public partial class DataTable : ObservableObject
         private set {_recordType = value;}
     }
 
-    private DataTableRecordsState _recordsState = new DataTableRecordsState();
-    /// <summary>
-    /// Holds the Table's current DataRecords State.
-    /// </summary>
-    public DataTableRecordsState RecordsState {
-        get {return _recordsState;}
-        set {_recordsState = value;}
-    }
-
     private List<string> _headers = [];
     /// <summary>
     /// Holds the Headers (keys) for each data field that the DataRecords in this Table contain.
@@ -54,11 +63,30 @@ public partial class DataTable : ObservableObject
         private set {_headers = value;}
     }
 
-    [ObservableProperty]
+    private Process? _process = null;
     /// <summary>
-    /// Observable property exposing the Name of the Process producing the Records in this Table.
+    /// The Process producing the Records in this Table.
     /// </summary>
-    public partial string TableProcess {get; set;}
+    public Process? Process 
+    {
+        get {return _process;}
+        private set {_process = value;}
+    }
+
+    private PageSet _activePageSet = new PageSet(typeof(DataRecord));
+    /// <summary>
+    /// Controls this Table's active PageSet, which is the PageSet the Table displays Pages from.
+    /// </summary>
+    public PageSet ActivePageSet
+    {
+        get {return _activePageSet;}
+        private set 
+        {
+            _activePageSet = value;
+            OnPropertyChanged(nameof(_activePageSet));
+            OnPropertyChanged(nameof(ActivePageSet));
+        }
+    }
 
     /// <summary>
     /// Parses a DataRecord of the DataTable's RecordType from CSVLine.
@@ -88,6 +116,28 @@ public partial class DataTable : ObservableObject
     /// </summary>
     /// <param name="Text"></param>
     /// <returns>A List of strings.</returns>
+    private List<string> ParseLines(string Text) {
+        // separate the read text into record lines (split by newline character)
+        List<string> RecordLines = Text
+            .Split("\n")
+            .ToList();
+        // remove the first entry and save it as the headers property
+        Headers = RecordLines[0]
+            .Split(",")
+            .ToList();
+        RecordLines.RemoveAt(0);
+        // remove any empty lines
+        RecordLines = RecordLines
+            .Where(x => !x.Equals(""))
+            .ToList();
+        return RecordLines;
+    }
+
+    /// <summary>
+    /// Asynchronously parses a bulk string into Lines that can be parsed.
+    /// </summary>
+    /// <param name="Text"></param>
+    /// <returns>A List of strings.</returns>
     private async Task<List<string>> ParseLinesAsync(string Text) {
         return await Task.Run(() => {
             // separate the read text into record lines (split by newline character)
@@ -108,12 +158,42 @@ public partial class DataTable : ObservableObject
     }
 
     /// <summary>
-    /// Asynchronously opens, reads, and formats the text in DataTable.Path as a list of DataRecords.
+    /// Reads the data file and formats the text as a List of strings that can later be parsed into DataRecord objects.
+    /// Stores the List in Table.LastReadLines.
     /// </summary>
+    /// <remarks>
+    /// Does not perform any formatting.
+    /// </remarks>
+    /// <returns>A List of Lines as strings.</returns>
+    private List<string> ReadLines()
+    {
+        // read the Database Table at the Path property
+        string Text;
+        try 
+        {
+            Text = File.ReadAllText(Path);
+        } 
+        catch (Exception _ex) 
+        {
+            throw new FileLoadException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
+        }
+        // split the text into a list of Line strings and update the cached Lines list
+        LastReadLines = ParseLines(Text);
+        // reverse list to show newest Lines first
+        LastReadLines.Reverse();
+        return LastReadLines;
+    }
+
+    /// <summary>
+    /// Asynchronously reads the data file and formats the text as a List of strings that can later be parsed into DataRecord objects.
+    /// Stores the List in Table.LastReadLines.
+    /// </summary>
+    /// <remarks>
+    /// Does not perform any formatting.
+    /// </remarks>
+    /// <returns>A List of Lines as strings.</returns>
     /// <exception cref="OperationCanceledException"></exception>
-    /// <exception cref="RecordParseException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task<List<DataRecord>> ReadAsync() 
+    private async Task<List<string>> ReadLinesAsync()
     {
         // read the Database Table at the Path property
         string Text;
@@ -125,160 +205,81 @@ public partial class DataTable : ObservableObject
         {
             throw new OperationCanceledException($"Failed to read the Database file: '{Path}' due to the following exception:\n{_ex.Message}.");
         }
-        // parse the text into individual DataRecord objects as a batch of async Tasks
-        List<string> RecordLines = await ParseLinesAsync(Text);
-        IEnumerable<Task<DataRecord>>? Tasks = RecordLines.Select(ParseRecordAsync);
-        DataRecord[]? ParseResult = await Task.WhenAll(Tasks);
-        if (ParseResult == null) 
+        // split the text into a list of Line strings and update the cached Lines list
+        LastReadLines = await ParseLinesAsync(Text);
+        // reverse list to show newest Lines first
+        LastReadLines.Reverse();
+        return LastReadLines;
+    }
+
+    /// <summary>
+    /// Searches each Line in LastReadLines for a match in ANY field (as a continuous CSV string). 
+    /// </summary>
+    /// <remarks>
+    /// Updates LastReadLines to contain the matching Lines.
+    /// </remarks>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <returns>A List of strings that were match hits for the search.</returns>
+    private async Task<List<string>> SearchAllFieldsAsync(string SearchTerm) 
+    {
+        // confirm that there are Lines to search through
+        if (LastReadLines is null) 
+        {
+            try
+            {
+                await ReadLinesAsync();
+            }
+            catch
+            {
+                throw new OperationCanceledException();
+            }
+        }
+        SearchResultLines = LastReadLines!;
+        // return all hits for the search term
+        SearchResultLines = SearchResultLines!
+            .Where(x => x
+            .Contains(SearchTerm))
+            .ToList();
+        return SearchResultLines;
+    }
+
+    /// <summary>
+    /// Searches each Line in LastReadLines for a match in PropertyName field.
+    /// </summary>
+    /// <remarks>
+    /// Updates LastReadLines to contain the matching Lines.
+    /// </remarks>
+    /// <param name="SearchTerm">The term to match.</param>
+    /// <param name="PropertyName">The name of the Property to search in.</param>
+    /// <exception cref="OperationCanceledException"></exception>
+    /// <returns>A List of strings that were match hits for the search.</returns>
+    private async Task<List<string>> SearchSingleFieldAsync(string SearchTerm, string PropertyName) 
+    {
+        // first find all Lines with hits in any field
+        SearchResultLines = await SearchAllFieldsAsync(SearchTerm);
+        // convert all Hits into DataRecords
+        IEnumerable<Task<DataRecord>>? ParseTasks = SearchResultLines!
+            .Select(ParseRecordAsync);
+        DataRecord[]? ParseResults = await Task.WhenAll(ParseTasks);
+        // confirm that the Parse was successful
+        if (ParseResults is null) 
         {
             return [];
         }
-        else 
-        {
-            return ParseResult.ToList();
-        }
-    }
-
-    /// <summary>
-    /// Asynchronously opens and overwrites the data in DataTable._path with the current list of DataRecords in DataTable._records.
-    /// </summary>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    private async Task SaveAsync(List<DataRecord> Records) 
-    {
-        // format the passed DataRecords as single string separated by newlines on a new CPU thread
-        if (Records != null) 
-        {
-            string Text = await Task.Run(() => 
-            {
-                string Formatted = "";
-                foreach (DataRecord _record in Records) 
-                {
-                    Formatted = $"{Formatted}{_record.ToCSV()}\n";
-                }
-                // return the formatted single string
-                return Formatted;
-            });
-            // asynchronously write the single string as text to the Database Table file at _path
-            await File.WriteAllTextAsync(Path, Text);
-        } 
-        else 
-        {
-            throw new OperationCanceledException("Cannot save null to the Database Table file.");
-        }
-    }
-
-    /// <summary>
-    /// Sorts the Table's Records list using SortingProperty as the sort.
-    /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
-    /// Does NOT overwrite with the sorted list.
-    /// </summary>
-    /// <param name="SortingProperty"></param>
-    /// <param name="SortOrder"></param>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords sorted using the Property and Order.</returns>
-    private async Task<List<DataRecord>> SortRecordsAsync(string SortingProperty, int SortOrder) 
-    {
-        if (RecordsState.Current == null) 
-        {
-            throw new OperationCanceledException();
-        }
-        // perform the sort algorithm on a new CPU thread
-        return await Task.Run(() => 
-        {
-            // use LINQ dynamic to sort using the property selected in the sorting field picker
-            List<DataRecord> SortedData = RecordsState.Current
-                .AsQueryable()
-                .OrderBy(SortingProperty)
-                .ToList();
-            // invert the order (ascending by default) if descending sort was selected
-            if (SortOrder == 1) 
-            {
-                SortedData.Reverse();
-            }
-            return SortedData;
-        });
-    }
-
-    /// <summary>
-    /// Searches each DataRecord for a match in ANY field (as a continuous string). 
-    /// </summary>
-    /// <param name="SearchTerm">The term to match.</param>
-    /// <exception cref="OperationCanceledException"></exception>
-    /// <returns>A List of DataRecords that were match hits for the search.</returns>
-    private async Task<List<DataRecord>> SearchAllFieldsAsync(string SearchTerm) 
-    {
-        if (RecordsState.LastRead == null) 
-        {
-            throw new OperationCanceledException();
-        }
-        // perform the search algorithm on a new CPU thread
-        return await Task.Run(() => 
-        {
-            // convert each DataRecord in RecordsState.LastRead to a CSV Line and check for a hit
-            List<DataRecord> SearchHits = [];
-            foreach (DataRecord _record in RecordsState.LastRead) 
-            {
-                string _recordString = _record.ToCSV();
-                if (_recordString.Contains(SearchTerm)) 
-                {
-                    SearchHits.Add(_record);
-                }
-            }
-            return SearchHits;
-        });
-    }
-
-    /// <summary>
-    /// Searches each DataRecord for a match in PropertyName field.
-    /// </summary>
-    /// <param name="SearchTerm">The term to match.</param>
-    /// <param name="PropertyName">The name of the Property to search in.</param>
-    /// <returns>A List of DataRecords that were match hits for the search.</returns>
-    private async Task<List<DataRecord>> SearchSingleFieldAsync(string SearchTerm, string PropertyName) 
-    {
-        if (RecordsState.LastRead == null) 
-        {
-            throw new OperationCanceledException();
-        }
-        return await Task.Run(() => 
-        {
-            // convert each DataRecord in _records to a CSV Line and check for a hit
-            List<DataRecord> SearchHits = [];
-            SearchHits = RecordsState.LastRead.Where(x => x.GetType()!
-                .GetProperty(PropertyName)!
-                .GetValue(x)!
-                .ToString()!
-                .Contains(SearchTerm))
-                .ToList();
-            return SearchHits;
-        });
-    }
-
-    /// <summary>
-    /// Runs one of the two Search Algorithms. 
-    /// The chosen Algorithm depends on the value of PropertyName.
-    /// </summary>
-    /// <param name="SearchTerm"></param>
-    /// <param name="PropertyName"></param>
-    /// <returns></returns>
-    private async Task<List<DataRecord>> SearchAsync(string SearchTerm, string PropertyName) 
-    {
-        return await Task.Run(async () => 
-        {
-            List<DataRecord> Hits;
-            // search in all fields of each DataRecord
-            if (PropertyName.Equals("All")) 
-            {
-                Hits = await SearchAllFieldsAsync(SearchTerm);
-            // search in a singular field of each DataRecord
-            } 
-            else 
-            {
-                Hits = await SearchSingleFieldAsync(SearchTerm, PropertyName);
-            }
-            return Hits;
-        });
+        // now find all DataRecords with a hit in the specific field requested
+        List<DataRecord> RecordHits = ParseResults
+            .Where(x => x.GetType()!
+            .GetProperty(PropertyName)!
+            .GetValue(x)!
+            .ToString()!
+            .Contains(SearchTerm))
+            .ToList();
+        // convert those DataRecords back to strings and return
+        SearchResultLines = RecordHits
+            .Select(x => x.ToCSV())
+            .ToList();
+        return SearchResultLines;
     }
 
     /// <summary>
@@ -300,112 +301,162 @@ public partial class DataTable : ObservableObject
         } 
         else 
         {
-            throw new ArgumentException($"Could not create a DataTable object from the file at {Path}.");
+            throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}'.");
         }
         // set the Table's Process using the filename
-        TableProcess = Path
+        string ProcessName = Path
             .Split("\\")[^1]
             .Replace(".txt", "");
-    }
-
-    /// <summary>
-    /// Retrieves either the Current or LastRead List of DataRecords in the Table.
-    /// </summary>
-    /// <exception cref="SystemException"></exception>
-    /// <returns>A List of DataRecords.</returns>
-    public async Task<List<DataRecord>> RequestRecords() 
-    {
-        return await Task.Run(() => {
-            // return the DataRecords stored in runtime
-            if (RecordsState.Current != null)
-            {
-                return RecordsState.Current;
-            }
-            else if (RecordsState.LastRead != null)
-            {
-                return RecordsState.LastRead;
-            }
-            else 
-            {
-                return [];
-            }
-        });
-    }
-
-    /// <summary>
-    /// Refreshes the Database Table in runtime.
-    /// </summary>
-    /// <returns>A list of DataRecords currently in the Database Table.</returns>
-    /// <exception cref="SystemException"></exception>
-    public async Task<List<DataRecord>> ReadRecordsAsync() 
-    {
-        // read the DataRecord and return the NotifyTaskCompletion object holding the promised list
-        try 
+        try
         {
-            RecordsState.LastRead = await ReadAsync();
-            RecordsState.Current = RecordsState.LastRead;
-            return RecordsState.LastRead;
-        } 
-        catch (Exception _ex) 
-        {
-            throw new SystemException($"Could not complete the read request due to the following exception:\n {_ex.Message}");
+            Process = new ProcessData().GetIndividualProcess(ProcessName);
         }
-    }
-
-    /// <summary>
-    /// Asynchronously saves DataRecords to DataTable.Path and updates DataTable.RecordsState.LastRead in runtime.
-    /// </summary>
-    /// <param name="Records">A List of DataRecords to write to DataTable._path.</param>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="PathTooLongException"></exception>
-    /// <exception cref="DirectoryNotFoundException"></exception>
-    /// <exception cref="IOException"></exception>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    /// <exception cref="FileNotFoundException"></exception>
-    /// <exception cref="NotSupportedException"></exception>
-    /// <exception cref="System.Security.SecurityException"></exception>
-    public async Task SaveRecordsAsync(List<DataRecord> Records) 
-    {
-        // save the passed records to the Database table file
-        try 
+        catch
         {
-            await SaveAsync(Records);
-        } 
-        catch (Exception _ex) 
-        {
-            throw new FileLoadException($"Failed to save the DataTable to the file '{_path}' due to the following access error:\n{_ex.Message}");
+            throw new ArgumentException($"Could not create a DataTable object from the file at '{Path}' because the Process '{ProcessName}' is not defined.");
         }
-        // update the RecordsState property
-        RecordsState.LastRead = await ReadAsync();
-        RecordsState.Current = RecordsState.LastRead;
+        // read the file synchronously (once) and set up the Table's PageSets
+        ReadLines();
+        BasePages = new PageSet(LastReadLines, RecordType);
+        SearchPages = new PageSet(RecordType);
+        ActivePageSet = BasePages;
     }
 
     /// <summary>
-    /// Sorts the Table's Records list using SortingProperty as the sort.
-    /// Order can be either 0 or 1, where 0 indicates ascending order and 1 indicates descending.
+    /// Jumps to the first Page in the Table's current Pages (the newest Records).
     /// </summary>
-    /// <param name="SortingProperty">A Property name applicable to the DataRecord class.</param>
-    /// <param name="Order">0 (ascending) or 1 (descending).</param>
+    public async Task<Page> GoToFirstPage()
+    {
+        return await ActivePageSet.GoToFirstPage();
+    }
+
+    /// <summary>
+    /// Goes to the previous Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task<Page> GoToPreviousPage()
+    {
+        return await ActivePageSet.GoToPreviousPage();
+    }
+
+    /// <summary>
+    /// Jumps to the last Page in the Table's current Pages (the oldest Records).
+    /// </summary>
+    public async Task<Page> GoToLastPage()
+    {
+        return await ActivePageSet.GoToLastPage();
+    }
+
+    /// <summary>
+    /// Goes to the next Page in the Table's current Pages (if one exists).
+    /// </summary>
+    public async Task<Page> GoToNextPage()
+    {
+        return await ActivePageSet.GoToNextPage();
+    }
+
+    /// <summary>
+    /// Swaps the Active Page Set to the last generated SearchPages PageSet.
+    /// </summary>
     /// <returns></returns>
-    public async Task<List<DataRecord>> RequestSort(string SortingProperty, int Order) 
+    public async Task GoToSearchPages()
     {
-        RecordsState.Current = await SortRecordsAsync(SortingProperty, Order);
-        return RecordsState.Current;
+        // set the Active Page Set to use Search Pages and set the Active Page to the first page in the set
+        ActivePageSet = SearchPages;
+        await SearchPages.SetActivePage(0);
     }
 
     /// <summary>
-    /// Performs a search on the current data in _records. 
+    /// Swaps the Active Page Set to the last generated BasePages PageSet.
+    /// </summary>
+    /// <returns></returns>
+    public async Task GoToBasePages()
+    {
+        // set the Active Page Set to use Base Pages and set the Active Page to the first page in the set
+        ActivePageSet = BasePages;
+        await BasePages.SetActivePage(0);
+    }
+
+    /// <summary>
+    /// Creates a new PageSet from the LastReadLines property. Replaces BasePages and SearchPages with this new PageSet.
+    /// </summary>
+    /// <param name="MaxCount"></param>
+    /// <param name="PageLength"></param>
+    /// <returns>The currently Active Page of the new PageSet.</returns>
+    /// <exception cref="OperationCanceledException"></exception>
+    public async Task<Page> RefreshPages(int MaxCount, int PageLength)
+    {
+        // confirm that there are Lines to create a PageSet from
+        if (LastReadLines is null) 
+        {
+            try
+            {
+                await ReadLinesAsync();
+            }
+            catch
+            {
+                throw new OperationCanceledException();
+            }
+        }
+        // create a new PageSet from LastReadLines using the passed PageLength and MaxCount
+        BasePages = new PageSet(LastReadLines!, RecordType, MaxCount, PageLength);
+        SearchPages = BasePages;
+        ActivePageSet = BasePages;
+        return await ActivePageSet.GetActivePage();
+    }
+
+    /// <summary>
+    /// Confirms that there are Pages in the Table and that they are of the correct Length.
+    /// Checks if the requested Page has been parsed into DataRecords and does so if not.
+    /// </summary>
+    /// <param name="PageNumber">The Page in Table.Pages to Parse 
+    /// (NOTE: Table.Pages is 0-oriented, so Page Numbers must be 1 less than the actual page number.)
+    /// </param>
+    /// <param name="PageLength">Specifies the maximum number of Lines to include in each Page.</param>
+    /// <param name="MaxCount">(Optional) Set a limit on the number of Pages allowed in the PageSet.</param>
+    /// <returns>A Page object with PageLength DataRecords ready to be displayed.</returns>
+    public async Task<Page> RequestPage(int PageNumber, int PageLength, int MaxCount = -1) 
+    {
+        // confirm that Pages is set to provide Pages of the correct size
+        if (ActivePageSet.PageCount < 1 || ActivePageSet.Pages[0].MaxLength != PageLength)
+        {
+            await RefreshPages(MaxCount, PageLength);
+        }
+        // get the requested Page
+        try
+        {
+            await ActivePageSet.SetActivePage(PageNumber);
+            return await ActivePageSet.GetActivePage();
+        }
+        catch
+        {
+            throw new IndexOutOfRangeException();
+        }
+    }
+
+    /// <summary>
+    /// Performs a search on all of the current records in the Table.
     /// If All passed as PropertyName, checks for matches in every field of the Data Record.
     /// Otherwise, searches for match hits in the singular field passed as PropertyName.
+    /// Builds a new PageSet from the search results and activates the new SearchPages PageSet.
     /// </summary>
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
-    /// <returns>A List of DataRecords that the matching algorithm hits.</returns>
-    public async Task<List<DataRecord>> RequestSearch(string SearchTerm, string PropertyName) 
+    /// <returns>The ActivePage of the new SearchPages PageSet.</returns>
+    public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
     {
-        // perform the search algorithm on a new CPU thread
-        RecordsState.Current = await SearchAsync(SearchTerm, PropertyName);
-        return RecordsState.Current;
+        // search in all fields of each DataRecord
+        if (PropertyName.Equals("All")) 
+        {
+            await SearchAllFieldsAsync(SearchTerm);
+        // search in a singular field of each DataRecord
+        } 
+        else 
+        {
+            await SearchSingleFieldAsync(SearchTerm, PropertyName);
+        }
+        // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
+        SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
+        await GoToSearchPages();
+        return await SearchPages.GetActivePage();
     }
 }

@@ -214,7 +214,6 @@ public class ProcessData()
     {
         if (!AreProcessesLoaded) 
         {
-            Console.WriteLine("Reading from GetAllProcesses()...");
             // load the data from the Masterlist
             JObject NewRead = LoadData();
             // get the list of Processes in the Masterlist
@@ -251,7 +250,6 @@ public class ProcessData()
         {
             CachedProcesses = await Task.Run(async () => 
             {
-                Console.WriteLine("Reading from GetAllProcessesAsync()...");
                 // load the data from the Masterlist
                 JObject NewRead = await LoadDataAsync();
                 // return the list of Processes in the Masterlist
@@ -286,7 +284,6 @@ public class ProcessData()
     {
         if (!AreDepartmentsLoaded) 
         {
-            Console.WriteLine("Reading from GetAllDepartments()...");
             // load the data from the Masterlist
             JObject NewRead = LoadData();
             // get the list of Departments in the Masterlist
@@ -322,7 +319,6 @@ public class ProcessData()
         {
             CachedDepartments = await Task.Run(async () => 
             {
-                Console.WriteLine("Reading from GetAllDepartmentsAsync()...");
                 // load the data from the Masterlist
                 JObject NewRead = await LoadDataAsync();
                 // get the list of Departments in the Masterlist

@@ -118,7 +118,14 @@ public partial class RecordParser()
             if (Requirements.Contains("JBKNumber")) 
             {
                 // assign the value of the current parsing index to the JBK Number property
-                VariableSet.JBKNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                try
+                {
+                    VariableSet.JBKNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                }
+                catch
+                {
+                    VariableSet.JBKNumber = null;
+                }
                 // increment to the next parsable index
                 _parsingIndex += 1;
             }
@@ -134,7 +141,14 @@ public partial class RecordParser()
             if (Requirements.Contains("DeburrJBKNumber")) 
             {
                 // assign the value of the current parsing index to the Deburr JBK Number property
-                VariableSet.DeburrJBKNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                try
+                {
+                    VariableSet.DeburrJBKNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                }
+                catch
+                {
+                    VariableSet.DeburrJBKNumber = null;
+                }
                 // increment to the next parsable index
                 _parsingIndex += 1;
             }
@@ -142,7 +156,14 @@ public partial class RecordParser()
             if (Requirements.Contains("DieNumber")) 
             {
                 // assign the value of the current parsing index to the Die Number property
-                VariableSet.DieNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                try
+                {
+                    VariableSet.DieNumber = int.Parse(SplitCSVLine[4 + _parsingIndex]);
+                }
+                catch
+                {
+                    VariableSet.DieNumber = null;
+                }
                 // increment to the next parsable index
                 _parsingIndex += 1;
             }
@@ -186,13 +207,29 @@ public partial class RecordParser()
             throw new RecordParseException();
         }
         // parse out universally required data fields
-        int Quantity = int.Parse(SplitCSVLine[3]);
+        int Quantity;
+        try
+        {
+            Quantity = int.Parse(SplitCSVLine[3]);
+        }
+        catch
+        {
+            Quantity = 0;
+        }
         List<string> Timestamp = SplitCSVLine[^3]
             .Split("-")
             .ToList();
         string RecordDate = Timestamp[0];
         string RecordTime = Timestamp[1];
-        int RecordShift = int.Parse(SplitCSVLine[^2]);
+        int RecordShift;
+        try
+        {
+            RecordShift = int.Parse(SplitCSVLine[^2]);
+        }
+        catch
+        {
+            RecordShift = 0;
+        }
         string OperatorID = SplitCSVLine[^1];
         // attempt to parse out any variably-required fields
         VariableFieldSet VariableFields;

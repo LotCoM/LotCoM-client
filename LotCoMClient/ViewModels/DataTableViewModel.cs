@@ -200,13 +200,18 @@ public partial class DataTableViewModel : ObservableObject
     /// <summary>
     /// Sets the BasePage and CurrentPage properties to NewPage, resetting the Page's shown DataRecord Page.
     /// </summary>
-    /// <param name="NewPage"></param>
-    public void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage)
+    /// <param name="NewPage">A NotifyTaskCompletion object to use as the source of the new Page object.</param>
+    /// <param name="ResetFilter">(Optional) Disable Filter Options reset on completion.</param>
+    public void SetNewPage(NotifyTaskCompletion<Models.Datasources.Page> NewPage, bool ResetFilter = true)
     {
         BasePage = NewPage;
         CurrentPage = NewPage;
         Options.PageNumber = Table!.ActivePageSet.ActivePageIndex + 1;
         PageNumberContext = $"{Options.PageNumber} of {Table!.ActivePageSet.PageCount}";
+        if (ResetFilter)
+        {
+            ClearFilterOptions();
+        }
     }
 
     /// <summary>

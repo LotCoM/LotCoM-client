@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
+using LotCoMClient.Models.Options;
 
 namespace LotCoMClient.Models.Datasources;
 
@@ -18,25 +19,15 @@ public partial class DataRecord : ObservableObject
     [ObservableProperty]
     public partial Part RecordPart {get; set;}
     [ObservableProperty]
-    public partial string Quantity {get; set;}
+    public partial int Quantity {get; set;}
     [ObservableProperty]
-    public partial string JBKNumber {get; set;}
-    [ObservableProperty]
-    public partial string LotNumber {get; set;}
-    [ObservableProperty]
-    public partial string DeburrJBKNumber {get; set;}
-    [ObservableProperty]
-    public partial string DieNumber {get; set;}
-    [ObservableProperty]
-    public partial string ModelNumber {get; set;}
-    [ObservableProperty]
-    public partial string HeatNumber {get; set;}
+    public partial VariableFieldSet VariableFields {get; set;}
     [ObservableProperty]
     public partial string RecordDate {get; set;}
     [ObservableProperty]
     public partial string RecordTime {get; set;}
     [ObservableProperty]
-    public partial string RecordShift {get; set;}
+    public partial int RecordShift {get; set;}
     [ObservableProperty]
     public partial string OperatorID {get; set;}
 
@@ -72,12 +63,7 @@ public partial class DataRecord : ObservableObject
     /// <param name="RecordProcess">The Process this record belongs to.</param>
     /// <param name="RecordPart">The Part assigned to this record.</param>
     /// <param name="Quantity">The Quantity assigned to this record.</param>
-    /// <param name="JBKNumber">The JBK Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="LotNumber">The Lot Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="DeburrJBKNumber">The Deburr JBK Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="DieNumber">The Die Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="ModelNumber">The Model Number assigned to this record (if required for RecordProcess).</param>
-    /// <param name="HeatNumber">The Heat Number assigned to this record (if required for RecordProcess).</param>
+    /// <param name="VariableFields">The VariableFieldSet assigned to this record.</param>
     /// <param name="RecordDate">The Date assigned to this record.</param>
     /// <param name="RecordTime">The Time assigned to this record.</param>
     /// <param name="RecordShift">The Shift Number assigned to this record.</param>
@@ -85,18 +71,13 @@ public partial class DataRecord : ObservableObject
     /// <param name="ScanAddress">(Optional) the IP Address of the Scanner producing this record. Only applicable to ScanRecords.</param>
     /// <param name="ProductionDate">(Optional) the Production Date of the Record's Label. Only applicable to ScanRecords.</param>
     /// <param name="ProductionTime">(Optional) the Production Time of the Record's Label. Only applicable to ScanRecords.</param>
-    public DataRecord(Process RecordProcess, Part RecordPart, string Quantity, string JBKNumber, string LotNumber, string DeburrJBKNumber, string DieNumber, string ModelNumber, string HeatNumber, string RecordDate, string RecordTime, string RecordShift, string OperatorID, string? ScanAddress = null, string? ProductionDate = null, string? ProductionTime = null) 
+    public DataRecord(Process RecordProcess, Part RecordPart, int Quantity, VariableFieldSet VariableFields, string RecordDate, string RecordTime, int RecordShift, string OperatorID, string? ScanAddress = null, string? ProductionDate = null, string? ProductionTime = null) 
     {
         // set the Record's properties
         this.RecordProcess = RecordProcess;
         this.RecordPart = RecordPart;
         this.Quantity = Quantity;
-        this.JBKNumber = JBKNumber;
-        this.LotNumber = LotNumber;
-        this.DeburrJBKNumber = DeburrJBKNumber;
-        this.DieNumber = DieNumber;
-        this.ModelNumber = ModelNumber;
-        this.HeatNumber = HeatNumber;
+        this.VariableFields = VariableFields;
         this.RecordDate = RecordDate;
         this.RecordTime = RecordTime;
         this.RecordShift = RecordShift;
@@ -144,27 +125,27 @@ public partial class DataRecord : ObservableObject
         // add the variably-required data fields to the Line
         if (IncludesJBKNumber) 
         {
-            CSVLine = $"{CSVLine},{JBKNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.JBKNumber}";
         }
         if (IncludesLotNumber) 
         {
-            CSVLine = $"{CSVLine},{LotNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.LotNumber}";
         }
         if (IncludesDeburrJBKNumber) 
         {
-            CSVLine = $"{CSVLine},{DeburrJBKNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.DeburrJBKNumber}";
         }
         if (IncludesDieNumber) 
         {
-            CSVLine = $"{CSVLine},{DieNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.DieNumber}";
         }
         if (IncludesModelNumber) 
         {
-            CSVLine = $"{CSVLine},{ModelNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.ModelNumber}";
         }
         if (IncludesHeatNumber) 
         {
-            CSVLine = $"{CSVLine},{HeatNumber}";
+            CSVLine = $"{CSVLine},{VariableFields.HeatNumber}";
         }
         // add the back set of universal data
         if (IsScanRecord)

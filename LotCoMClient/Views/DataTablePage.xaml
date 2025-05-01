@@ -536,148 +536,180 @@
                                         <RowDefinition Height="5"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <!-- Left-Side Padding Column -->
-                                        <ColumnDefinition Width="25"/>
-                                        <!-- Date Column -->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!-- Time Column -->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!-- ScanRecord Scanner Address Column -->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!-- ScanRecord Production Timestamp Column -->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!-- Shift Column -->
-                                        <ColumnDefinition Width="Auto"/>
-                                        <!-- Operator Column -->
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <!-- Horizontal Stack Layout to Layer DataRecord Fields -->
-                                    <HorizontalStackLayout
-                                        Margin="0,10,0,0"
-                                        Grid.Row="0"
-                                        Grid.Column="1"
-                                        Grid.ColumnSpan="6">
+                                    <!-- Main DataRecord Fields -->
+                                    <Grid
+                                        Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <!-- DataRecord Part Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Part Name Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Quantity Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord JBK Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Lot Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Deburr JBK Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Die Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Model Number Row -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- DataRecord Heat Number Row -->
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
                                         <!-- DataRecord Part Number -->
                                         <Label
+                                            Grid.Column="0"
                                             Text="{Binding RecordPart.PartNumber, StringFormat='Part: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Part Name -->
                                         <Label
+                                            Grid.Column="1"
                                             Margin="10,0,0,0"
                                             Text="{Binding RecordPart.PartName}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Quantity -->
                                         <Label
+                                            Grid.Column="2"
                                             Margin="20,0,0,0"
                                             Text="{Binding Quantity, StringFormat='Quantity: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord JBK Number -->
                                         <Label
+                                            Grid.Column="3"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesJBKNumber}"
-                                            Text="{Binding JBKNumber, StringFormat='JBK #: {0}'}"
+                                            Text="{Binding VariableFields.JBKNumber, StringFormat='JBK #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Lot Number -->
                                         <Label
+                                            Grid.Column="4"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesLotNumber}"
-                                            Text="{Binding LotNumber, StringFormat='Lot #: {0}'}"
+                                            Text="{Binding VariableFields.LotNumber, StringFormat='Lot #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Deburr JBK Number -->
                                         <Label
+                                            Grid.Column="5"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesDeburrJBKNumber}"
-                                            Text="{Binding DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
+                                            Text="{Binding VariableFields.DeburrJBKNumber, StringFormat='Deburr JBK #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Die Number -->
                                         <Label
+                                            Grid.Column="6"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesDieNumber}"
-                                            Text="{Binding DieNumber, StringFormat='Die #: {0}'}"
+                                            Text="{Binding VariableFields.DieNumber, StringFormat='Die #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Model Number -->
                                         <Label
+                                            Grid.Column="7"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesModelNumber}"
-                                            Text="{Binding ModelNumber, StringFormat='Model #: {0}'}"
+                                            Text="{Binding VariableFields.ModelNumber, StringFormat='Model #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
                                         <!-- DataRecord Heat Number -->
                                         <Label
+                                            Grid.Column="8"
                                             Margin="20,0,0,0"
                                             IsVisible="{Binding IncludesHeatNumber}"
-                                            Text="{Binding HeatNumber, StringFormat='Heat #: {0}'}"
+                                            Text="{Binding VariableFields.HeatNumber, StringFormat='Heat #: {0}'}"
                                             FontSize="12"
                                             TextColor="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"/>
-                                    </HorizontalStackLayout>
-                                    <!-- DataRecord Date Label -->
-                                    <Label
-                                        Margin="5,0,0,0"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Text="{Binding RecordDate, StringFormat='Date: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- DataRecord Time Label -->
-                                    <Label
-                                        Margin="5,0,0,0"
-                                        Grid.Row="1"
-                                        Grid.Column="2"
-                                        Text="{Binding RecordTime, StringFormat='Time: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- ScanRecord Scanner Address Label -->
-                                    <Label
-                                        Margin="20,0,0,0"
-                                        IsVisible="{Binding IsScanRecord}"
-                                        Grid.Row="1"
-                                        Grid.Column="3"
-                                        Text="{Binding ScanAddress, StringFormat='Scanner: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- ScanRecord Production Timestamp -->
-                                    <Label 
-                                        Margin="20,0,0,0"
-                                        IsVisible="{Binding IsScanRecord}"
-                                        Grid.Row="1"
-                                        Grid.Column="4"
-                                        Text="{Binding ProductionTimestamp, StringFormat='Produced: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- DataRecord Shift Label -->
-                                    <Label
-                                        Margin="10,0,0,0"
-                                        Grid.Row="1"
-                                        Grid.Column="5"
-                                        Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- DataRecord Production Operator -->
-                                    <Label 
-                                        Margin="10,0,0,0"
-                                        Grid.Row="1"
-                                        Grid.Column="6"
-                                        Text="{Binding OperatorID, StringFormat='Operator: {0}'}"
-                                        FontSize="12"
-                                        TextColor="{StaticResource Gray500}"
-                                        VerticalOptions="Start"/>
-                                    <!-- Separator Bar -->
+                                    </Grid>
+                                    <!-- Secondary DataRecord Fields -->
+                                    <Grid
+                                        Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <!-- Left-Side Padding Column -->
+                                            <ColumnDefinition Width="25"/>
+                                            <!-- Date Column -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Time Column -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- ScanRecord Scanner Address Column -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- ScanRecord Production Timestamp Column -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Shift Column -->
+                                            <ColumnDefinition Width="Auto"/>
+                                            <!-- Operator Column -->
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- DataRecord Date Label -->
+                                        <Label
+                                            Margin="5,0,0,0"
+                                            Grid.Column="1"
+                                            Text="{Binding RecordDate, StringFormat='Date: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                        <!-- DataRecord Time Label -->
+                                        <Label
+                                            Margin="5,0,0,0"
+                                            Grid.Column="2"
+                                            Text="{Binding RecordTime, StringFormat='Time: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                        <!-- ScanRecord Scanner Address Label -->
+                                        <Label
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IsScanRecord}"
+                                            Grid.Column="3"
+                                            Text="{Binding ScanAddress, StringFormat='Scanner: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                        <!-- ScanRecord Production Timestamp -->
+                                        <Label 
+                                            Margin="20,0,0,0"
+                                            IsVisible="{Binding IsScanRecord}"
+                                            Grid.Column="4"
+                                            Text="{Binding ProductionTimestamp, StringFormat='Produced: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                        <!-- DataRecord Shift Label -->
+                                        <Label
+                                            Margin="10,0,0,0"
+                                            Grid.Column="5"
+                                            Text="{Binding RecordShift, StringFormat='Shift: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                        <!-- DataRecord Production Operator -->
+                                        <Label 
+                                            Margin="10,0,0,0"
+                                            Grid.Column="6"
+                                            Text="{Binding OperatorID, StringFormat='Operator: {0}'}"
+                                            FontSize="12"
+                                            TextColor="{StaticResource Gray500}"
+                                            VerticalOptions="Start"/>
+                                    </Grid>
+                                    <!-- Entry Separator Bar -->
                                     <BoxView
                                         Grid.Row="2"
                                         Grid.Column="0"
-                                        Grid.ColumnSpan="7"
                                         HeightRequest="1"
                                         HorizontalOptions="Fill"
                                         VerticalOptions="Center"

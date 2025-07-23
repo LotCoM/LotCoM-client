@@ -1,6 +1,6 @@
-using LotCoMClient.Models.Services;
+using LotComClient.Models.Services;
 
-namespace LotCoMClient.Views;
+namespace LotComClient.Views;
 
 /// <summary>
 /// Code-behind (View Layer) for the DataTablePage View.
@@ -31,7 +31,7 @@ public partial class DataTablePage : ContentPage
                 // CurrentPage is loaded; update the BodyTableHeader to show the item count and navigation
                 _viewModel.Options.SetBodyHeaderModeToNavigation();
             } 
-            else 
+            else if (!_viewModel.CurrentPage.IsFaulted)
             {
                 // the CurrentPage is not loaded yet; default Body Table Header options
                 _viewModel.Options.SetBodyHeaderModeToLabel("Loading records...");
@@ -109,7 +109,7 @@ public partial class DataTablePage : ContentPage
     /// <param name="e"></param>
     private async void OnListViewSearchButtonPressed(object sender, EventArgs e) 
     {
-        await Task.Run(() => 
+        await Task.Run(() =>
         {
             // invoke the ViewModel local sort method using the current search term
             if (ListViewSearchingFieldPicker is null)
@@ -118,7 +118,14 @@ public partial class DataTablePage : ContentPage
             }
             _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
-            _viewModel.SearchDataTable();
+            try
+            {
+                _viewModel.SearchDataTable();
+            }
+            catch
+            {
+                _viewModel.Options.SetBodyHeaderModeToLabel("No Search results");
+            }
         });
     }
 

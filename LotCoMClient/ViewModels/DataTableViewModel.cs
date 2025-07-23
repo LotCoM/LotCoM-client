@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LotCoMClient.Models.Datasources;
-using LotCoMClient.Models.Options;
-using LotCoMClient.Models.Services;
+using LotComClient.Models.Datasources;
+using LotComClient.Models.Options;
+using LotComClient.Models.Services;
 using System.Linq.Dynamic;
 
-namespace LotCoMClient.ViewModels;
+namespace LotComClient.ViewModels;
 
 /// <summary>
 /// ViewModel (ViewModel Layer) controlling the logic of the DataTablePage View class.
@@ -283,7 +283,7 @@ public partial class DataTableViewModel : ObservableObject
     /// Configures the Data property to only show those match hits.
     /// </summary>
     /// <returns></returns>
-    public void SearchDataTable() 
+    public void SearchDataTable()
     {
         // get the selected Field from the Searching Field Picker
         if (Options.SelectedSearchingFieldIndex == -1)
@@ -291,11 +291,25 @@ public partial class DataTableViewModel : ObservableObject
             return;
         }
         string PropertyName = Options.SearchableFields[Options.SelectedSearchingFieldIndex];
-        if (PropertyName != "All") 
+        if (PropertyName != "All")
         {
             PropertyName = ResolveDataRecordPropertyName(PropertyName);
         }
         // Search using the Model class
-        CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>(Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.PageLength));
+        try
+        {
+            CurrentPage = new NotifyTaskCompletion<Models.Datasources.Page>
+            (
+                Table!.SearchAsync(Options.SearchTerm, PropertyName, Options.PageLength)
+            );
+            if (CurrentPage.IsFaulted)
+            {
+                throw new NullReferenceException();
+            }
+        }
+        catch
+        {
+            throw new NullReferenceException($"There were no Search Results for the query:\n'Term: {Options.SearchTerm}'\n'Field: {PropertyName}'");
+        }
     }
 }

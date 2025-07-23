@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
-using LotCoMClient.Models.Datasources;
-using LotCoMClient.Models.Services;
+using LotComClient.Models.Datasources;
+using LotComClient.Models.Services;
 
-namespace LotCoMClient.Views;
+namespace LotComClient.Views;
 
 /// <summary>
 /// Code-behind (View Layer) for the DataTableSelectorPage View.
@@ -120,7 +120,14 @@ public partial class DataTableSelectorPage : ContentPage
             }
             _viewModel.Options.SearchTerm = ListViewSearchingSearchBar.Text;
             _viewModel.Options.SelectedSearchingFieldIndex = ListViewSearchingFieldPicker.SelectedIndex;
-            _viewModel.SearchDataTable();
+            try
+            {
+                _viewModel.SearchDataTable();
+            }
+            catch
+            {
+                _viewModel.Options.SetBodyHeaderModeToLabel("No Search results");
+            }
         });
     }
 

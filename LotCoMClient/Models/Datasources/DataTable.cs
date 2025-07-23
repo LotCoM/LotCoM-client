@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LotCoMClient.Models.Exceptions;
+using LotComClient.Models.Exceptions;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
-/// Provides controlled access and manipulation of database tables in the LotCoM Database.
+/// Provides controlled access and manipulation of database tables in the LotCom Database.
 /// </summary>
 public partial class DataTable : ObservableObject 
 {
@@ -35,7 +35,7 @@ public partial class DataTable : ObservableObject
 
     private string _path = "";
     /// <summary>
-    /// The Path of the database table file in the LotCoM database filing system.
+    /// The Path of the database table file in the LotCom database filing system.
     /// </summary>
     public string Path 
     {
@@ -285,7 +285,7 @@ public partial class DataTable : ObservableObject
     /// <summary>
     /// Constructs a new DataTable that provides controlled access and manipulation of data in the Database Table located at DataTablePath.
     /// </summary>
-    /// <param name="DataTablePath">A full file path to a Database Table file in the LotCoM database.</param>
+    /// <param name="DataTablePath">A full file path to a Database Table file in the LotCom database.</param>
     public DataTable(string DataTablePath) 
     {
         Path = DataTablePath;
@@ -362,7 +362,14 @@ public partial class DataTable : ObservableObject
     {
         // set the Active Page Set to use Search Pages and set the Active Page to the first page in the set
         ActivePageSet = SearchPages;
-        await SearchPages.SetActivePage(0);
+        try
+        {
+            await SearchPages.SetActivePage(0);
+        }
+        catch
+        {
+            throw new NullReferenceException("There is no Search Page at the specified index '0'.");
+        }
     }
 
     /// <summary>
@@ -441,6 +448,7 @@ public partial class DataTable : ObservableObject
     /// </summary>
     /// <param name="SearchTerm">The term to match.</param>
     /// <param name="PropertyName">The name of the Property to search in.</param>
+    /// <exception cref="NullReferenceException"></exception>
     /// <returns>The ActivePage of the new SearchPages PageSet.</returns>
     public async Task<Page> SearchAsync(string SearchTerm, string PropertyName, int PageLength) 
     {
@@ -455,6 +463,10 @@ public partial class DataTable : ObservableObject
             await SearchSingleFieldAsync(SearchTerm, PropertyName);
         }
         // create a new PageSet with the new SearchResultLines value and return the first Page in that new set
+        if (SearchResultLines.Count < 1)
+        {
+            throw new NullReferenceException($"There were no Search Results for the query:\n'Term: {SearchTerm}'\n'Field: {PropertyName}'");
+        }
         SearchPages = new PageSet(SearchResultLines, RecordType, PageLength: PageLength);
         await GoToSearchPages();
         return await SearchPages.GetActivePage();

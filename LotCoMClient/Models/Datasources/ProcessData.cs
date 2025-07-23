@@ -1,14 +1,14 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Provides controlled access to Process data sources.
 /// </summary>
 public class ProcessData() 
 {
-    private const string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\process_control\\_process_masterlist.json";
+    private const string Path = "\\\\144.133.122.1\\Lot Control Management\\Database\\process_control\\process_data.json";
         
     /// <summary>
     /// Contains the List of Processes produced by the last LoadData/LoadDataAsync call. 

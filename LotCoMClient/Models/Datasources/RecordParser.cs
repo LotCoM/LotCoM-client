@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
-using LotCoMClient.Models.Exceptions;
-using LotCoMClient.Models.Options;
+using LotComClient.Models.Exceptions;
+using LotComClient.Models.Options;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Provides parsing methods for DataRecord objects.
@@ -290,8 +290,10 @@ public partial class RecordParser()
         {
             DataRecord BaseRecord = await ParseBaseDataRecord(SplitLine);
             BaseRecord.ScanAddress = ScanAddress;
-            BaseRecord.ProductionDate = RecordDate;
-            BaseRecord.ProductionTime = RecordTime;
+            BaseRecord.ProductionDate = BaseRecord.RecordDate;
+            BaseRecord.ProductionTime = BaseRecord.RecordTime;
+            BaseRecord.RecordDate = RecordDate;
+            BaseRecord.RecordTime = RecordTime;
             ParsedRecord = ScanRecord.ConvertFromBase(BaseRecord);
             // Why swap the RecordDate and ProductionDate properties:
             //   ParseBaseDataRecord parses the ProductionDate from the Record,
@@ -299,10 +301,6 @@ public partial class RecordParser()
             //   ScanRecords are not the same and contain both RecordDates and
             //   ProductionDates, since the Record could be Printed one day and
             //   not be scanned for a week
-            ParsedRecord.ProductionDate = ParsedRecord.RecordDate;
-            ParsedRecord.ProductionTime = ParsedRecord.RecordTime;
-            ParsedRecord.RecordDate = RecordDate;
-            ParsedRecord.RecordTime = RecordTime;
         }
         catch
         {

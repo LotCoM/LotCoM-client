@@ -1,7 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LotCoMClient.Models.Datasources;
+using LotComClient.Models.Datasources;
 
-namespace LotCoMClient.Models.Options;
+namespace LotComClient.Models.Options;
 
 /// <summary>
 /// Encapsulates several options and controls that change the way a DataTablePage looks and functions.

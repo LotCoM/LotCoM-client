@@ -3,7 +3,7 @@
 
 using System.ComponentModel;
 
-namespace LotCoMClient.Models.Services;
+namespace LotComClient.Models.Services;
 
 public sealed class NotifyTaskCompletion<TResult> : INotifyPropertyChanged {
 

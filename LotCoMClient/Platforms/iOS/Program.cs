@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace LotCoMClient;
+namespace LotComClient;
 
 public class Program
 {

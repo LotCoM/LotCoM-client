@@ -1,7 +1,7 @@
-using LotCoMClient.Models.Datasources;
-using LotCoMClient.Models.Services;
+using LotComClient.Models.Datasources;
+using LotComClient.Models.Services;
 
-namespace LotCoMClient.ViewModels;
+namespace LotComClient.ViewModels;
 
 /// <summary>
 /// ViewModel (ViewModel Layer) controlling the logic of the DataTableSelectorPage View class.

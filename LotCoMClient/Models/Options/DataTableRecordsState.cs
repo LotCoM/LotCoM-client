@@ -1,6 +1,6 @@
-using LotCoMClient.Models.Datasources;
+using LotComClient.Models.Datasources;
 
-namespace LotCoMClient.Models.Options;
+namespace LotComClient.Models.Options;
 
 public class DataTableRecordsState 
 {

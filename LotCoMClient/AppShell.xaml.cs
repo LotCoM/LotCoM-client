@@ -1,4 +1,4 @@
-﻿namespace LotCoMClient;
+﻿namespace LotComClient;
 
 public partial class AppShell : Shell
 {

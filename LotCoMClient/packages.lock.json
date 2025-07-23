@@ -33,9 +33,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[9.0.4, )",
-        "resolved": "9.0.4",
-        "contentHash": "xUdlUxiFwXhTYhB4VxKg/IA0+jlZXJPo70LYuMryWbJHdonIpZjw+7DO2B0pWwpXIOs6MlH5WVXPEtfrGEcVZA=="
+        "requested": "[9.0.6, )",
+        "resolved": "9.0.6",
+        "contentHash": "TXy3SbJzGXQbxxIxCjdrp8bwEyTDImyYNpTpd6v7P3JL2Y7dno8EYG7dPezfYTa5SoWKdhbH9cbnwHHs3BR5gA=="
       },
       "Newtonsoft.Json": {
         "type": "Direct",
@@ -1150,7 +1150,7 @@
     "net9.0-android35.0/iossimulator-x64": {},
     "net9.0-android35.0/maccatalyst-x64": {},
     "net9.0-android35.0/win10-x64": {},
-    "net9.0-ios18.4": {
+    "net9.0-ios18.5": {
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
         "requested": "[8.4.0, )",
@@ -1182,9 +1182,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[9.0.4, )",
-        "resolved": "9.0.4",
-        "contentHash": "xUdlUxiFwXhTYhB4VxKg/IA0+jlZXJPo70LYuMryWbJHdonIpZjw+7DO2B0pWwpXIOs6MlH5WVXPEtfrGEcVZA=="
+        "requested": "[9.0.6, )",
+        "resolved": "9.0.6",
+        "contentHash": "TXy3SbJzGXQbxxIxCjdrp8bwEyTDImyYNpTpd6v7P3JL2Y7dno8EYG7dPezfYTa5SoWKdhbH9cbnwHHs3BR5gA=="
       },
       "Newtonsoft.Json": {
         "type": "Direct",
@@ -1323,12 +1323,12 @@
         "contentHash": "phCeRjp1whbMJiW/tFZtRN2eNZ1BD4jwHqCriFNvQ7Hli0PhGEhgkPuKilEs87L9wNNZPsrIS81zTH9MReFLfg=="
       }
     },
-    "net9.0-ios18.4/android-arm64": {},
-    "net9.0-ios18.4/android-x64": {},
-    "net9.0-ios18.4/iossimulator-x64": {},
-    "net9.0-ios18.4/maccatalyst-x64": {},
-    "net9.0-ios18.4/win10-x64": {},
-    "net9.0-maccatalyst18.4": {
+    "net9.0-ios18.5/android-arm64": {},
+    "net9.0-ios18.5/android-x64": {},
+    "net9.0-ios18.5/iossimulator-x64": {},
+    "net9.0-ios18.5/maccatalyst-x64": {},
+    "net9.0-ios18.5/win10-x64": {},
+    "net9.0-maccatalyst18.5": {
       "CommunityToolkit.Mvvm": {
         "type": "Direct",
         "requested": "[8.4.0, )",
@@ -1360,9 +1360,9 @@
       },
       "Microsoft.NET.ILLink.Tasks": {
         "type": "Direct",
-        "requested": "[9.0.4, )",
-        "resolved": "9.0.4",
-        "contentHash": "xUdlUxiFwXhTYhB4VxKg/IA0+jlZXJPo70LYuMryWbJHdonIpZjw+7DO2B0pWwpXIOs6MlH5WVXPEtfrGEcVZA=="
+        "requested": "[9.0.6, )",
+        "resolved": "9.0.6",
+        "contentHash": "TXy3SbJzGXQbxxIxCjdrp8bwEyTDImyYNpTpd6v7P3JL2Y7dno8EYG7dPezfYTa5SoWKdhbH9cbnwHHs3BR5gA=="
       },
       "Newtonsoft.Json": {
         "type": "Direct",
@@ -1501,11 +1501,11 @@
         "contentHash": "phCeRjp1whbMJiW/tFZtRN2eNZ1BD4jwHqCriFNvQ7Hli0PhGEhgkPuKilEs87L9wNNZPsrIS81zTH9MReFLfg=="
       }
     },
-    "net9.0-maccatalyst18.4/android-arm64": {},
-    "net9.0-maccatalyst18.4/android-x64": {},
-    "net9.0-maccatalyst18.4/iossimulator-x64": {},
-    "net9.0-maccatalyst18.4/maccatalyst-x64": {},
-    "net9.0-maccatalyst18.4/win10-x64": {},
+    "net9.0-maccatalyst18.5/android-arm64": {},
+    "net9.0-maccatalyst18.5/android-x64": {},
+    "net9.0-maccatalyst18.5/iossimulator-x64": {},
+    "net9.0-maccatalyst18.5/maccatalyst-x64": {},
+    "net9.0-maccatalyst18.5/win10-x64": {},
     "net9.0-windows10.0.19041": {
       "CommunityToolkit.Mvvm": {
         "type": "Direct",

@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Creates a set of Lines and/or DataRecords that can be displayed in a ListView.

@@ -1,4 +1,4 @@
-namespace LotCoMClient.Views;
+namespace LotComClient.Views;
 
 public partial class StyleTestPage : ContentPage {
     public StyleTestPage() {

@@ -1,6 +1,6 @@
-using LotCoMClient.Models.Options;
+using LotComClient.Models.Options;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Extension of the DataRecord class that represents a Label Scan event record.

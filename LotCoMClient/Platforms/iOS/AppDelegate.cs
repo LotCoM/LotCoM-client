@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace LotCoMClient;
+namespace LotComClient;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

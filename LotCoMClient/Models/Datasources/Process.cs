@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// An objective version of a Process loaded from the Process Masterlist data source.

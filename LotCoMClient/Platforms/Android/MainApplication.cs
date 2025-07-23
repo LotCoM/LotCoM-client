@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace LotCoMClient;
+namespace LotComClient;
 
 [Application]
 public class MainApplication : MauiApplication

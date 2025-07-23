@@ -1,4 +1,4 @@
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Formats a DateTime object as a string like MM/DD/YYYY-HH:MM:SS.

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace LotCoMClient;
+namespace LotComClient;
 
 public static class MauiProgram
 {

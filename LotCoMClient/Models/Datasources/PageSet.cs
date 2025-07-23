@@ -1,4 +1,4 @@
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
 /// Provides a control structure for a set of Page objects that can be used in the same context.

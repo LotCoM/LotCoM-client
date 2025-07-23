@@ -14,7 +14,7 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
-		<RootNamespace>LotCoMClient</RootNamespace>
+		<RootNamespace>LotComClient</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<MauiVersion>9.0.40</MauiVersion>
 		<SingleProject>true</SingleProject>
@@ -22,7 +22,7 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>LotCoMClient</ApplicationTitle>
+		<ApplicationTitle>LotComClient</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.lotcomclient</ApplicationId>

@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LotCoMClient.ViewModels;
+namespace LotComClient.ViewModels;
 
 /// <summary>
 /// ViewModel (ViewModel Layer) controlling the logic of the HomePage View class.

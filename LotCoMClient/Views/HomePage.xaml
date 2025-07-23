@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:LotCoMClient.ViewModels"
-             xmlns:views="clr-namespace:LotCoMClient.Views"
-             x:Class="LotCoMClient.Views.HomePage"
+             xmlns:viewModels="clr-namespace:LotComClient.ViewModels"
+             xmlns:views="clr-namespace:LotComClient.Views"
+             x:Class="LotComClient.Views.HomePage"
              x:DataType="viewModels:HomePageViewModel"
              BackgroundColor="{AppThemeBinding Light={StaticResource Background}, Dark={StaticResource BackgroundDark}}">
 

@@ -1,10 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
-using LotCoMClient.Models.Options;
+using LotComClient.Models.Options;
 
-namespace LotCoMClient.Models.Datasources;
+namespace LotComClient.Models.Datasources;
 
 /// <summary>
-/// Base class for all table entry records in LotCoM database tables.
+/// Base class for all table entry records in LotCom database tables.
 /// </summary>
 public partial class DataRecord : ObservableObject 
 {

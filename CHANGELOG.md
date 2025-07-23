@@ -1,16 +1,16 @@
 
 # `0.1.0`
 ### Datasource Class Implementations
-- **[feature/project](https://github.com/LotCoM/LotCoM-client/pull/1)**
+- **[feature/project](https://github.com/LotCom/LotCom-client/pull/1)**
   - Create and upload .NET MAUI project.
   - Create Repository and Project documentation.
   - Rough roadmapping.
-- **[feature/2](https://github.com/LotCoM/LotCoM-client/pull/3)**
-  - Implement `DataTable.cs` class ([#2](https://github.com/LotCoM/LotCoM-client/issues/2))
+- **[feature/2](https://github.com/LotCom/LotCom-client/pull/3)**
+  - Implement `DataTable.cs` class ([#2](https://github.com/LotCom/LotCom-client/issues/2))
   - **New Classes:**
-    - `DataTable.cs`: Provides controlled access and interaction with LotCoM database tables.
-- **[feature/4](https://github.com/LotCoM/LotCoM-client/pull/5)**
-  - Implement Data Record class group ([#4](https://github.com/LotCoM/LotCoM-client/issues/4))
+    - `DataTable.cs`: Provides controlled access and interaction with LotCom database tables.
+- **[feature/4](https://github.com/LotCom/LotCom-client/pull/5)**
+  - Implement Data Record class group ([#4](https://github.com/LotCom/LotCom-client/issues/4))
   - Implement custom `RecordParseException`.
   - Integrate Data Records with `DataTable`.
   - **New Classes:**
@@ -19,8 +19,8 @@
     - `ScanRecord.cs`: Extension of `DataRecord` used to hold a single Label Scan event record.
     - `RecordParser.cs`: Static parser used to create `DataRecord` objects from CSV lines.
     - `RecordParseException.cs`: Custom extension of `Exception` used to throw and trace errors that occur while parsing DataRecords from CSV lines.
-- **[feature/6](https://github.com/LotCoM/LotCoM-client/pull/8)**
-  - Import Process data class group from LotCoM-printer ([#6](https://github.com/LotCoM/LotCoM-client/issues/6)).
+- **[feature/6](https://github.com/LotCom/LotCom-client/pull/8)**
+  - Import Process data class group from LotCom-printer ([#6](https://github.com/LotCom/LotCom-client/issues/6)).
   - Implement synchronous versions of some lightweight Process data methods.
   - Integrate Process data classes with Data Record classes.
   - Add new dependencies `CommunityToolkit.MVVM` and `Newtonsoft.Json`.
@@ -30,25 +30,25 @@
     - `Part.cs`: Represents a single Part in the YNA production flow.
     - `PartData.cs`: Provides access to and methods on the Process datasource.
     - `Timestamp`: Provides quick and consistent formatting of DateTime objects into timestamps of `mm/dd/yyyy-hh:mm:ss`.
-- **[feature/7](https://github.com/LotCoM/LotCoM-client/pull/9)**
-  - Remove ambiguity in variable data fields of `DataRecord.cs` ([#7](https://github.com/LotCoM/LotCoM-client/issues/7))
+- **[feature/7](https://github.com/LotCom/LotCom-client/pull/9)**
+  - Remove ambiguity in variable data fields of `DataRecord.cs` ([#7](https://github.com/LotCom/LotCom-client/issues/7))
 
 # `0.2.0`
 ### Print Data Pages
-- **[feature/11](https://github.com/LotCoM/LotCoM-client/pull/14)**
-  - Implement `DataTablePage` class to display `DataTable` data in a `ListView` ([#11](https://github.com/LotCoM/LotCoM-client/issues/11)).
+- **[feature/11](https://github.com/LotCom/LotCom-client/pull/14)**
+  - Implement `DataTablePage` class to display `DataTable` data in a `ListView` ([#11](https://github.com/LotCom/LotCom-client/issues/11)).
   - Remove reliance on `Shell`/`AppShell` Navigation.
   - Fix several `Model` class issues.
   - Convert `DataRecord` and `DataTable` classes to `ObservableObject` class extensions.
   - **New Classes:**
     - `DataTableViewModel.cs`: Provides `View-Model` layer logic and control over `DataTablePage` instances.
     - `DataTablePage.xaml.cs` & `DataTablePage.xaml`: Provides a `Page` to display a given `DataTable` on.
-- **[feature/13](https://github.com/LotCoM/LotCoM-client/pull/15)**
-  - Implement an improved `Taskbar` application Icon ([#13](https://github.com/LotCoM/LotCoM-client/issues/13)).
-- **[bug/18](https://github.com/LotCoM/LotCoM-client/pull/19)**
-  - Resolve an issue in `DataTable` that causes an application crash when instantiating from an empty database table ([#18](https://github.com/LotCoM/LotCoM-client/issues/18)).
-- **[feature/16](https://github.com/LotCoM/LotCoM-client/pull/20)**
-  - Implement `NavigationPage` navigation in `App.xaml` class ([#16](https://github.com/LotCoM/LotCoM-client/issues/16)).
+- **[feature/13](https://github.com/LotCom/LotCom-client/pull/15)**
+  - Implement an improved `Taskbar` application Icon ([#13](https://github.com/LotCom/LotCom-client/issues/13)).
+- **[bug/18](https://github.com/LotCom/LotCom-client/pull/19)**
+  - Resolve an issue in `DataTable` that causes an application crash when instantiating from an empty database table ([#18](https://github.com/LotCom/LotCom-client/issues/18)).
+- **[feature/16](https://github.com/LotCom/LotCom-client/pull/20)**
+  - Implement `NavigationPage` navigation in `App.xaml` class ([#16](https://github.com/LotCom/LotCom-client/issues/16)).
   - Implement a new `HomePage` to start the application on.
     - Implements Navigation to `DataTablePage` Views for all of the YNA production departments.
   - Implement `DataTableSelectorPage`, an extension of `DataTablePage`. 
@@ -63,13 +63,13 @@
     - `DataTableSelectorPage.xaml.cs` & `DataTableSelectorPage.xaml`: Provides a `Page` to display a given `DataTable` on, with the added Process selection functionality.
     - `HomePageViewModel.cs`: Provides `View-Model` layer logic and control over `HomePage` instances.
     - `HomePage.xaml.cs` & `HomePage.xaml`: Provides a landing for the application after starting. Provides initial Navigation.
-- **[feature/17](https://github.com/LotCoM/LotCoM-client/pull/21)**
-  - Asynchronize `DataTable` and `DataTablePage` data loading actions ([#17](https://github.com/LotCoM/LotCoM-client/issues/17)).
+- **[feature/17](https://github.com/LotCom/LotCom-client/pull/21)**
+  - Asynchronize `DataTable` and `DataTablePage` data loading actions ([#17](https://github.com/LotCom/LotCom-client/issues/17)).
   - Implement `NotifyTaskCompletion` service class.
   - **New Classes**
     - Allows instantiation of "observable" tasks. These tasks can be used as the value of a property on instantiation without blocking threads.
-- **[feature/22](https://github.com/LotCoM/LotCoM-client/pull/23)**
-  - Major UI Color and Style tweaks ([#22](https://github.com/LotCoM/LotCoM-client/issues/22)).
+- **[feature/22](https://github.com/LotCom/LotCom-client/pull/23)**
+  - Major UI Color and Style tweaks ([#22](https://github.com/LotCom/LotCom-client/issues/22)).
   - Implement `RecessedButton` resource library.
     - Allows easy application of a "recessed" look to `Button` controls.
     - Cuts down on repetitive code (DRY!).
@@ -77,9 +77,9 @@
 
 # `0.3.0`
 ### Scan Data Pages
-- **[feature/25](https://github.com/LotCoM/LotCoM-client/pull/26)**
-  - Implement Scanning Data Page navigation and logic ([#25](https://github.com/LotCoM/LotCoM-client/issues/25))
+- **[feature/25](https://github.com/LotCom/LotCom-client/pull/26)**
+  - Implement Scanning Data Page navigation and logic ([#25](https://github.com/LotCom/LotCom-client/issues/25))
   - Implement ScanAddress property in DataRecord classes (for ScanRecords).
-- **[bug/27](https://github.com/LotCoM/LotCoM-client/pull/28)**
-  - Resolve ([#27](https://github.com/LotCoM/LotCoM-client/issues/27)).
+- **[bug/27](https://github.com/LotCom/LotCom-client/pull/28)**
+  - Resolve ([#27](https://github.com/LotCom/LotCom-client/issues/27)).
     - Implement missing ModelNumber property in DataRecord classes.

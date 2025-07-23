@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace LotCoMClient.Models.Options;
+namespace LotComClient.Models.Options;
 
 public partial class VariableFieldSet(int? JBKNumber = null, string? LotNumber = null, int? DeburrJBKNumber = null, int? DieNumber = null, string? ModelNumber = null, string? HeatNumber = null) : ObservableObject ()
 {

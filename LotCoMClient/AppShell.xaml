@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="LotCoMClient.AppShell"
+    x:Class="LotComClient.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:LotCoMClient"
-    xmlns:views="clr-namespace:LotCoMClient.Views"
+    xmlns:local="clr-namespace:LotComClient"
+    xmlns:views="clr-namespace:LotComClient.Views"
     Shell.FlyoutBehavior="Flyout"
-    Title="LotCoMClient">
+    Title="LotComClient">
 
     <ShellContent
         Title="LotCom Client"

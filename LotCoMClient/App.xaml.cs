@@ -1,6 +1,6 @@
-﻿using LotCoMClient.Views;
+﻿using LotComClient.Views;
 
-namespace LotCoMClient;
+namespace LotComClient;
 
 public partial class App : Application {
 	public App() {

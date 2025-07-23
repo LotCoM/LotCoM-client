@@ -1,6 +1,6 @@
-using LotCoMClient.Models.Datasources;
+using LotComClient.Models.Datasources;
 
-namespace LotCoMClient.Views;
+namespace LotComClient.Views;
 
 /// <summary>
 /// Code-behind (View Layer) for the HomePage View.
